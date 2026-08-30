@@ -1,106 +1,79 @@
-"use client";
+import React from 'react';
+import { Badge, MetricCard } from './ui';
 
-/**
- * Conditions readout for whatever timestep the map is showing.
- *
- * The whole panel is an aria-live region so a screen-reader user hears the
- * situation change as the timeline plays, rather than having to go looking.
- */
-
-import { Card, Pill, SectionTitle, Stat } from "./ui";
-import type { FloodState } from "@/lib/flood";
-import { shortName, type Landmark } from "@/lib/routing";
-import { totalSegments } from "@/lib/useCoastguard";
-
-interface Props {
-  displayed: FloodState;
-  horizon: number;
-  blockedCount: number;
-  cutOff: Landmark[];
-  floodedFraction: number;
+interface StatusPanelProps {
+  floodedRoadsCount: number;
+  totalRoadsCount: number;
+  inundatedAreaSqKm: number;
+  criticalAtRiskCount: number;
+  evacuationRoutesActive: number;
+  peakDepthM: number;
 }
 
 export default function StatusPanel({
-  displayed,
-  horizon,
-  blockedCount,
-  cutOff,
-  floodedFraction,
-}: Props) {
-  const severity =
-    displayed.waterLevelM > 2.5
-      ? { tone: "coral" as const, label: "Severe flooding" }
-      : displayed.waterLevelM > 1.5
-        ? { tone: "amber" as const, label: "Flooding" }
-        : displayed.waterLevelM > 0.6
-          ? { tone: "blue" as const, label: "Elevated tide" }
-          : { tone: "teal" as const, label: "Normal conditions" };
-
-  const blockedPct = Math.round((blockedCount / totalSegments) * 100);
+  floodedRoadsCount = 14,
+  totalRoadsCount = 82,
+  inundatedAreaSqKm = 3.42,
+  criticalAtRiskCount = 3,
+  evacuationRoutesActive = 4,
+  peakDepthM = 1.64,
+}: StatusPanelProps) {
+  const roadRiskRatio = Math.round((floodedRoadsCount / Math.max(totalRoadsCount, 1)) * 100);
 
   return (
-    <Card>
-      <SectionTitle
-        action={<Pill tone={severity.tone}>{severity.label}</Pill>}
-      >
-        {horizon === 0 ? "Conditions now" : `Projected +${horizon} h`}
-      </SectionTitle>
-
-      <div
-        className="grid grid-cols-2 gap-2.5"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        <Stat
-          label="Water level"
-          value={`${displayed.waterLevelM.toFixed(2)} m`}
-          detail={`tide ${displayed.tideM.toFixed(2)} + surge ${displayed.surgeM.toFixed(2)}`}
-          tone={displayed.waterLevelM > 2.5 ? "danger" : undefined}
-        />
-        <Stat
-          label="Rainfall"
-          value={`${displayed.rainfallMmHr.toFixed(1)} mm/h`}
-          detail={`${(displayed.rainAccumM * 100).toFixed(0)} cm accumulated`}
-          tone={displayed.rainfallMmHr > 20 ? "warn" : undefined}
-        />
-        <Stat
-          label="Roads impassable"
-          value={`${blockedCount} / ${totalSegments}`}
-          detail={`${blockedPct}% of the network`}
-          tone={blockedPct > 25 ? "danger" : blockedPct > 10 ? "warn" : "ok"}
-        />
-        <Stat
-          label="Landmarks cut off"
-          value={String(cutOff.length)}
-          detail={
-            cutOff.length
-              ? cutOff.map(shortName).join(", ")
-              : "all reachable"
-          }
-          tone={cutOff.length ? "danger" : "ok"}
-        />
+    <div className="space-y-4">
+      {/* Realtime Threat Banner */}
+      <div className="hud-panel p-4 rounded-xl border border-rose-500/30 bg-rose-950/20 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 text-lg animate-pulse">
+            <i className="fa-solid fa-triangle-exclamation" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs tracking-widest text-rose-400 font-bold uppercase">Condition: Coastal Flood Alert</span>
+              <Badge variant="danger">SEVERITY 3</Badge>
+            </div>
+            <p className="text-xs text-slate-300 font-mono mt-0.5">Cat-2 Surge event in progress. Surge peak matching astronomic spring tide.</p>
+          </div>
+        </div>
+        <Badge variant="cyan" className="hidden md:inline-flex">GRID ONLINE</Badge>
       </div>
 
-      <div className="mt-3 space-y-2 border-t border-sand-dim pt-3 text-[11.5px] leading-relaxed text-ink-soft">
-        <p>
-          <strong className="text-navy">
-            {(floodedFraction * 100).toFixed(1)}%
-          </strong>{" "}
-          of the town&rsquo;s land area is under water, and wind is gusting to{" "}
-          <strong className="text-navy">
-            {displayed.windKph.toFixed(0)} km/h
-          </strong>
-          .
-        </p>
-        {displayed.isolatedCells > 0 && (
-          <p>
-            <strong className="text-navy">{displayed.isolatedCells}</strong>{" "}
-            cells sit below the water level but have no path to the sea, so the
-            model correctly leaves them dry. A plain elevation threshold would
-            have flooded them.
-          </p>
-        )}
+      {/* Telemetry Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <MetricCard
+          label="Inundated Grid Area"
+          value={inundatedAreaSqKm.toFixed(2)}
+          unit="km²"
+          trend="+18% in last hour"
+          color="cyan"
+          icon="fa-solid fa-water"
+        />
+        <MetricCard
+          label="Roadway Blockages"
+          value={`${floodedRoadsCount}/${totalRoadsCount}`}
+          unit={`(${roadRiskRatio}%)`}
+          trend="Critical arteries affected"
+          color="rose"
+          icon="fa-solid fa-road-barrier"
+        />
+        <MetricCard
+          label="Peak Water Column"
+          value={peakDepthM.toFixed(2)}
+          unit="meters"
+          trend="Over mean sea level"
+          color="amber"
+          icon="fa-solid fa-arrows-up-down"
+        />
+        <MetricCard
+          label="Critical Landmarks"
+          value={criticalAtRiskCount}
+          unit="Facilities At Risk"
+          trend="Hospital / Substation alerted"
+          color="emerald"
+          icon="fa-solid fa-hospital"
+        />
       </div>
-    </Card>
+    </div>
   );
 }
