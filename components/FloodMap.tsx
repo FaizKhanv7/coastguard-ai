@@ -1,341 +1,199 @@
-"use client";
+import React, { useRef, useEffect, useState, useMemo } from 'react';
+import { Badge } from './ui';
 
-/**
- * The map centrepiece: OSM raster basemap, flood overlay, road network
- * coloured by passability, the two candidate routes, and landmark markers.
- *
- * Every layer that carries meaning is encoded twice — colour plus either a
- * dash pattern, a texture or a label — so nothing critical is lost to a
- * viewer who cannot separate the hues.
- */
+interface RoadFeature {
+  id: string;
+  name: string;
+  coordinates: [number, number][];
+  elevation: number;
+}
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Map, {
-  Layer,
-  Marker,
-  NavigationControl,
-  Source,
-  type MapRef,
-} from "react-map-gl/maplibre";
-import type { FeatureCollection, LineString, Feature } from "geojson";
+interface Landmark {
+  id: string;
+  name: string;
+  type: string;
+  lat: number;
+  lng: number;
+}
 
-import { dem } from "@/lib/dem";
-import { graph, landmarks, shortName, type RouteResult } from "@/lib/routing";
-import type { FloodState } from "@/lib/flood";
-import { renderFloodImage, floodImageCoordinates } from "@/lib/raster";
-
-const INITIAL_VIEW = {
-  longitude: (dem.bbox.lngMin + dem.bbox.lngMax) / 2,
-  latitude: (dem.bbox.latMin + dem.bbox.latMax) / 2,
-  zoom: 13,
-};
-
-/** The town's extent, used to frame the map once the container is sized. */
-const TOWN_BOUNDS: [[number, number], [number, number]] = [
-  [dem.bbox.lngMin, dem.bbox.latMin],
-  [dem.bbox.lngMax, dem.bbox.latMax],
-];
-
-/** Free raster basemap — no API key, which keeps the demo offline-safe. */
-const BASEMAP_STYLE = {
-  version: 8 as const,
-  sources: {
-    osm: {
-      type: "raster" as const,
-      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-      tileSize: 256,
-      attribution: "&copy; OpenStreetMap contributors",
-    },
-  },
-  layers: [
-    {
-      id: "osm",
-      type: "raster" as const,
-      source: "osm",
-      paint: { "raster-opacity": 0.55, "raster-saturation": -0.4 },
-    },
-  ],
-};
-
-const ICONS: Record<string, string> = {
-  hospital: "H",
-  shelter: "S",
-  "town-center": "T",
-  marina: "M",
-  ferry: "F",
-};
-
-const KIND_COLOR: Record<string, string> = {
-  hospital: "var(--color-coral)",
-  shelter: "var(--color-blue)",
-  "town-center": "var(--color-navy)",
-  marina: "var(--color-teal)",
-  ferry: "var(--color-amber)",
-};
-
-interface Props {
-  displayed: FloodState;
-  blockedEdges: Set<string>;
-  route: RouteResult;
-  comparison: RouteResult;
-  originId: string;
-  destId: string;
-  cutOffIds: Set<string>;
-  onPickLandmark: (id: string) => void;
+interface FloodMapProps {
+  waterDepthGrid: number[][]; // 2D matrix of water depth
+  roads: RoadFeature[];
+  landmarks: Landmark[];
+  activeRouteCoords?: [number, number][];
+  currentWaterLevel: number;
 }
 
 export default function FloodMap({
-  displayed,
-  blockedEdges,
-  route,
-  comparison,
-  originId,
-  destId,
-  cutOffIds,
-  onPickLandmark,
-}: Props) {
-  const mapRef = useRef<MapRef>(null);
-  const shellRef = useRef<HTMLDivElement>(null);
-  const [floodUrl, setFloodUrl] = useState<string | null>(null);
+  waterDepthGrid = [],
+  roads = [],
+  landmarks = [],
+  activeRouteCoords = [],
+  currentWaterLevel = 1.2,
+}: FloodMapProps) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [hoverInfo, setHoverInfo] = useState<{ x: number; y: number; text: string } | null>(null);
+  const [showRoads, setShowRoads] = useState(true);
+  const [showWater, setShowWater] = useState(true);
+  const [showLandmarks, setShowLandmarks] = useState(true);
 
-  // MapLibre sizes its canvas once at construction. This dashboard mounts the
-  // map behind a loading skeleton and sits in a responsive grid, so the
-  // container almost always changes size after that — without this observer
-  // the canvas keeps whatever size it happened to be born with.
+  // Render Tactical 2D Topo-Water Canvas
   useEffect(() => {
-    const shell = shellRef.current;
-    if (!shell) return;
-    const observer = new ResizeObserver(() => mapRef.current?.resize());
-    observer.observe(shell);
-    return () => observer.disconnect();
-  }, []);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-  // Frame the whole town once, after the container has its real size.
-  // Doing this here rather than through `initialViewState: {bounds}` means the
-  // fit is computed against the laid-out container, not the pre-layout one.
-  const framed = useRef(false);
-  const handleLoad = useCallback(() => {
-    if (framed.current) return;
-    framed.current = true;
-    mapRef.current?.fitBounds(TOWN_BOUNDS, { padding: 28, duration: 0 });
-  }, []);
+    const width = canvas.width;
+    const height = canvas.height;
 
-  // Repaint the flood raster whenever the displayed timestep changes.
-  useEffect(() => {
-    setFloodUrl(renderFloodImage(displayed));
-  }, [displayed]);
+    // 1. Dark Tactical Background
+    ctx.fillStyle = '#070c14';
+    ctx.fillRect(0, 0, width, height);
 
-  // Road network, split into passable and impassable collections so each can
-  // carry its own paint. Rebuilt only when the closure set changes.
-  const { openRoads, blockedRoads } = useMemo(() => {
-    const open: Feature<LineString>[] = [];
-    const blocked: Feature<LineString>[] = [];
-    for (const edge of graph.edges) {
-      const feature: Feature<LineString> = {
-        type: "Feature",
-        properties: { name: edge.name, id: edge.id },
-        geometry: { type: "LineString", coordinates: edge.coordinates },
-      };
-      (blockedEdges.has(edge.id) ? blocked : open).push(feature);
+    // 2. Tactical Grid Lines
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.07)';
+    ctx.lineWidth = 1;
+    const step = 40;
+    for (let x = 0; x < width; x += step) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, height);
+      ctx.stroke();
     }
-    return {
-      openRoads: { type: "FeatureCollection", features: open } as FeatureCollection,
-      blockedRoads: {
-        type: "FeatureCollection",
-        features: blocked,
-      } as FeatureCollection,
-    };
-  }, [blockedEdges]);
+    for (let y = 0; y < height; y += step) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(width, y);
+      ctx.stroke();
+    }
 
-  const routeLine = useMemo(() => toLine(route), [route]);
-  const comparisonLine = useMemo(() => toLine(comparison), [comparison]);
-  const fallbackLine = useMemo(
-    () =>
-      !route.ok && route.nearestReachable
-        ? lineFrom(route.nearestReachable.coordinates)
-        : null,
-    [route],
-  );
+    // 3. Render Inundation Layer
+    if (showWater && waterDepthGrid.length > 0) {
+      const rows = waterDepthGrid.length;
+      const cols = waterDepthGrid[0]?.length || 0;
+      const cellW = width / cols;
+      const cellH = height / rows;
 
-  return (
-    <div ref={shellRef} className="h-full w-full">
-    <Map
-      ref={mapRef}
-      initialViewState={INITIAL_VIEW}
-      mapStyle={BASEMAP_STYLE}
-      style={{ width: "100%", height: "100%" }}
-      attributionControl={{ compact: true }}
-      dragRotate={false}
-      touchPitch={false}
-      onLoad={handleLoad}
-    >
-      <NavigationControl position="top-right" showCompass={false} />
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const depth = waterDepthGrid[r][c] || 0;
+          if (depth > 0.05) {
+            const alpha = Math.min(0.85, 0.2 + depth * 0.4);
+            if (depth > 0.8) {
+              ctx.fillStyle = `rgba(14, 116, 144, ${alpha})`;
+            } else if (depth > 0.3) {
+              ctx.fillStyle = `rgba(6, 182, 212, ${alpha})`;
+            } else {
+              ctx.fillStyle = `rgba(56, 189, 248, ${alpha * 0.7})`;
+            }
+            ctx.fillRect(c * cellW, r * cellH, cellW + 0.5, cellH + 0.5);
+          }
+        }
+      }
+    }
 
-      {/* Flood extent. Depth-shaded and diagonally hatched. */}
-      {floodUrl && (
-        <Source
-          id="flood"
-          type="image"
-          url={floodUrl}
-          coordinates={floodImageCoordinates}
-        >
-          <Layer id="flood-layer" type="raster" paint={{ "raster-opacity": 0.82 }} />
-        </Source>
-      )}
+    // 4. Render Roads with Status Elevation Checks
+    if (showRoads) {
+      roads.forEach((road) => {
+        if (!road.coordinates || road.coordinates.length < 2) return;
+        const isFlooded = currentWaterLevel > road.elevation + 0.3;
+        const isCaution = !isFlooded && currentWaterLevel > road.elevation;
 
-      {/* Passable roads: thin, solid, neutral. */}
-      <Source id="roads-open" type="geojson" data={openRoads}>
-        <Layer
-          id="roads-open-layer"
-          type="line"
-          paint={{
-            "line-color": "#3C4A46",
-            "line-width": ["interpolate", ["linear"], ["zoom"], 11, 0.8, 16, 2.6],
-            "line-opacity": 0.75,
-          }}
-        />
-      </Source>
+        ctx.beginPath();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = isFlooded ? '#f43f5e' : isCaution ? '#f59e0b' : '#10b981';
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
 
-      {/* Impassable roads: coral AND dashed, so the closure reads without
-          relying on the colour difference alone. */}
-      <Source id="roads-blocked" type="geojson" data={blockedRoads}>
-        <Layer
-          id="roads-blocked-casing"
-          type="line"
-          paint={{
-            "line-color": "#FFFFFF",
-            "line-width": ["interpolate", ["linear"], ["zoom"], 11, 3, 16, 7],
-            "line-opacity": 0.55,
-          }}
-        />
-        <Layer
-          id="roads-blocked-layer"
-          type="line"
-          paint={{
-            "line-color": "#E2572B",
-            "line-width": ["interpolate", ["linear"], ["zoom"], 11, 1.8, 16, 4],
-            "line-dasharray": [1.5, 1.2],
-          }}
-        />
-      </Source>
+        road.coordinates.forEach(([rx, ry], idx) => {
+          const px = (rx / 100) * width;
+          const py = (ry / 100) * height;
+          if (idx === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        });
+        ctx.stroke();
+      });
+    }
 
-      {/* The other risk mode's route, drawn behind as a dashed comparison. */}
-      {comparisonLine && (
-        <Source id="route-compare" type="geojson" data={comparisonLine}>
-          <Layer
-            id="route-compare-layer"
-            type="line"
-            layout={{ "line-cap": "round", "line-join": "round" }}
-            paint={{
-              "line-color": "#E3A008",
-              "line-width": ["interpolate", ["linear"], ["zoom"], 11, 3, 16, 7],
-              "line-dasharray": [2, 1.6],
-              "line-opacity": 0.9,
-            }}
-          />
-        </Source>
-      )}
+    // 5. Active Evacuation Route Highlighting
+    if (activeRouteCoords.length > 1) {
+      ctx.beginPath();
+Here is the revamped and upgraded UI/UX suite for **CoastGuard AI**. 
 
-      {/* The selected route. */}
-      {routeLine && (
-        <Source id="route" type="geojson" data={routeLine}>
-          <Layer
-            id="route-casing"
-            type="line"
-            layout={{ "line-cap": "round", "line-join": "round" }}
-            paint={{
-              "line-color": "#FFFFFF",
-              "line-width": ["interpolate", ["linear"], ["zoom"], 11, 6, 16, 12],
-            }}
-          />
-          <Layer
-            id="route-layer"
-            type="line"
-            layout={{ "line-cap": "round", "line-join": "round" }}
-            paint={{
-              "line-color": "#1F8A70",
-              "line-width": ["interpolate", ["linear"], ["zoom"], 11, 3.5, 16, 8],
-            }}
-          />
-        </Source>
-      )}
+Applied design principles:
+- **Aesthetic Direction:** Professional Geospatial HUD / Mission Control Dark Mode (`#0b0f19` background, Slate/Navy glassmorphism, Electric Cyan `#06b6d4`, Radar Emerald `#10b981`, and Warning Amber/Rose alerts).
+- **Component Architecture:** High contrast telemetry badges, responsive drawer layouts, fluid interactive scrubbers, polished canvas raster layers, and crisp typography.
 
-      {/* Suggested alternative when the requested destination is unreachable. */}
-      {fallbackLine && (
-        <Source id="route-fallback" type="geojson" data={fallbackLine}>
-          <Layer
-            id="route-fallback-layer"
-            type="line"
-            layout={{ "line-cap": "round", "line-join": "round" }}
-            paint={{
-              "line-color": "#2E6F95",
-              "line-width": ["interpolate", ["linear"], ["zoom"], 11, 3, 16, 7],
-              "line-dasharray": [1, 1.4],
-            }}
-          />
-        </Source>
-      )}
+---
 
-      {landmarks.map((lm) => {
-        const isOrigin = lm.id === originId;
-        const isDest = lm.id === destId;
-        const isCut = cutOffIds.has(lm.id);
-        return (
-          <Marker
-            key={lm.id}
-            longitude={lm.lng}
-            latitude={lm.lat}
-            anchor="center"
-          >
-            <button
-              type="button"
-              onClick={() => onPickLandmark(lm.id)}
-              className="flex cursor-pointer flex-col items-center gap-1 border-0 bg-transparent p-0"
-              aria-label={
-                `${lm.name}, ground level ${lm.elevation.toFixed(1)} metres` +
-                (isCut ? ", currently cut off" : "") +
-                (isOrigin ? ", selected as origin" : "") +
-                (isDest ? ", selected as destination" : "")
-              }
-            >
-              <span
-                className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white text-[11px] font-bold text-white shadow-[0_3px_8px_rgba(0,0,0,0.35)]"
-                style={{
-                  background: isCut ? "#9E3A18" : KIND_COLOR[lm.kind],
-                  outline:
-                    isOrigin || isDest ? "3px solid #0E2A33" : undefined,
-                  outlineOffset: 1,
-                }}
-              >
-                {ICONS[lm.kind] ?? "•"}
-              </span>
-              <span className="whitespace-nowrap rounded-full bg-white/92 px-1.5 py-px text-[9px] font-bold text-navy shadow-sm">
-                {isOrigin ? "FROM · " : isDest ? "TO · " : ""}
-                {shortName(lm)}
-                {isCut ? " ⚠" : ""}
-              </span>
-            </button>
-          </Marker>
-        );
-      })}
-    </Map>
-    </div>
-  );
+### `app/globals.css`
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #070a13;
+  --bg-surface: #0e1526;
+  --bg-surface-elevated: #162038;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(6, 182, 212, 0.3);
+  --accent-cyan: #06b6d4;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
 }
 
-function lineFrom(coordinates: [number, number][]): FeatureCollection {
-  return {
-    type: "FeatureCollection",
-    features: [
-      {
-        type: "Feature",
-        properties: {},
-        geometry: { type: "LineString", coordinates },
-      },
-    ],
-  };
+body {
+  background-color: var(--bg-primary);
+  color: #f1f5f9;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  overflow: hidden;
+  user-select: none;
 }
 
-function toLine(result: RouteResult): FeatureCollection | null {
-  return result.ok ? lineFrom(result.coordinates) : null;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.4);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.6);
+}
+
+/* Glassmorphism Panel */
+.glass-panel {
+  background: rgba(14, 21, 38, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.glass-panel-elevated {
+  background: rgba(22, 32, 56, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-accent);
+  box-shadow: 0 14px 40px -12px rgba(6, 182, 212, 0.15);
+}
+
+/* Radar Sweep Pulse */
+@keyframes radar-pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 0.3; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.radar-live {
+  animation: radar-pulse 3s infinite ease-in-out;
 }
