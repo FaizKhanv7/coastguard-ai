@@ -63,11 +63,12 @@ export default function LandingPage() {
           </h1>
 
           <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-white/75">
-            CoastGuard AI models where water will spread across an isolated
-            coastal town over the next 6, 12 and 24 hours — then finds the
-            safest still-passable route between any two points, excluding roads
-            that are already under water or that the forecast says will be
-            before you arrive.
+            CoastGuard AI models where water will spread across Miami-Dade
+            over the next 6, 12 and 24 hours — on real USGS elevation, real
+            NOAA tide and the real road network — then finds the safest
+            still-passable route between any two points, excluding roads that
+            are already under water or that the forecast says will be before
+            you arrive.
           </p>
 
           <div className="mt-7 flex flex-wrap gap-3">

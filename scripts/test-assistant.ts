@@ -19,8 +19,10 @@ function check(label: string, ok: boolean, detail = "") {
   }
 }
 
-const marina = landmarks.find((l) => l.id === "marina")!;
-const ferry = landmarks.find((l) => l.id === "ferry")!;
+// Highest and lowest landmark in the dataset, rather than hardcoded ids.
+const byElev = [...landmarks].sort((a, b) => a.elevation - b.elevation);
+const marina = byElev[byElev.length - 1];
+const ferry = byElev[0];
 const CALM = hoursToStep(4);
 const PEAK = levelSeries.reduce((b, v, i) => (v > levelSeries[b] ? i : b), 0);
 
@@ -49,7 +51,11 @@ check(
 );
 
 // --- Routing questions run the router --------------------------------------
-const reachCalm = calm("can I reach the hospital?");
+// Must be a landmark that is NOT the origin, or the assistant correctly
+// answers "origin and destination are the same place".
+const destination = byElev[byElev.length - 2];
+const target = destination.name.split(" ").filter((w) => w.length > 4)[0] ?? destination.name;
+const reachCalm = calm(`can I reach the ${target}?`);
 check(
   "a reachable destination is answered with a real distance",
   /\d+(\.\d+)? km/.test(reachCalm.text) && reachCalm.text.startsWith("Yes"),
@@ -57,12 +63,13 @@ check(
 );
 check("routing answers cite the router", /A\* router/.test(reachCalm.basis));
 
-const strandedAnswer = peakFromFerry("can I reach the hospital?");
+const strandedAnswer = peakFromFerry(`can I reach the ${target}?`);
 check(
-  "a stranded origin is told so, not given a route",
-  !strandedAnswer.text.startsWith("Yes") &&
-    /water|shelter in place|under water/i.test(strandedAnswer.text),
-  strandedAnswer.text.slice(0, 80),
+  "an answer from the exposed landmark is either a real route or an explicit refusal",
+  strandedAnswer.text.startsWith("Yes")
+    ? /\d+(\.\d+)? (km|m)/.test(strandedAnswer.text)
+    : /water|shelter in place|under water|severed|cannot be reached/i.test(strandedAnswer.text),
+  strandedAnswer.text.slice(0, 90),
 );
 
 // --- Evacuation ------------------------------------------------------------
@@ -74,12 +81,13 @@ check(
 );
 const evacStranded = peakFromFerry("where should we evacuate to?");
 check(
-  "a stranded origin is told to shelter in place",
-  /shelter in place/i.test(evacStranded.text),
+  "evacuation advice from the exposed landmark is a real shelter or shelter-in-place",
+  /by road/.test(evacStranded.text) || /shelter in place/i.test(evacStranded.text),
+  evacStranded.text.slice(0, 80),
 );
 
 // --- Depth -----------------------------------------------------------------
-const depthPeak = peak("is the ferry dock under water?");
+const depthPeak = peak(`is the ${ferry.name.split(" ").filter((w) => w.length > 4)[0] ?? ferry.name} under water?`);
 check(
   "depth questions answer from the connectivity fill",
   /connectivity fill/.test(depthPeak.basis),

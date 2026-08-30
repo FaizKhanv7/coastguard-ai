@@ -10,7 +10,9 @@
  *
  * THE MODEL, IN THREE STEPS
  *
- * 1. Water level.  h(t) = tide(t) + surge(t) + rainAccumulation(t)
+ * 1. Water level. h(t) = NOAA tide(t) + surge(t) + rainAccumulation(t).
+ *    Miami vertical references are NAVD88; MHHW is +0.42 m NAVD88 and the
+ *    operational king-tide/surge planning baseline is +1.10 m NAVD88.
  *
  *    tide and surge come straight from the forcing series. Rainfall is *not*
  *    added directly: rain that falls has to accumulate and then drain away.
@@ -30,9 +32,7 @@
  *
  *    (b) is the part that matters. A naive threshold ("elevation < h") floods
  *    every inland hollow that happens to sit below the water level, including
- *    ones with no path to the sea. Kalinaw Island's Old Quarry Basin is
- *    exactly that case: its floor is 2 m below sea level but it is ringed by
- *    ~20 m of high ground, so it must stay dry. We get (b) by breadth-first
+ *    ones with no path to Biscayne Bay or the Atlantic-facing boundary. We get (b) by breadth-first
  *    search seeded from every flooded cell on the grid boundary, using
  *    4-connectivity.
  *
@@ -47,8 +47,8 @@
  *     Over a 4 km town and multi-hour timesteps that is a reasonable
  *     simplification; for a dam break it would not be.
  *   - Drainage is a single global time constant, not a real sewer network.
- *   - The DEM is synthetic, 27 m per cell, so features narrower than about
- *     30 m (a sea wall, a raised causeway) are invisible to the model.
+ *   - The checked-in dataset may be an explicitly tagged offline bootstrap.
+ *     Operational use requires refreshing it from USGS/NOAA/OSM first.
  *   - 4-connectivity is deliberately conservative: water will not squeeze
  *     through a diagonal-only gap between two dry cells.
  * ============================================================================
@@ -96,6 +96,12 @@ const DRAINAGE_TAU_H = 5;
  * ground, so we scale it up by a catchment factor.
  */
 const RUNOFF_GAIN = 4.0;
+
+/** Miami tidal reference constants, metres NAVD88. */
+export const MHHW_NAVD88_M = 0.42;
+export const KING_TIDE_SURGE_BASELINE_NAVD88_M = 1.10;
+export const MIAMI_ELEVATION_MIN_M = 0;
+export const MIAMI_ELEVATION_MAX_M = 8;
 
 // ---------------------------------------------------------------------------
 // Water level
@@ -156,11 +162,11 @@ export interface FloodState {
   /** 1 = flooded, 0 = dry. Length = dem.cols * dem.rows. */
   flooded: Uint8Array;
   floodedCells: number;
-  /** Cells below the water level but cut off from the sea (e.g. the quarry). */
+  /** Cells below the water level but with no connected path to the sea. */
   isolatedCells: number;
 }
 
-// Reused between calls so we are not allocating a 25 600-entry queue 193 times.
+// Reused between calls so we are not allocating a grid-sized queue repeatedly.
 const queue = new Int32Array(CELL_COUNT);
 
 /**

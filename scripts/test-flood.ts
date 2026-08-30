@@ -109,36 +109,87 @@ for (let i = 0; i < STEP_COUNT; i++) {
 }
 check("flooded area is monotonic in water level", monotonic);
 
-// 4. THE headline property: the Old Quarry Basin sits below sea level but is
-//    ringed by high ground, so connectivity must keep it dry even at the
-//    storm peak. A naive elevation threshold would flood it.
-const quarryCol = Math.round(0.815 * (dem.cols - 1));
-const quarryRow = Math.round(0.33 * (dem.rows - 1));
-const quarryIdx = cellIndex(quarryRow, quarryCol);
-const quarryElev = elevations[quarryIdx];
-
+// 4. THE headline property, stated without naming a fixture: the connectivity
+//    model must leave SOME cells dry that sit below the water level, and they
+//    must be genuinely enclosed. On the synthetic island that was the Old
+//    Quarry Basin; on Miami-Dade it is inland fill and spoil ground behind the
+//    coastal ridge. Asserting the property rather than the place means this
+//    test survives a change of dataset, which is exactly what happened.
 check(
-  "Old Quarry Basin floor is below sea level",
-  quarryElev < 0,
-  `${quarryElev.toFixed(2)} m`,
-);
-check(
-  "connectivity keeps the quarry dry at the storm peak",
-  peakState.flooded[quarryIdx] === 0,
-  `water ${peakState.waterLevelM.toFixed(2)} m, quarry floor ${quarryElev.toFixed(2)} m`,
-);
-check(
-  "a naive threshold model would wrongly flood it",
-  quarryElev < peakState.waterLevelM && peakState.isolatedCells > 20,
-  `${peakState.isolatedCells} cells below water level but cut off from the sea`,
+  "connectivity excludes cells a naive threshold would flood",
+  peakState.isolatedCells > 0,
+  `${peakState.isolatedCells} cells below the water line but cut off from the sea`,
 );
 
-// 5. Ocean cells on the north edge must always be flooded.
-const northEdge = cellIndex(dem.rows - 1, Math.round(dem.cols / 2));
+// Find the deepest such cell and prove it really is enclosed: every cell on
+// the straight line out to the nearest grid edge must rise above the water.
+let deepestIsolated = -1;
+let deepestDrop = 0;
+for (let i = 0; i < elevations.length; i++) {
+  if (peakState.flooded[i] === 0) {
+    const drop = peakState.waterLevelM - elevations[i];
+    if (drop > deepestDrop) {
+      deepestDrop = drop;
+      deepestIsolated = i;
+    }
+  }
+}
 check(
-  "open ocean is flooded at every timestep",
-  states.every((s) => s.flooded[northEdge] === 1),
-  "north edge midpoint",
+  "the deepest excluded cell is meaningfully below the water line",
+  deepestIsolated >= 0 && deepestDrop > 0.25,
+  deepestIsolated >= 0
+    ? `${deepestDrop.toFixed(2)} m below water at cell ${deepestIsolated}`
+    : "none found",
+);
+
+if (deepestIsolated >= 0) {
+  // Walk outward along the row; a genuinely enclosed pocket must be separated
+  // from the boundary by ground standing above the water level.
+  const row = Math.floor(deepestIsolated / dem.cols);
+  const col = deepestIsolated - row * dem.cols;
+  let barrierWest = false;
+  for (let c = col; c >= 0; c--) {
+    if (elevations[cellIndex(row, c)] >= peakState.waterLevelM) { barrierWest = true; break; }
+  }
+  let barrierEast = false;
+  for (let c = col; c < dem.cols; c++) {
+    if (elevations[cellIndex(row, c)] >= peakState.waterLevelM) { barrierEast = true; break; }
+  }
+  check(
+    "that cell is walled off from the grid edge by higher ground",
+    barrierWest && barrierEast,
+    `barriers west: ${barrierWest}, east: ${barrierEast}`,
+  );
+}
+
+// 5. The model must always have an open-water connection. Which EDGE that is
+//    depends on the dataset - the synthetic island faced north, Miami-Dade
+//    faces east onto Biscayne Bay - so find the lowest boundary cell rather
+//    than assuming a compass direction.
+let oceanCell = -1;
+let oceanElev = Infinity;
+const edgeCells: number[] = [];
+for (let col = 0; col < dem.cols; col++) {
+  edgeCells.push(cellIndex(0, col), cellIndex(dem.rows - 1, col));
+}
+for (let row = 0; row < dem.rows; row++) {
+  edgeCells.push(cellIndex(row, 0), cellIndex(row, dem.cols - 1));
+}
+for (const c of edgeCells) {
+  if (elevations[c] < oceanElev) {
+    oceanElev = elevations[c];
+    oceanCell = c;
+  }
+}
+check(
+  "the lowest boundary cell is below sea level (open water is on the grid edge)",
+  oceanElev < 0,
+  `${oceanElev.toFixed(2)} m at cell ${oceanCell}`,
+);
+check(
+  "open water stays flooded at every timestep",
+  states.every((s) => s.flooded[oceanCell] === 1),
+  `cell ${oceanCell}, row ${Math.floor(oceanCell / dem.cols)}, col ${oceanCell % dem.cols}`,
 );
 
 console.log(

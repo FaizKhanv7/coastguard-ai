@@ -69,7 +69,7 @@ function placeIndex() {
   return entries;
 }
 
-/** Loose name match — "hospital" should find "Kalinaw District Hospital". */
+/** Loose name match — "hospital" should find "Jackson Memorial Hospital". */
 function findPlace(q: string) {
   const lower = q.toLowerCase();
   const all = placeIndex();

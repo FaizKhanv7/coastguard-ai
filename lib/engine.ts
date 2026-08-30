@@ -41,7 +41,7 @@ import {
   type RouteResult,
   type Landmark,
 } from "./routing";
-import { dem, cellAt, elevations } from "./dem";
+import { dem, cellAt, elevations, isNoData } from "./dem";
 import { renderFloodImage, floodImageCoordinates } from "./raster";
 
 // ---------------------------------------------------------------------------
@@ -334,6 +334,9 @@ export function floodDepthAt(
   const s = displayedState(step, horizonH);
   const cell = cellAt(lng, lat);
   if (cell < 0 || !s.flooded[cell]) return 0;
+  // A no-data cell is open water, not a flooded place; reporting "9999 m of
+  // water here" would be nonsense.
+  if (isNoData(elevations[cell])) return 0;
   return Math.max(0, s.waterLevelM - elevations[cell]);
 }
 

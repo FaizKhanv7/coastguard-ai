@@ -141,8 +141,8 @@ export function CoastguardProvider({ children }: { children: ReactNode }) {
   const [step, setStep] = useState(hoursToStep(4));
   const [playing, setPlaying] = useState(false);
   const [horizon, setHorizon] = useState<Horizon>(0);
-  const [originId, setOriginId] = useState("marina");
-  const [destId, setDestId] = useState("hospital");
+  const [originId, setOriginId] = useState("uscg-sector-miami");
+  const [destId, setDestId] = useState("jackson-memorial");
   const [mode, setMode] = useState<RiskTolerance>("fastest");
 
   const [incidents, setIncidents] = useState<Incident[]>(community.incidents);

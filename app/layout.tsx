@@ -23,7 +23,7 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   title: "CoastGuard AI — Flood forecast & safe routing",
   description:
-    "Predictive flood modelling and dynamic safe-route pathfinding for Kalinaw Island.",
+    "Predictive flood modelling and dynamic safe-route pathfinding for Miami-Dade County, Florida.",
 };
 
 export const viewport: Viewport = {

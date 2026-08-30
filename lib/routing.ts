@@ -59,7 +59,8 @@
 
 import roadsJson from "../data/roads.json";
 import landmarksJson from "../data/landmarks.json";
-import { cellAt, haversine, elevations } from "./dem";
+import { cellAt, haversine, elevations, isNoData } from "./dem";
+import { waterLevels } from "./flood";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -88,6 +89,14 @@ export interface GraphEdge {
   sampleCells: Int32Array;
   /** Lowest elevation anywhere along the segment — handy for the UI. */
   minElevation: number;
+  /** How the road is carried: on grade, on a bridge deck, or in a tunnel. */
+  structure: "bridge" | "tunnel" | "grade";
+  /**
+   * Road surface elevation in metres. For a bridge this is the deck, taken
+   * from the abutments rather than the DEM underneath — see the note in
+   * isEdgeBlocked.
+   */
+  deckElevationM: number;
 }
 
 export interface RoadGraph {
@@ -107,6 +116,7 @@ export interface Landmark {
 }
 
 export type RiskTolerance = "safest" | "fastest";
+export type RescueVehicle = "standard-patrol" | "high-water" | "shallow-draft-vessel";
 
 export interface RouteWarning {
   edgeId: string;
@@ -163,6 +173,18 @@ export type RouteResult = RouteSuccess | RouteFailure;
 /** Spacing between elevation samples along an edge, in metres. */
 const SAMPLE_SPACING_M = 15;
 
+/**
+ * Ground below this is permanently submerged and is therefore water, not road.
+ *
+ * The DEM is bare earth at ~40 m per cell, so a coastal road or a road running
+ * beside a canal inevitably picks up cells that are actually the channel next
+ * to it. Left in, those cells report the road as flooded at every state of the
+ * tide - which is how 843 Miami road segments came out "impassable" at low
+ * water. A cell that never emerges even at the lowest water level in the whole
+ * forecast is not part of the carriageway, so it is dropped from the sample.
+ */
+const PERMANENT_WATER_M = Math.min(...waterLevels.map((w) => w.levelM));
+
 interface RoadFeature {
   properties: {
     id: string;
@@ -171,6 +193,8 @@ interface RoadFeature {
     to: string;
     lengthM: number;
     speedKph: number;
+    structure?: "bridge" | "tunnel" | "grade";
+    deckElevationM?: number;
   };
   geometry: { type: "LineString"; coordinates: number[][] };
 }
@@ -208,7 +232,12 @@ function sampleEdgeCells(coords: LngLat[]): {
     for (let s = 0; s <= steps; s++) {
       const t = s / steps;
       const cell = cellAt(aLng + (bLng - aLng) * t, aLat + (bLat - aLat) * t);
-      if (cell >= 0) seen.add(cell);
+      // Skip anything that is not carriageway: USGS no-data (open water,
+      // where 3DEP has no bare earth) and ground that never emerges even at
+      // the lowest water level in the forecast.
+      if (cell >= 0 && !isNoData(elevations[cell]) && elevations[cell] > PERMANENT_WATER_M) {
+        seen.add(cell);
+      }
     }
   }
 
@@ -260,6 +289,8 @@ export function buildGraph(): RoadGraph {
       coordinates: coords,
       sampleCells: cells,
       minElevation,
+      structure: f.properties.structure ?? "grade",
+      deckElevationM: f.properties.deckElevationM ?? minElevation,
     });
 
     nodes[a].edges.push(edgeIdx);
@@ -301,13 +332,26 @@ export interface FloodFrame {
 /**
  * Depth of standing water at which a road stops being drivable, in metres.
  *
- * 0.30 m is the figure emergency services generally use: at about a foot,
- * a typical car loses traction and starts to float. Below that a road is wet
- * but usable, which matters — without this threshold every road that gets its
- * toes damp at high tide would close, and the network would be severed from
- * hour zero.
+ * Miami coastal rescue defaults: 0.15 m for standard patrol vehicles and
+ * 0.90 m for high-water vehicles. The route API selects the threshold from
+ * the requested rescue vehicle profile.
  */
-export const VEHICLE_DEPTH_LIMIT_M = 0.3;
+export const STANDARD_PATROL_DEPTH_LIMIT_M = 0.15;
+export const HIGH_WATER_VEHICLE_DEPTH_LIMIT_M = 0.90;
+export const SHALLOW_DRAFT_VESSEL_MIN_DEPTH_M = 0.60;
+/** Backwards-compatible default: standard coastal patrol vehicle. */
+export const VEHICLE_DEPTH_LIMIT_M = STANDARD_PATROL_DEPTH_LIMIT_M;
+
+export function clearanceForVehicle(vehicle: RescueVehicle): number {
+  if (vehicle === "high-water") return HIGH_WATER_VEHICLE_DEPTH_LIMIT_M;
+  return STANDARD_PATROL_DEPTH_LIMIT_M;
+}
+
+/** A shallow-draft rescue vessel requires at least 0.60 m connected water depth. */
+export function isShallowDraftNavigable(depthM: number): boolean {
+  return depthM > SHALLOW_DRAFT_VESSEL_MIN_DEPTH_M;
+}
+
 
 /**
  * An edge is impassable if ANY sampled point along it is BOTH connected to the
@@ -321,6 +365,28 @@ export function isEdgeBlocked(
   frame: FloodFrame,
   depthLimit: number = VEHICLE_DEPTH_LIMIT_M,
 ): boolean {
+  /*
+   * A bridge is judged against its deck, not against the DEM beneath it.
+   *
+   * The elevation model is bare earth: under a causeway it records the bay
+   * floor. Sampling those cells would report every bridge in the county as
+   * permanently submerged, sever the causeways at low tide, and make the whole
+   * map wrong in a way that looks plausible. So for a bridge we compare the
+   * water level to the deck estimated from its abutments.
+   *
+   * Tunnels get the opposite treatment: they sit below grade, so they flood
+   * before the surface around them does.
+   */
+  if (edge.structure === "bridge") {
+    return frame.waterLevelM - edge.deckElevationM > depthLimit;
+  }
+
+  // Every sample was open water (a causeway OSM never tagged as a bridge).
+  // Judge it on its recorded bed elevation instead of calling it dry.
+  if (edge.sampleCells.length === 0) {
+    return frame.waterLevelM - edge.deckElevationM > depthLimit;
+  }
+
   for (let i = 0; i < edge.sampleCells.length; i++) {
     const cell = edge.sampleCells[i];
     if (frame.flooded[cell] && frame.waterLevelM - elevations[cell] > depthLimit) {
@@ -353,10 +419,10 @@ export function blockedEdgeIds(frame: FloodFrame): string[] {
 }
 
 /** Boolean-per-edge passability, indexed the same way as graph.edges. */
-export function passableEdgeFlags(frame: FloodFrame): Uint8Array {
+export function passableEdgeFlags(frame: FloodFrame, depthLimit: number = VEHICLE_DEPTH_LIMIT_M): Uint8Array {
   const flags = new Uint8Array(graph.edges.length);
   for (let i = 0; i < graph.edges.length; i++) {
-    flags[i] = isEdgeBlocked(graph.edges[i], frame) ? 0 : 1;
+    flags[i] = isEdgeBlocked(graph.edges[i], frame, depthLimit) ? 0 : 1;
   }
   return flags;
 }
@@ -534,6 +600,8 @@ export interface FindRouteOptions {
   startStep?: number;
   /** Hours per timeline step. */
   stepHours?: number;
+  /** Vehicle clearance used for road passability. */
+  vehicle?: RescueVehicle;
 }
 
 /**
@@ -546,11 +614,12 @@ export function findRoute(
   opts: FindRouteOptions,
 ): RouteResult {
   const { mode, current, horizon, horizonH } = opts;
+  const depthLimit = clearanceForVehicle(opts.vehicle ?? "standard-patrol");
 
   // `safest` avoids anything that floods before the horizon; `fastest` only
   // avoids what is under water at this moment.
   const routingFrame = mode === "safest" ? horizon : current;
-  const passable = passableEdgeFlags(routingFrame);
+  const passable = passableEdgeFlags(routingFrame, depthLimit);
 
   let blocked = 0;
   for (let i = 0; i < passable.length; i++) if (!passable[i]) blocked++;

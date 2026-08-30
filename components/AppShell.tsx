@@ -37,7 +37,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-x-4 gap-y-2 px-3 py-3 lg:px-5">
           <Link href="/" className="mr-auto block">
             <span className="block text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink-soft">
-              Kalinaw Island
+              Miami-Dade, Florida
             </span>
             <span className="block font-serif text-[20px] font-semibold text-navy">
               CoastGuard AI

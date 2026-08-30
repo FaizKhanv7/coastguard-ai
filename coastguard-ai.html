@@ -431,7 +431,7 @@
 
     <div class="topbar">
       <div>
-        <div class="place">Kalinaw Island</div>
+        <div class="place">Miami-Dade, FL</div>
         <h1>Good morning, Mira</h1>
       </div>
       <div class="bell">🔔<div class="dot"></div></div>
@@ -476,7 +476,7 @@
     <!-- Natural Coastal Buffer Health Dashboard -->
     <div class="card">
       <h3 style="font-size:13.5px; color:var(--navy); margin-bottom:2px;">Natural Coastal Buffer Health</h3>
-      <p style="font-size:11px; color:var(--ink-soft);">Storm surge defense metrics for Kalinaw Coast</p>
+      <p style="font-size:11px; color:var(--ink-soft);">Storm surge defense metrics for the Miami-Dade coast</p>
       <div class="buffer-grid">
         <div class="buffer-item">
           <div class="val" style="color:var(--teal-dark);">88%</div>
@@ -862,9 +862,15 @@ const AI_ENABLED = /^gsk_[A-Za-z0-9_-]{20,}$/.test(GROQ_API_KEY);
    =========================================================================== */
 const CG = window.CoastGuard;
 
-/* Where Mira is standing, snapped onto the road network so the router can
-   actually path from here. */
-const USER_ORIGIN = CG.nearestNode(126.0892, 9.8756);
+/* Where the user is standing, snapped onto the road network so the router can
+   actually path from here. Downtown Miami / Brickell: central, low-lying, and
+   the part of the county the surge reaches first.
+
+   Derived from the dataset rather than hardcoded lat/lng, so this cannot drift
+   out of the map again if the operating area changes. */
+const HOME_LANDMARK =
+  CG.landmarks.find((l) => l.id === "brickell-zone-a") ?? CG.landmarks[0];
+const USER_ORIGIN = CG.nearestNode(HOME_LANDMARK.lng, HOME_LANDMARK.lat);
 
 /* Simulation state, driven by the scrubber on the map screen. */
 let simStep = CG.hoursToStep(4);
@@ -935,7 +941,7 @@ let volunteerJobs = CG.community.volunteerJobs.map((j, i) => ({
 
 let map, mapInitialized = false;
 let reportPickerMap, reportPickerMarker;
-let selectedReportCoords = [9.8756, 126.0892];
+let selectedReportCoords = [HOME_LANDMARK.lat, HOME_LANDMARK.lng];
 
 let userIncidents = CG.community.incidents.map(inc => ({
   cgId: inc.id,
@@ -1272,7 +1278,7 @@ function renderSafeSpot() {
   }
 
   document.getElementById('safespot-distance').textContent = spot.reachable
-    ? "🛣️ " + formatDistance(Math.round(spot.distanceM)) + " by road"
+    ? "🛣️ " + formatDistance(Math.round(spot.distanceM))
     : "⚠️ No road route right now";
   document.getElementById('safespot-elevation').textContent =
     "⛰️ " + spot.elevationM + "m above sea level";
@@ -1437,7 +1443,7 @@ function handleAddResource(e) {
     location,
     status: 'Available',
     claimed: false,
-    coords: [9.8756 + randomLatOffset, 126.0892 + randomLngOffset]
+    coords: [HOME_LANDMARK.lat + randomLatOffset, HOME_LANDMARK.lng + randomLngOffset]
   });
 
   closeModal('modal-add-resource');
@@ -1516,7 +1522,7 @@ function handleAddJob(e) {
     isUrgent: true,
     isAccess: false,
     verifiedBy: "Mira (You)",
-    coords: [9.8756 + randomLatOffset, 126.0892 + randomLngOffset]
+    coords: [HOME_LANDMARK.lat + randomLatOffset, HOME_LANDMARK.lng + randomLngOffset]
   });
   
   closeModal('modal-add-job');
@@ -1528,7 +1534,11 @@ function handleAddJob(e) {
 function initMap() {
   if (!mapInitialized) {
     mapInitialized = true;
-    map = L.map('leafletMap', { zoomControl: true }).setView([9.8756, 126.0892], 15);
+    /* preferCanvas: at the storm peak the model closes over 3 600 road segments,
+       and drawing that many individual SVG paths locks up a phone. Canvas
+       rendering handles the whole county network smoothly. */
+    map = L.map('leafletMap', { zoomControl: true, preferCanvas: true })
+      .setView([HOME_LANDMARK.lat, HOME_LANDMARK.lng], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
     mapMarkersLayer = L.layerGroup().addTo(map);
     

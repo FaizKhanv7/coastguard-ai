@@ -1,1 +1,1592 @@
-{"description":"48 h of tide, storm surge and rainfall at 15-minute resolution. tideM and surgeM are metres relative to mean sea level; they are additive. rainfallMmHr is the instantaneous rate, which lib/flood.ts integrates into an accumulation term with drainage decay.","startIso":"2026-09-14T00:00:00Z","stepMinutes":15,"steps":193,"stormPeakHour":26,"samples":[{"index":0,"hours":0,"tideM":-0.372,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":1,"hours":0.25,"tideM":-0.238,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":2,"hours":0.5,"tideM":-0.1,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":3,"hours":0.75,"tideM":0.038,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":4,"hours":1,"tideM":0.176,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":5,"hours":1.25,"tideM":0.311,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":6,"hours":1.5,"tideM":0.44,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":7,"hours":1.75,"tideM":0.562,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":8,"hours":2,"tideM":0.675,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":9,"hours":2.25,"tideM":0.777,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":10,"hours":2.5,"tideM":0.866,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":11,"hours":2.75,"tideM":0.941,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":12,"hours":3,"tideM":1.001,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":13,"hours":3.25,"tideM":1.044,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":14,"hours":3.5,"tideM":1.071,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":15,"hours":3.75,"tideM":1.081,"surgeM":0,"rainfallMmHr":1.21,"windKph":12},{"index":16,"hours":4,"tideM":1.073,"surgeM":0,"rainfallMmHr":1.21,"windKph":12},{"index":17,"hours":4.25,"tideM":1.049,"surgeM":0,"rainfallMmHr":1.21,"windKph":12},{"index":18,"hours":4.5,"tideM":1.007,"surgeM":0,"rainfallMmHr":1.22,"windKph":12.1},{"index":19,"hours":4.75,"tideM":0.95,"surgeM":0,"rainfallMmHr":1.23,"windKph":12.1},{"index":20,"hours":5,"tideM":0.877,"surgeM":0,"rainfallMmHr":1.24,"windKph":12.1},{"index":21,"hours":5.25,"tideM":0.791,"surgeM":0,"rainfallMmHr":1.26,"windKph":12.1},{"index":22,"hours":5.5,"tideM":0.692,"surgeM":0,"rainfallMmHr":1.29,"windKph":12.1},{"index":23,"hours":5.75,"tideM":0.583,"surgeM":0,"rainfallMmHr":1.32,"windKph":12.1},{"index":24,"hours":6,"tideM":0.464,"surgeM":0,"rainfallMmHr":1.37,"windKph":12.1},{"index":25,"hours":6.25,"tideM":0.339,"surgeM":0,"rainfallMmHr":1.43,"windKph":12.2},{"index":26,"hours":6.5,"tideM":0.208,"surgeM":0,"rainfallMmHr":1.51,"windKph":12.2},{"index":27,"hours":6.75,"tideM":0.074,"surgeM":0,"rainfallMmHr":1.61,"windKph":12.2},{"index":28,"hours":7,"tideM":-0.061,"surgeM":0,"rainfallMmHr":1.73,"windKph":12.3},{"index":29,"hours":7.25,"tideM":-0.194,"surgeM":0.001,"rainfallMmHr":1.88,"windKph":12.3},{"index":30,"hours":7.5,"tideM":-0.324,"surgeM":0.001,"rainfallMmHr":2.06,"windKph":12.4},{"index":31,"hours":7.75,"tideM":-0.449,"surgeM":0.001,"rainfallMmHr":2.28,"windKph":12.4},{"index":32,"hours":8,"tideM":-0.566,"surgeM":0.001,"rainfallMmHr":2.54,"windKph":12.5},{"index":33,"hours":8.25,"tideM":-0.673,"surgeM":0.001,"rainfallMmHr":2.84,"windKph":12.6},{"index":34,"hours":8.5,"tideM":-0.77,"surgeM":0.002,"rainfallMmHr":3.18,"windKph":12.6},{"index":35,"hours":8.75,"tideM":-0.854,"surgeM":0.002,"rainfallMmHr":3.55,"windKph":12.7},{"index":36,"hours":9,"tideM":-0.925,"surgeM":0.003,"rainfallMmHr":3.96,"windKph":12.8},{"index":37,"hours":9.25,"tideM":-0.98,"surgeM":0.003,"rainfallMmHr":4.41,"windKph":13},{"index":38,"hours":9.5,"tideM":-1.02,"surgeM":0.004,"rainfallMmHr":4.87,"windKph":13.1},{"index":39,"hours":9.75,"tideM":-1.043,"surgeM":0.005,"rainfallMmHr":5.35,"windKph":13.2},{"index":40,"hours":10,"tideM":-1.05,"surgeM":0.006,"rainfallMmHr":5.83,"windKph":13.4},{"index":41,"hours":10.25,"tideM":-1.04,"surgeM":0.007,"rainfallMmHr":6.31,"windKph":13.6},{"index":42,"hours":10.5,"tideM":-1.013,"surgeM":0.008,"rainfallMmHr":6.76,"windKph":13.8},{"index":43,"hours":10.75,"tideM":-0.971,"surgeM":0.01,"rainfallMmHr":7.17,"windKph":14},{"index":44,"hours":11,"tideM":-0.913,"surgeM":0.012,"rainfallMmHr":7.53,"windKph":14.3},{"index":45,"hours":11.25,"tideM":-0.84,"surgeM":0.014,"rainfallMmHr":7.82,"windKph":14.5},{"index":46,"hours":11.5,"tideM":-0.754,"surgeM":0.016,"rainfallMmHr":8.05,"windKph":14.9},{"index":47,"hours":11.75,"tideM":-0.657,"surgeM":0.019,"rainfallMmHr":8.19,"windKph":15.2},{"index":48,"hours":12,"tideM":-0.549,"surgeM":0.023,"rainfallMmHr":8.25,"windKph":15.6},{"index":49,"hours":12.25,"tideM":-0.433,"surgeM":0.027,"rainfallMmHr":8.22,"windKph":15.9},{"index":50,"hours":12.5,"tideM":-0.31,"surgeM":0.032,"rainfallMmHr":8.11,"windKph":16.4},{"index":51,"hours":12.75,"tideM":-0.182,"surgeM":0.037,"rainfallMmHr":7.92,"windKph":16.9},{"index":52,"hours":13,"tideM":-0.052,"surgeM":0.043,"rainfallMmHr":7.66,"windKph":17.4},{"index":53,"hours":13.25,"tideM":0.078,"surgeM":0.05,"rainfallMmHr":7.35,"windKph":17.9},{"index":54,"hours":13.5,"tideM":0.207,"surgeM":0.059,"rainfallMmHr":7,"windKph":18.5},{"index":55,"hours":13.75,"tideM":0.333,"surgeM":0.068,"rainfallMmHr":6.63,"windKph":19.2},{"index":56,"hours":14,"tideM":0.453,"surgeM":0.078,"rainfallMmHr":6.25,"windKph":19.8},{"index":57,"hours":14.25,"tideM":0.565,"surgeM":0.09,"rainfallMmHr":5.89,"windKph":20.6},{"index":58,"hours":14.5,"tideM":0.668,"surgeM":0.103,"rainfallMmHr":5.55,"windKph":21.4},{"index":59,"hours":14.75,"tideM":0.76,"surgeM":0.118,"rainfallMmHr":5.26,"windKph":22.2},{"index":60,"hours":15,"tideM":0.84,"surgeM":0.135,"rainfallMmHr":5.03,"windKph":23.1},{"index":61,"hours":15.25,"tideM":0.906,"surgeM":0.153,"rainfallMmHr":4.88,"windKph":24.1},{"index":62,"hours":15.5,"tideM":0.958,"surgeM":0.174,"rainfallMmHr":4.82,"windKph":25},{"index":63,"hours":15.75,"tideM":0.994,"surgeM":0.196,"rainfallMmHr":4.86,"windKph":26.1},{"index":64,"hours":16,"tideM":1.015,"surgeM":0.221,"rainfallMmHr":5,"windKph":27.2},{"index":65,"hours":16.25,"tideM":1.019,"surgeM":0.249,"rainfallMmHr":5.27,"windKph":28.4},{"index":66,"hours":16.5,"tideM":1.007,"surgeM":0.279,"rainfallMmHr":5.66,"windKph":29.6},{"index":67,"hours":16.75,"tideM":0.979,"surgeM":0.311,"rainfallMmHr":6.18,"windKph":30.8},{"index":68,"hours":17,"tideM":0.936,"surgeM":0.347,"rainfallMmHr":6.83,"windKph":32.1},{"index":69,"hours":17.25,"tideM":0.877,"surgeM":0.385,"rainfallMmHr":7.63,"windKph":33.5},{"index":70,"hours":17.5,"tideM":0.805,"surgeM":0.426,"rainfallMmHr":8.58,"windKph":34.9},{"index":71,"hours":17.75,"tideM":0.721,"surgeM":0.471,"rainfallMmHr":9.67,"windKph":36.3},{"index":72,"hours":18,"tideM":0.625,"surgeM":0.518,"rainfallMmHr":10.9,"windKph":37.8},{"index":73,"hours":18.25,"tideM":0.519,"surgeM":0.568,"rainfallMmHr":12.29,"windKph":39.3},{"index":74,"hours":18.5,"tideM":0.406,"surgeM":0.622,"rainfallMmHr":13.82,"windKph":40.8},{"index":75,"hours":18.75,"tideM":0.286,"surgeM":0.679,"rainfallMmHr":15.48,"windKph":42.4},{"index":76,"hours":19,"tideM":0.162,"surgeM":0.738,"rainfallMmHr":17.28,"windKph":44},{"index":77,"hours":19.25,"tideM":0.035,"surgeM":0.801,"rainfallMmHr":19.2,"windKph":45.6},{"index":78,"hours":19.5,"tideM":-0.091,"surgeM":0.866,"rainfallMmHr":21.23,"windKph":47.2},{"index":79,"hours":19.75,"tideM":-0.216,"surgeM":0.934,"rainfallMmHr":23.35,"windKph":48.8},{"index":80,"hours":20,"tideM":-0.337,"surgeM":1.004,"rainfallMmHr":25.53,"windKph":50.4},{"index":81,"hours":20.25,"tideM":-0.452,"surgeM":1.076,"rainfallMmHr":27.76,"windKph":51.9},{"index":82,"hours":20.5,"tideM":-0.56,"surgeM":1.15,"rainfallMmHr":30,"windKph":53.5},{"index":83,"hours":20.75,"tideM":-0.659,"surgeM":1.225,"rainfallMmHr":32.24,"windKph":55},{"index":84,"hours":21,"tideM":-0.747,"surgeM":1.302,"rainfallMmHr":34.43,"windKph":56.5},{"index":85,"hours":21.25,"tideM":-0.823,"surgeM":1.379,"rainfallMmHr":36.55,"windKph":58},{"index":86,"hours":21.5,"tideM":-0.886,"surgeM":1.456,"rainfallMmHr":38.56,"windKph":59.4},{"index":87,"hours":21.75,"tideM":-0.934,"surgeM":1.534,"rainfallMmHr":40.42,"windKph":60.7},{"index":88,"hours":22,"tideM":-0.968,"surgeM":1.61,"rainfallMmHr":42.12,"windKph":62},{"index":89,"hours":22.25,"tideM":-0.986,"surgeM":1.686,"rainfallMmHr":43.61,"windKph":63.2},{"index":90,"hours":22.5,"tideM":-0.989,"surgeM":1.759,"rainfallMmHr":44.87,"windKph":64.3},{"index":91,"hours":22.75,"tideM":-0.975,"surgeM":1.831,"rainfallMmHr":45.87,"windKph":65.3},{"index":92,"hours":23,"tideM":-0.947,"surgeM":1.9,"rainfallMmHr":46.61,"windKph":66.3},{"index":93,"hours":23.25,"tideM":-0.903,"surgeM":1.965,"rainfallMmHr":47.05,"windKph":67.1},{"index":94,"hours":23.5,"tideM":-0.845,"surgeM":2.027,"rainfallMmHr":47.2,"windKph":67.9},{"index":95,"hours":23.75,"tideM":-0.774,"surgeM":2.085,"rainfallMmHr":47.05,"windKph":68.5},{"index":96,"hours":24,"tideM":-0.691,"surgeM":2.138,"rainfallMmHr":46.61,"windKph":69},{"index":97,"hours":24.25,"tideM":-0.597,"surgeM":2.186,"rainfallMmHr":45.87,"windKph":69.5},{"index":98,"hours":24.5,"tideM":-0.493,"surgeM":2.228,"rainfallMmHr":44.87,"windKph":69.8},{"index":99,"hours":24.75,"tideM":-0.383,"surgeM":2.265,"rainfallMmHr":43.61,"windKph":69.9},{"index":100,"hours":25,"tideM":-0.266,"surgeM":2.295,"rainfallMmHr":42.12,"windKph":70},{"index":101,"hours":25.25,"tideM":-0.146,"surgeM":2.319,"rainfallMmHr":40.42,"windKph":69.9},{"index":102,"hours":25.5,"tideM":-0.023,"surgeM":2.336,"rainfallMmHr":38.56,"windKph":69.8},{"index":103,"hours":25.75,"tideM":0.1,"surgeM":2.347,"rainfallMmHr":36.55,"windKph":69.5},{"index":104,"hours":26,"tideM":0.22,"surgeM":2.35,"rainfallMmHr":34.43,"windKph":69},{"index":105,"hours":26.25,"tideM":0.337,"surgeM":2.347,"rainfallMmHr":32.24,"windKph":68.5},{"index":106,"hours":26.5,"tideM":0.449,"surgeM":2.336,"rainfallMmHr":30,"windKph":67.9},{"index":107,"hours":26.75,"tideM":0.552,"surgeM":2.319,"rainfallMmHr":27.75,"windKph":67.1},{"index":108,"hours":27,"tideM":0.647,"surgeM":2.295,"rainfallMmHr":25.52,"windKph":66.3},{"index":109,"hours":27.25,"tideM":0.732,"surgeM":2.265,"rainfallMmHr":23.33,"windKph":65.3},{"index":110,"hours":27.5,"tideM":0.804,"surgeM":2.228,"rainfallMmHr":21.21,"windKph":64.3},{"index":111,"hours":27.75,"tideM":0.864,"surgeM":2.186,"rainfallMmHr":19.17,"windKph":63.2},{"index":112,"hours":28,"tideM":0.91,"surgeM":2.138,"rainfallMmHr":17.24,"windKph":62},{"index":113,"hours":28.25,"tideM":0.941,"surgeM":2.085,"rainfallMmHr":15.42,"windKph":60.7},{"index":114,"hours":28.5,"tideM":0.958,"surgeM":2.027,"rainfallMmHr":13.73,"windKph":59.4},{"index":115,"hours":28.75,"tideM":0.959,"surgeM":1.965,"rainfallMmHr":12.16,"windKph":58},{"index":116,"hours":29,"tideM":0.945,"surgeM":1.9,"rainfallMmHr":10.73,"windKph":56.5},{"index":117,"hours":29.25,"tideM":0.916,"surgeM":1.831,"rainfallMmHr":9.44,"windKph":55},{"index":118,"hours":29.5,"tideM":0.873,"surgeM":1.759,"rainfallMmHr":8.27,"windKph":53.5},{"index":119,"hours":29.75,"tideM":0.816,"surgeM":1.686,"rainfallMmHr":7.23,"windKph":51.9},{"index":120,"hours":30,"tideM":0.746,"surgeM":1.61,"rainfallMmHr":6.31,"windKph":50.4},{"index":121,"hours":30.25,"tideM":0.664,"surgeM":1.534,"rainfallMmHr":5.5,"windKph":48.8},{"index":122,"hours":30.5,"tideM":0.573,"surgeM":1.456,"rainfallMmHr":4.79,"windKph":47.2},{"index":123,"hours":30.75,"tideM":0.472,"surgeM":1.379,"rainfallMmHr":4.19,"windKph":45.6},{"index":124,"hours":31,"tideM":0.364,"surgeM":1.302,"rainfallMmHr":3.66,"windKph":44},{"index":125,"hours":31.25,"tideM":0.251,"surgeM":1.225,"rainfallMmHr":3.22,"windKph":42.4},{"index":126,"hours":31.5,"tideM":0.134,"surgeM":1.15,"rainfallMmHr":2.85,"windKph":40.8},{"index":127,"hours":31.75,"tideM":0.015,"surgeM":1.076,"rainfallMmHr":2.53,"windKph":39.3},{"index":128,"hours":32,"tideM":-0.104,"surgeM":1.004,"rainfallMmHr":2.27,"windKph":37.8},{"index":129,"hours":32.25,"tideM":-0.221,"surgeM":0.934,"rainfallMmHr":2.06,"windKph":36.3},{"index":130,"hours":32.5,"tideM":-0.334,"surgeM":0.866,"rainfallMmHr":1.88,"windKph":34.9},{"index":131,"hours":32.75,"tideM":-0.441,"surgeM":0.801,"rainfallMmHr":1.74,"windKph":33.5},{"index":132,"hours":33,"tideM":-0.542,"surgeM":0.738,"rainfallMmHr":1.62,"windKph":32.1},{"index":133,"hours":33.25,"tideM":-0.633,"surgeM":0.679,"rainfallMmHr":1.53,"windKph":30.8},{"index":134,"hours":33.5,"tideM":-0.715,"surgeM":0.622,"rainfallMmHr":1.45,"windKph":29.6},{"index":135,"hours":33.75,"tideM":-0.784,"surgeM":0.568,"rainfallMmHr":1.39,"windKph":28.4},{"index":136,"hours":34,"tideM":-0.842,"surgeM":0.518,"rainfallMmHr":1.35,"windKph":27.2},{"index":137,"hours":34.25,"tideM":-0.886,"surgeM":0.471,"rainfallMmHr":1.31,"windKph":26.1},{"index":138,"hours":34.5,"tideM":-0.915,"surgeM":0.426,"rainfallMmHr":1.28,"windKph":25},{"index":139,"hours":34.75,"tideM":-0.931,"surgeM":0.385,"rainfallMmHr":1.26,"windKph":24.1},{"index":140,"hours":35,"tideM":-0.931,"surgeM":0.347,"rainfallMmHr":1.25,"windKph":23.1},{"index":141,"hours":35.25,"tideM":-0.917,"surgeM":0.311,"rainfallMmHr":1.23,"windKph":22.2},{"index":142,"hours":35.5,"tideM":-0.888,"surgeM":0.279,"rainfallMmHr":1.23,"windKph":21.4},{"index":143,"hours":35.75,"tideM":-0.846,"surgeM":0.249,"rainfallMmHr":1.22,"windKph":20.6},{"index":144,"hours":36,"tideM":-0.79,"surgeM":0.221,"rainfallMmHr":1.21,"windKph":19.8},{"index":145,"hours":36.25,"tideM":-0.722,"surgeM":0.196,"rainfallMmHr":1.21,"windKph":19.2},{"index":146,"hours":36.5,"tideM":-0.642,"surgeM":0.174,"rainfallMmHr":1.21,"windKph":18.5},{"index":147,"hours":36.75,"tideM":-0.553,"surgeM":0.153,"rainfallMmHr":1.2,"windKph":17.9},{"index":148,"hours":37,"tideM":-0.455,"surgeM":0.135,"rainfallMmHr":1.2,"windKph":17.4},{"index":149,"hours":37.25,"tideM":-0.35,"surgeM":0.118,"rainfallMmHr":1.2,"windKph":16.9},{"index":150,"hours":37.5,"tideM":-0.24,"surgeM":0.103,"rainfallMmHr":1.2,"windKph":16.4},{"index":151,"hours":37.75,"tideM":-0.127,"surgeM":0.09,"rainfallMmHr":1.2,"windKph":15.9},{"index":152,"hours":38,"tideM":-0.011,"surgeM":0.078,"rainfallMmHr":1.2,"windKph":15.6},{"index":153,"hours":38.25,"tideM":0.104,"surgeM":0.068,"rainfallMmHr":1.2,"windKph":15.2},{"index":154,"hours":38.5,"tideM":0.217,"surgeM":0.059,"rainfallMmHr":1.2,"windKph":14.9},{"index":155,"hours":38.75,"tideM":0.327,"surgeM":0.05,"rainfallMmHr":1.2,"windKph":14.5},{"index":156,"hours":39,"tideM":0.431,"surgeM":0.043,"rainfallMmHr":1.2,"windKph":14.3},{"index":157,"hours":39.25,"tideM":0.529,"surgeM":0.037,"rainfallMmHr":1.2,"windKph":14},{"index":158,"hours":39.5,"tideM":0.617,"surgeM":0.032,"rainfallMmHr":1.2,"windKph":13.8},{"index":159,"hours":39.75,"tideM":0.696,"surgeM":0.027,"rainfallMmHr":1.2,"windKph":13.6},{"index":160,"hours":40,"tideM":0.764,"surgeM":0.023,"rainfallMmHr":1.2,"windKph":13.4},{"index":161,"hours":40.25,"tideM":0.819,"surgeM":0.019,"rainfallMmHr":1.2,"windKph":13.2},{"index":162,"hours":40.5,"tideM":0.861,"surgeM":0.016,"rainfallMmHr":1.2,"windKph":13.1},{"index":163,"hours":40.75,"tideM":0.89,"surgeM":0.014,"rainfallMmHr":1.2,"windKph":13},{"index":164,"hours":41,"tideM":0.905,"surgeM":0.012,"rainfallMmHr":1.2,"windKph":12.8},{"index":165,"hours":41.25,"tideM":0.905,"surgeM":0.01,"rainfallMmHr":1.2,"windKph":12.7},{"index":166,"hours":41.5,"tideM":0.891,"surgeM":0.008,"rainfallMmHr":1.2,"windKph":12.6},{"index":167,"hours":41.75,"tideM":0.864,"surgeM":0.007,"rainfallMmHr":1.2,"windKph":12.6},{"index":168,"hours":42,"tideM":0.822,"surgeM":0.006,"rainfallMmHr":1.2,"windKph":12.5},{"index":169,"hours":42.25,"tideM":0.768,"surgeM":0.005,"rainfallMmHr":1.2,"windKph":12.4},{"index":170,"hours":42.5,"tideM":0.702,"surgeM":0.004,"rainfallMmHr":1.2,"windKph":12.4},{"index":171,"hours":42.75,"tideM":0.625,"surgeM":0.003,"rainfallMmHr":1.2,"windKph":12.3},{"index":172,"hours":43,"tideM":0.538,"surgeM":0.003,"rainfallMmHr":1.2,"windKph":12.3},{"index":173,"hours":43.25,"tideM":0.443,"surgeM":0.002,"rainfallMmHr":1.2,"windKph":12.2},{"index":174,"hours":43.5,"tideM":0.341,"surgeM":0.002,"rainfallMmHr":1.2,"windKph":12.2},{"index":175,"hours":43.75,"tideM":0.234,"surgeM":0.001,"rainfallMmHr":1.2,"windKph":12.2},{"index":176,"hours":44,"tideM":0.124,"surgeM":0.001,"rainfallMmHr":1.2,"windKph":12.1},{"index":177,"hours":44.25,"tideM":0.012,"surgeM":0.001,"rainfallMmHr":1.2,"windKph":12.1},{"index":178,"hours":44.5,"tideM":-0.101,"surgeM":0.001,"rainfallMmHr":1.2,"windKph":12.1},{"index":179,"hours":44.75,"tideM":-0.211,"surgeM":0.001,"rainfallMmHr":1.2,"windKph":12.1},{"index":180,"hours":45,"tideM":-0.317,"surgeM":0,"rainfallMmHr":1.2,"windKph":12.1},{"index":181,"hours":45.25,"tideM":-0.419,"surgeM":0,"rainfallMmHr":1.2,"windKph":12.1},{"index":182,"hours":45.5,"tideM":-0.514,"surgeM":0,"rainfallMmHr":1.2,"windKph":12.1},{"index":183,"hours":45.75,"tideM":-0.6,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":184,"hours":46,"tideM":-0.677,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":185,"hours":46.25,"tideM":-0.743,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":186,"hours":46.5,"tideM":-0.797,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":187,"hours":46.75,"tideM":-0.839,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":188,"hours":47,"tideM":-0.867,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":189,"hours":47.25,"tideM":-0.882,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":190,"hours":47.5,"tideM":-0.882,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":191,"hours":47.75,"tideM":-0.869,"surgeM":0,"rainfallMmHr":1.2,"windKph":12},{"index":192,"hours":48,"tideM":-0.842,"surgeM":0,"rainfallMmHr":1.2,"windKph":12}]}
+{
+  "bounds": [
+    -80.25,
+    25.72,
+    -80.12,
+    25.82
+  ],
+  "resolution_m": 40.3,
+  "source_resolution": "USGS 3DEP best available (1 m where published)",
+  "datum": "NAVD88",
+  "location": "Miami-Dade Coastal Metro, FL",
+  "description": "48 h of water-level forcing on the Miami-Dade grid, at 15-minute steps. tideM is MEASURED: NOAA CO-OPS astronomical predictions at Virginia Key (metres NAVD88), interpolated from hourly to 15-minute. surgeM, rainfallMmHr and windKph are a MODELLED design storm - see design_storm - because the astronomical tide alone does not flood Miami-Dade and a design storm is how coastal flood risk is actually planned against.",
+  "source": "NOAA CO-OPS (tide, measured) + CoastGuard AI design storm (surge/rain/wind, modelled)",
+  "data_status": "tide: observed prediction; surge/rain/wind: design scenario",
+  "generated_at": "2026-08-30T22:34:40.322Z",
+  "station": {
+    "id": "8723214",
+    "name": "Virginia Key, Biscayne Bay, FL"
+  },
+  "secondary_station": {
+    "id": "8723170",
+    "name": "Miami Harbor Entrance / Miami Beach, FL",
+    "role": "historical prediction/reference station; not used for live observations"
+  },
+  "latest_observation": {
+    "timestamp": "2026-08-30 22:24",
+    "waterLevelM": -0.413,
+    "flags": "1,0,0,0"
+  },
+  "design_storm": {
+    "label": "Category 2 storm surge, Biscayne Bay",
+    "peakHour": 26,
+    "surgePeakM": 2.2,
+    "surgeWidthH": 5,
+    "rainPeakMmHr": 48,
+    "rainPeakHour": 23.5,
+    "rainWidthH": 3.2,
+    "windPeakKph": 165
+  },
+  "mhhw_navd88_m": 0.42,
+  "king_tide_surge_baseline_navd88_m": 1.1,
+  "startIso": "2026-08-30T00:00:00Z",
+  "stepMinutes": 15,
+  "steps": 193,
+  "stormPeakHour": 26,
+  "samples": [
+    {
+      "index": 0,
+      "hours": 0,
+      "tideM": -0.133,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14
+    },
+    {
+      "index": 1,
+      "hours": 0.25,
+      "tideM": -0.098,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14
+    },
+    {
+      "index": 2,
+      "hours": 0.5,
+      "tideM": -0.064,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14
+    },
+    {
+      "index": 3,
+      "hours": 0.75,
+      "tideM": -0.029,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14
+    },
+    {
+      "index": 4,
+      "hours": 1,
+      "tideM": 0.006,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14
+    },
+    {
+      "index": 5,
+      "hours": 1.25,
+      "tideM": 0.03,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14
+    },
+    {
+      "index": 6,
+      "hours": 1.5,
+      "tideM": 0.054,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14
+    },
+    {
+      "index": 7,
+      "hours": 1.75,
+      "tideM": 0.079,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14
+    },
+    {
+      "index": 8,
+      "hours": 2,
+      "tideM": 0.103,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.1
+    },
+    {
+      "index": 9,
+      "hours": 2.25,
+      "tideM": 0.11,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.1
+    },
+    {
+      "index": 10,
+      "hours": 2.5,
+      "tideM": 0.117,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.1
+    },
+    {
+      "index": 11,
+      "hours": 2.75,
+      "tideM": 0.125,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.1
+    },
+    {
+      "index": 12,
+      "hours": 3,
+      "tideM": 0.132,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.1
+    },
+    {
+      "index": 13,
+      "hours": 3.25,
+      "tideM": 0.112,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.1
+    },
+    {
+      "index": 14,
+      "hours": 3.5,
+      "tideM": 0.092,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.1
+    },
+    {
+      "index": 15,
+      "hours": 3.75,
+      "tideM": 0.073,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.2
+    },
+    {
+      "index": 16,
+      "hours": 4,
+      "tideM": 0.053,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.2
+    },
+    {
+      "index": 17,
+      "hours": 4.25,
+      "tideM": 0.011,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.2
+    },
+    {
+      "index": 18,
+      "hours": 4.5,
+      "tideM": -0.03,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.2
+    },
+    {
+      "index": 19,
+      "hours": 4.75,
+      "tideM": -0.072,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.3
+    },
+    {
+      "index": 20,
+      "hours": 5,
+      "tideM": -0.113,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.3
+    },
+    {
+      "index": 21,
+      "hours": 5.25,
+      "tideM": -0.157,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.4
+    },
+    {
+      "index": 22,
+      "hours": 5.5,
+      "tideM": -0.202,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.4
+    },
+    {
+      "index": 23,
+      "hours": 5.75,
+      "tideM": -0.246,
+      "surgeM": 0.001,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.5
+    },
+    {
+      "index": 24,
+      "hours": 6,
+      "tideM": -0.29,
+      "surgeM": 0.001,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.6
+    },
+    {
+      "index": 25,
+      "hours": 6.25,
+      "tideM": -0.325,
+      "surgeM": 0.001,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.7
+    },
+    {
+      "index": 26,
+      "hours": 6.5,
+      "tideM": -0.36,
+      "surgeM": 0.001,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.8
+    },
+    {
+      "index": 27,
+      "hours": 6.75,
+      "tideM": -0.395,
+      "surgeM": 0.001,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.9
+    },
+    {
+      "index": 28,
+      "hours": 7,
+      "tideM": -0.43,
+      "surgeM": 0.002,
+      "rainfallMmHr": 1.2,
+      "windKph": 15
+    },
+    {
+      "index": 29,
+      "hours": 7.25,
+      "tideM": -0.454,
+      "surgeM": 0.002,
+      "rainfallMmHr": 1.2,
+      "windKph": 15.1
+    },
+    {
+      "index": 30,
+      "hours": 7.5,
+      "tideM": -0.478,
+      "surgeM": 0.002,
+      "rainfallMmHr": 1.2,
+      "windKph": 15.3
+    },
+    {
+      "index": 31,
+      "hours": 7.75,
+      "tideM": -0.501,
+      "surgeM": 0.003,
+      "rainfallMmHr": 1.2,
+      "windKph": 15.5
+    },
+    {
+      "index": 32,
+      "hours": 8,
+      "tideM": -0.525,
+      "surgeM": 0.003,
+      "rainfallMmHr": 1.2,
+      "windKph": 15.7
+    },
+    {
+      "index": 33,
+      "hours": 8.25,
+      "tideM": -0.532,
+      "surgeM": 0.004,
+      "rainfallMmHr": 1.2,
+      "windKph": 15.9
+    },
+    {
+      "index": 34,
+      "hours": 8.5,
+      "tideM": -0.54,
+      "surgeM": 0.005,
+      "rainfallMmHr": 1.2,
+      "windKph": 16.1
+    },
+    {
+      "index": 35,
+      "hours": 8.75,
+      "tideM": -0.548,
+      "surgeM": 0.006,
+      "rainfallMmHr": 1.2,
+      "windKph": 16.4
+    },
+    {
+      "index": 36,
+      "hours": 9,
+      "tideM": -0.555,
+      "surgeM": 0.007,
+      "rainfallMmHr": 1.2,
+      "windKph": 16.7
+    },
+    {
+      "index": 37,
+      "hours": 9.25,
+      "tideM": -0.541,
+      "surgeM": 0.008,
+      "rainfallMmHr": 1.2,
+      "windKph": 17.1
+    },
+    {
+      "index": 38,
+      "hours": 9.5,
+      "tideM": -0.528,
+      "surgeM": 0.009,
+      "rainfallMmHr": 1.2,
+      "windKph": 17.4
+    },
+    {
+      "index": 39,
+      "hours": 9.75,
+      "tideM": -0.514,
+      "surgeM": 0.011,
+      "rainfallMmHr": 1.2,
+      "windKph": 17.9
+    },
+    {
+      "index": 40,
+      "hours": 10,
+      "tideM": -0.5,
+      "surgeM": 0.013,
+      "rainfallMmHr": 1.21,
+      "windKph": 18.3
+    },
+    {
+      "index": 41,
+      "hours": 10.25,
+      "tideM": -0.468,
+      "surgeM": 0.015,
+      "rainfallMmHr": 1.21,
+      "windKph": 18.8
+    },
+    {
+      "index": 42,
+      "hours": 10.5,
+      "tideM": -0.435,
+      "surgeM": 0.018,
+      "rainfallMmHr": 1.21,
+      "windKph": 19.4
+    },
+    {
+      "index": 43,
+      "hours": 10.75,
+      "tideM": -0.402,
+      "surgeM": 0.021,
+      "rainfallMmHr": 1.22,
+      "windKph": 20
+    },
+    {
+      "index": 44,
+      "hours": 11,
+      "tideM": -0.37,
+      "surgeM": 0.024,
+      "rainfallMmHr": 1.22,
+      "windKph": 20.6
+    },
+    {
+      "index": 45,
+      "hours": 11.25,
+      "tideM": -0.328,
+      "surgeM": 0.028,
+      "rainfallMmHr": 1.23,
+      "windKph": 21.4
+    },
+    {
+      "index": 46,
+      "hours": 11.5,
+      "tideM": -0.286,
+      "surgeM": 0.033,
+      "rainfallMmHr": 1.24,
+      "windKph": 22.1
+    },
+    {
+      "index": 47,
+      "hours": 11.75,
+      "tideM": -0.245,
+      "surgeM": 0.038,
+      "rainfallMmHr": 1.26,
+      "windKph": 23
+    },
+    {
+      "index": 48,
+      "hours": 12,
+      "tideM": -0.203,
+      "surgeM": 0.044,
+      "rainfallMmHr": 1.28,
+      "windKph": 23.9
+    },
+    {
+      "index": 49,
+      "hours": 12.25,
+      "tideM": -0.164,
+      "surgeM": 0.05,
+      "rainfallMmHr": 1.3,
+      "windKph": 24.9
+    },
+    {
+      "index": 50,
+      "hours": 12.5,
+      "tideM": -0.126,
+      "surgeM": 0.057,
+      "rainfallMmHr": 1.33,
+      "windKph": 26
+    },
+    {
+      "index": 51,
+      "hours": 12.75,
+      "tideM": -0.087,
+      "surgeM": 0.066,
+      "rainfallMmHr": 1.37,
+      "windKph": 27.2
+    },
+    {
+      "index": 52,
+      "hours": 13,
+      "tideM": -0.048,
+      "surgeM": 0.075,
+      "rainfallMmHr": 1.42,
+      "windKph": 28.4
+    },
+    {
+      "index": 53,
+      "hours": 13.25,
+      "tideM": -0.018,
+      "surgeM": 0.085,
+      "rainfallMmHr": 1.48,
+      "windKph": 29.8
+    },
+    {
+      "index": 54,
+      "hours": 13.5,
+      "tideM": 0.011,
+      "surgeM": 0.097,
+      "rainfallMmHr": 1.56,
+      "windKph": 31.2
+    },
+    {
+      "index": 55,
+      "hours": 13.75,
+      "tideM": 0.041,
+      "surgeM": 0.109,
+      "rainfallMmHr": 1.66,
+      "windKph": 32.8
+    },
+    {
+      "index": 56,
+      "hours": 14,
+      "tideM": 0.071,
+      "surgeM": 0.123,
+      "rainfallMmHr": 1.79,
+      "windKph": 34.4
+    },
+    {
+      "index": 57,
+      "hours": 14.25,
+      "tideM": 0.087,
+      "surgeM": 0.139,
+      "rainfallMmHr": 1.94,
+      "windKph": 36.2
+    },
+    {
+      "index": 58,
+      "hours": 14.5,
+      "tideM": 0.104,
+      "surgeM": 0.156,
+      "rainfallMmHr": 2.12,
+      "windKph": 38.1
+    },
+    {
+      "index": 59,
+      "hours": 14.75,
+      "tideM": 0.12,
+      "surgeM": 0.175,
+      "rainfallMmHr": 2.34,
+      "windKph": 40
+    },
+    {
+      "index": 60,
+      "hours": 15,
+      "tideM": 0.136,
+      "surgeM": 0.196,
+      "rainfallMmHr": 2.61,
+      "windKph": 42.1
+    },
+    {
+      "index": 61,
+      "hours": 15.25,
+      "tideM": 0.129,
+      "surgeM": 0.218,
+      "rainfallMmHr": 2.93,
+      "windKph": 44.3
+    },
+    {
+      "index": 62,
+      "hours": 15.5,
+      "tideM": 0.121,
+      "surgeM": 0.243,
+      "rainfallMmHr": 3.31,
+      "windKph": 46.7
+    },
+    {
+      "index": 63,
+      "hours": 15.75,
+      "tideM": 0.114,
+      "surgeM": 0.269,
+      "rainfallMmHr": 3.76,
+      "windKph": 49.1
+    },
+    {
+      "index": 64,
+      "hours": 16,
+      "tideM": 0.106,
+      "surgeM": 0.298,
+      "rainfallMmHr": 4.28,
+      "windKph": 51.7
+    },
+    {
+      "index": 65,
+      "hours": 16.25,
+      "tideM": 0.073,
+      "surgeM": 0.329,
+      "rainfallMmHr": 4.89,
+      "windKph": 54.3
+    },
+    {
+      "index": 66,
+      "hours": 16.5,
+      "tideM": 0.039,
+      "surgeM": 0.362,
+      "rainfallMmHr": 5.59,
+      "windKph": 57.1
+    },
+    {
+      "index": 67,
+      "hours": 16.75,
+      "tideM": 0.006,
+      "surgeM": 0.397,
+      "rainfallMmHr": 6.39,
+      "windKph": 60
+    },
+    {
+      "index": 68,
+      "hours": 17,
+      "tideM": -0.027,
+      "surgeM": 0.435,
+      "rainfallMmHr": 7.3,
+      "windKph": 63
+    },
+    {
+      "index": 69,
+      "hours": 17.25,
+      "tideM": -0.071,
+      "surgeM": 0.476,
+      "rainfallMmHr": 8.33,
+      "windKph": 66.1
+    },
+    {
+      "index": 70,
+      "hours": 17.5,
+      "tideM": -0.115,
+      "surgeM": 0.519,
+      "rainfallMmHr": 9.48,
+      "windKph": 69.4
+    },
+    {
+      "index": 71,
+      "hours": 17.75,
+      "tideM": -0.158,
+      "surgeM": 0.564,
+      "rainfallMmHr": 10.75,
+      "windKph": 72.7
+    },
+    {
+      "index": 72,
+      "hours": 18,
+      "tideM": -0.202,
+      "surgeM": 0.612,
+      "rainfallMmHr": 12.16,
+      "windKph": 76.1
+    },
+    {
+      "index": 73,
+      "hours": 18.25,
+      "tideM": -0.24,
+      "surgeM": 0.662,
+      "rainfallMmHr": 13.7,
+      "windKph": 79.6
+    },
+    {
+      "index": 74,
+      "hours": 18.5,
+      "tideM": -0.278,
+      "surgeM": 0.714,
+      "rainfallMmHr": 15.36,
+      "windKph": 83.1
+    },
+    {
+      "index": 75,
+      "hours": 18.75,
+      "tideM": -0.317,
+      "surgeM": 0.769,
+      "rainfallMmHr": 17.15,
+      "windKph": 86.8
+    },
+    {
+      "index": 76,
+      "hours": 19,
+      "tideM": -0.355,
+      "surgeM": 0.826,
+      "rainfallMmHr": 19.06,
+      "windKph": 90.5
+    },
+    {
+      "index": 77,
+      "hours": 19.25,
+      "tideM": -0.382,
+      "surgeM": 0.884,
+      "rainfallMmHr": 21.07,
+      "windKph": 94.2
+    },
+    {
+      "index": 78,
+      "hours": 19.5,
+      "tideM": -0.409,
+      "surgeM": 0.945,
+      "rainfallMmHr": 23.18,
+      "windKph": 98
+    },
+    {
+      "index": 79,
+      "hours": 19.75,
+      "tideM": -0.437,
+      "surgeM": 1.007,
+      "rainfallMmHr": 25.36,
+      "windKph": 101.8
+    },
+    {
+      "index": 80,
+      "hours": 20,
+      "tideM": -0.464,
+      "surgeM": 1.071,
+      "rainfallMmHr": 27.59,
+      "windKph": 105.6
+    },
+    {
+      "index": 81,
+      "hours": 20.25,
+      "tideM": -0.477,
+      "surgeM": 1.136,
+      "rainfallMmHr": 29.86,
+      "windKph": 109.4
+    },
+    {
+      "index": 82,
+      "hours": 20.5,
+      "tideM": -0.491,
+      "surgeM": 1.201,
+      "rainfallMmHr": 32.13,
+      "windKph": 113.2
+    },
+    {
+      "index": 83,
+      "hours": 20.75,
+      "tideM": -0.504,
+      "surgeM": 1.268,
+      "rainfallMmHr": 34.38,
+      "windKph": 117
+    },
+    {
+      "index": 84,
+      "hours": 21,
+      "tideM": -0.517,
+      "surgeM": 1.334,
+      "rainfallMmHr": 36.58,
+      "windKph": 120.7
+    },
+    {
+      "index": 85,
+      "hours": 21.25,
+      "tideM": -0.51,
+      "surgeM": 1.401,
+      "rainfallMmHr": 38.69,
+      "windKph": 124.4
+    },
+    {
+      "index": 86,
+      "hours": 21.5,
+      "tideM": -0.504,
+      "surgeM": 1.467,
+      "rainfallMmHr": 40.68,
+      "windKph": 128
+    },
+    {
+      "index": 87,
+      "hours": 21.75,
+      "tideM": -0.497,
+      "surgeM": 1.533,
+      "rainfallMmHr": 42.53,
+      "windKph": 131.5
+    },
+    {
+      "index": 88,
+      "hours": 22,
+      "tideM": -0.491,
+      "surgeM": 1.598,
+      "rainfallMmHr": 44.21,
+      "windKph": 134.9
+    },
+    {
+      "index": 89,
+      "hours": 22.25,
+      "tideM": -0.465,
+      "surgeM": 1.661,
+      "rainfallMmHr": 45.67,
+      "windKph": 138.2
+    },
+    {
+      "index": 90,
+      "hours": 22.5,
+      "tideM": -0.439,
+      "surgeM": 1.722,
+      "rainfallMmHr": 46.91,
+      "windKph": 141.4
+    },
+    {
+      "index": 91,
+      "hours": 22.75,
+      "tideM": -0.412,
+      "surgeM": 1.781,
+      "rainfallMmHr": 47.9,
+      "windKph": 144.4
+    },
+    {
+      "index": 92,
+      "hours": 23,
+      "tideM": -0.386,
+      "surgeM": 1.838,
+      "rainfallMmHr": 48.62,
+      "windKph": 147.3
+    },
+    {
+      "index": 93,
+      "hours": 23.25,
+      "tideM": -0.347,
+      "surgeM": 1.891,
+      "rainfallMmHr": 49.05,
+      "windKph": 149.9
+    },
+    {
+      "index": 94,
+      "hours": 23.5,
+      "tideM": -0.307,
+      "surgeM": 1.941,
+      "rainfallMmHr": 49.2,
+      "windKph": 152.4
+    },
+    {
+      "index": 95,
+      "hours": 23.75,
+      "tideM": -0.268,
+      "surgeM": 1.988,
+      "rainfallMmHr": 49.05,
+      "windKph": 154.7
+    },
+    {
+      "index": 96,
+      "hours": 24,
+      "tideM": -0.229,
+      "surgeM": 2.031,
+      "rainfallMmHr": 48.62,
+      "windKph": 156.8
+    },
+    {
+      "index": 97,
+      "hours": 24.25,
+      "tideM": -0.189,
+      "surgeM": 2.069,
+      "rainfallMmHr": 47.9,
+      "windKph": 158.7
+    },
+    {
+      "index": 98,
+      "hours": 24.5,
+      "tideM": -0.149,
+      "surgeM": 2.103,
+      "rainfallMmHr": 46.91,
+      "windKph": 160.4
+    },
+    {
+      "index": 99,
+      "hours": 24.75,
+      "tideM": -0.109,
+      "surgeM": 2.132,
+      "rainfallMmHr": 45.67,
+      "windKph": 161.8
+    },
+    {
+      "index": 100,
+      "hours": 25,
+      "tideM": -0.069,
+      "surgeM": 2.156,
+      "rainfallMmHr": 44.21,
+      "windKph": 162.9
+    },
+    {
+      "index": 101,
+      "hours": 25.25,
+      "tideM": -0.038,
+      "surgeM": 2.175,
+      "rainfallMmHr": 42.53,
+      "windKph": 163.8
+    },
+    {
+      "index": 102,
+      "hours": 25.5,
+      "tideM": -0.008,
+      "surgeM": 2.189,
+      "rainfallMmHr": 40.68,
+      "windKph": 164.5
+    },
+    {
+      "index": 103,
+      "hours": 25.75,
+      "tideM": 0.023,
+      "surgeM": 2.197,
+      "rainfallMmHr": 38.69,
+      "windKph": 164.9
+    },
+    {
+      "index": 104,
+      "hours": 26,
+      "tideM": 0.054,
+      "surgeM": 2.2,
+      "rainfallMmHr": 36.58,
+      "windKph": 165
+    },
+    {
+      "index": 105,
+      "hours": 26.25,
+      "tideM": 0.072,
+      "surgeM": 2.197,
+      "rainfallMmHr": 34.38,
+      "windKph": 164.9
+    },
+    {
+      "index": 106,
+      "hours": 26.5,
+      "tideM": 0.089,
+      "surgeM": 2.189,
+      "rainfallMmHr": 32.13,
+      "windKph": 164.5
+    },
+    {
+      "index": 107,
+      "hours": 26.75,
+      "tideM": 0.107,
+      "surgeM": 2.175,
+      "rainfallMmHr": 29.86,
+      "windKph": 163.8
+    },
+    {
+      "index": 108,
+      "hours": 27,
+      "tideM": 0.125,
+      "surgeM": 2.156,
+      "rainfallMmHr": 27.59,
+      "windKph": 162.9
+    },
+    {
+      "index": 109,
+      "hours": 27.25,
+      "tideM": 0.123,
+      "surgeM": 2.132,
+      "rainfallMmHr": 25.36,
+      "windKph": 161.8
+    },
+    {
+      "index": 110,
+      "hours": 27.5,
+      "tideM": 0.12,
+      "surgeM": 2.103,
+      "rainfallMmHr": 23.18,
+      "windKph": 160.4
+    },
+    {
+      "index": 111,
+      "hours": 27.75,
+      "tideM": 0.118,
+      "surgeM": 2.069,
+      "rainfallMmHr": 21.07,
+      "windKph": 158.7
+    },
+    {
+      "index": 112,
+      "hours": 28,
+      "tideM": 0.116,
+      "surgeM": 2.031,
+      "rainfallMmHr": 19.06,
+      "windKph": 156.8
+    },
+    {
+      "index": 113,
+      "hours": 28.25,
+      "tideM": 0.087,
+      "surgeM": 1.988,
+      "rainfallMmHr": 17.15,
+      "windKph": 154.7
+    },
+    {
+      "index": 114,
+      "hours": 28.5,
+      "tideM": 0.058,
+      "surgeM": 1.941,
+      "rainfallMmHr": 15.36,
+      "windKph": 152.4
+    },
+    {
+      "index": 115,
+      "hours": 28.75,
+      "tideM": 0.029,
+      "surgeM": 1.891,
+      "rainfallMmHr": 13.7,
+      "windKph": 149.9
+    },
+    {
+      "index": 116,
+      "hours": 29,
+      "tideM": 0,
+      "surgeM": 1.838,
+      "rainfallMmHr": 12.16,
+      "windKph": 147.3
+    },
+    {
+      "index": 117,
+      "hours": 29.25,
+      "tideM": -0.045,
+      "surgeM": 1.781,
+      "rainfallMmHr": 10.75,
+      "windKph": 144.4
+    },
+    {
+      "index": 118,
+      "hours": 29.5,
+      "tideM": -0.091,
+      "surgeM": 1.722,
+      "rainfallMmHr": 9.48,
+      "windKph": 141.4
+    },
+    {
+      "index": 119,
+      "hours": 29.75,
+      "tideM": -0.137,
+      "surgeM": 1.661,
+      "rainfallMmHr": 8.33,
+      "windKph": 138.2
+    },
+    {
+      "index": 120,
+      "hours": 30,
+      "tideM": -0.182,
+      "surgeM": 1.598,
+      "rainfallMmHr": 7.3,
+      "windKph": 134.9
+    },
+    {
+      "index": 121,
+      "hours": 30.25,
+      "tideM": -0.225,
+      "surgeM": 1.533,
+      "rainfallMmHr": 6.39,
+      "windKph": 131.5
+    },
+    {
+      "index": 122,
+      "hours": 30.5,
+      "tideM": -0.268,
+      "surgeM": 1.467,
+      "rainfallMmHr": 5.59,
+      "windKph": 128
+    },
+    {
+      "index": 123,
+      "hours": 30.75,
+      "tideM": -0.312,
+      "surgeM": 1.401,
+      "rainfallMmHr": 4.89,
+      "windKph": 124.4
+    },
+    {
+      "index": 124,
+      "hours": 31,
+      "tideM": -0.355,
+      "surgeM": 1.334,
+      "rainfallMmHr": 4.28,
+      "windKph": 120.7
+    },
+    {
+      "index": 125,
+      "hours": 31.25,
+      "tideM": -0.387,
+      "surgeM": 1.268,
+      "rainfallMmHr": 3.76,
+      "windKph": 117
+    },
+    {
+      "index": 126,
+      "hours": 31.5,
+      "tideM": -0.418,
+      "surgeM": 1.201,
+      "rainfallMmHr": 3.31,
+      "windKph": 113.2
+    },
+    {
+      "index": 127,
+      "hours": 31.75,
+      "tideM": -0.45,
+      "surgeM": 1.136,
+      "rainfallMmHr": 2.93,
+      "windKph": 109.4
+    },
+    {
+      "index": 128,
+      "hours": 32,
+      "tideM": -0.482,
+      "surgeM": 1.071,
+      "rainfallMmHr": 2.61,
+      "windKph": 105.6
+    },
+    {
+      "index": 129,
+      "hours": 32.25,
+      "tideM": -0.5,
+      "surgeM": 1.007,
+      "rainfallMmHr": 2.34,
+      "windKph": 101.8
+    },
+    {
+      "index": 130,
+      "hours": 32.5,
+      "tideM": -0.518,
+      "surgeM": 0.945,
+      "rainfallMmHr": 2.12,
+      "windKph": 98
+    },
+    {
+      "index": 131,
+      "hours": 32.75,
+      "tideM": -0.536,
+      "surgeM": 0.884,
+      "rainfallMmHr": 1.94,
+      "windKph": 94.2
+    },
+    {
+      "index": 132,
+      "hours": 33,
+      "tideM": -0.554,
+      "surgeM": 0.826,
+      "rainfallMmHr": 1.79,
+      "windKph": 90.5
+    },
+    {
+      "index": 133,
+      "hours": 33.25,
+      "tideM": -0.554,
+      "surgeM": 0.769,
+      "rainfallMmHr": 1.66,
+      "windKph": 86.8
+    },
+    {
+      "index": 134,
+      "hours": 33.5,
+      "tideM": -0.554,
+      "surgeM": 0.714,
+      "rainfallMmHr": 1.56,
+      "windKph": 83.1
+    },
+    {
+      "index": 135,
+      "hours": 33.75,
+      "tideM": -0.554,
+      "surgeM": 0.662,
+      "rainfallMmHr": 1.48,
+      "windKph": 79.6
+    },
+    {
+      "index": 136,
+      "hours": 34,
+      "tideM": -0.554,
+      "surgeM": 0.612,
+      "rainfallMmHr": 1.42,
+      "windKph": 76.1
+    },
+    {
+      "index": 137,
+      "hours": 34.25,
+      "tideM": -0.534,
+      "surgeM": 0.564,
+      "rainfallMmHr": 1.37,
+      "windKph": 72.7
+    },
+    {
+      "index": 138,
+      "hours": 34.5,
+      "tideM": -0.514,
+      "surgeM": 0.519,
+      "rainfallMmHr": 1.33,
+      "windKph": 69.4
+    },
+    {
+      "index": 139,
+      "hours": 34.75,
+      "tideM": -0.494,
+      "surgeM": 0.476,
+      "rainfallMmHr": 1.3,
+      "windKph": 66.1
+    },
+    {
+      "index": 140,
+      "hours": 35,
+      "tideM": -0.474,
+      "surgeM": 0.435,
+      "rainfallMmHr": 1.28,
+      "windKph": 63
+    },
+    {
+      "index": 141,
+      "hours": 35.25,
+      "tideM": -0.438,
+      "surgeM": 0.397,
+      "rainfallMmHr": 1.26,
+      "windKph": 60
+    },
+    {
+      "index": 142,
+      "hours": 35.5,
+      "tideM": -0.401,
+      "surgeM": 0.362,
+      "rainfallMmHr": 1.24,
+      "windKph": 57.1
+    },
+    {
+      "index": 143,
+      "hours": 35.75,
+      "tideM": -0.364,
+      "surgeM": 0.329,
+      "rainfallMmHr": 1.23,
+      "windKph": 54.3
+    },
+    {
+      "index": 144,
+      "hours": 36,
+      "tideM": -0.328,
+      "surgeM": 0.298,
+      "rainfallMmHr": 1.22,
+      "windKph": 51.7
+    },
+    {
+      "index": 145,
+      "hours": 36.25,
+      "tideM": -0.285,
+      "surgeM": 0.269,
+      "rainfallMmHr": 1.22,
+      "windKph": 49.1
+    },
+    {
+      "index": 146,
+      "hours": 36.5,
+      "tideM": -0.242,
+      "surgeM": 0.243,
+      "rainfallMmHr": 1.21,
+      "windKph": 46.7
+    },
+    {
+      "index": 147,
+      "hours": 36.75,
+      "tideM": -0.199,
+      "surgeM": 0.218,
+      "rainfallMmHr": 1.21,
+      "windKph": 44.3
+    },
+    {
+      "index": 148,
+      "hours": 37,
+      "tideM": -0.156,
+      "surgeM": 0.196,
+      "rainfallMmHr": 1.21,
+      "windKph": 42.1
+    },
+    {
+      "index": 149,
+      "hours": 37.25,
+      "tideM": -0.118,
+      "surgeM": 0.175,
+      "rainfallMmHr": 1.2,
+      "windKph": 40
+    },
+    {
+      "index": 150,
+      "hours": 37.5,
+      "tideM": -0.081,
+      "surgeM": 0.156,
+      "rainfallMmHr": 1.2,
+      "windKph": 38.1
+    },
+    {
+      "index": 151,
+      "hours": 37.75,
+      "tideM": -0.044,
+      "surgeM": 0.139,
+      "rainfallMmHr": 1.2,
+      "windKph": 36.2
+    },
+    {
+      "index": 152,
+      "hours": 38,
+      "tideM": -0.006,
+      "surgeM": 0.123,
+      "rainfallMmHr": 1.2,
+      "windKph": 34.4
+    },
+    {
+      "index": 153,
+      "hours": 38.25,
+      "tideM": 0.02,
+      "surgeM": 0.109,
+      "rainfallMmHr": 1.2,
+      "windKph": 32.8
+    },
+    {
+      "index": 154,
+      "hours": 38.5,
+      "tideM": 0.047,
+      "surgeM": 0.097,
+      "rainfallMmHr": 1.2,
+      "windKph": 31.2
+    },
+    {
+      "index": 155,
+      "hours": 38.75,
+      "tideM": 0.073,
+      "surgeM": 0.085,
+      "rainfallMmHr": 1.2,
+      "windKph": 29.8
+    },
+    {
+      "index": 156,
+      "hours": 39,
+      "tideM": 0.099,
+      "surgeM": 0.075,
+      "rainfallMmHr": 1.2,
+      "windKph": 28.4
+    },
+    {
+      "index": 157,
+      "hours": 39.25,
+      "tideM": 0.109,
+      "surgeM": 0.066,
+      "rainfallMmHr": 1.2,
+      "windKph": 27.2
+    },
+    {
+      "index": 158,
+      "hours": 39.5,
+      "tideM": 0.12,
+      "surgeM": 0.057,
+      "rainfallMmHr": 1.2,
+      "windKph": 26
+    },
+    {
+      "index": 159,
+      "hours": 39.75,
+      "tideM": 0.13,
+      "surgeM": 0.05,
+      "rainfallMmHr": 1.2,
+      "windKph": 24.9
+    },
+    {
+      "index": 160,
+      "hours": 40,
+      "tideM": 0.14,
+      "surgeM": 0.044,
+      "rainfallMmHr": 1.2,
+      "windKph": 23.9
+    },
+    {
+      "index": 161,
+      "hours": 40.25,
+      "tideM": 0.126,
+      "surgeM": 0.038,
+      "rainfallMmHr": 1.2,
+      "windKph": 23
+    },
+    {
+      "index": 162,
+      "hours": 40.5,
+      "tideM": 0.112,
+      "surgeM": 0.033,
+      "rainfallMmHr": 1.2,
+      "windKph": 22.1
+    },
+    {
+      "index": 163,
+      "hours": 40.75,
+      "tideM": 0.098,
+      "surgeM": 0.028,
+      "rainfallMmHr": 1.2,
+      "windKph": 21.4
+    },
+    {
+      "index": 164,
+      "hours": 41,
+      "tideM": 0.084,
+      "surgeM": 0.024,
+      "rainfallMmHr": 1.2,
+      "windKph": 20.6
+    },
+    {
+      "index": 165,
+      "hours": 41.25,
+      "tideM": 0.047,
+      "surgeM": 0.021,
+      "rainfallMmHr": 1.2,
+      "windKph": 20
+    },
+    {
+      "index": 166,
+      "hours": 41.5,
+      "tideM": 0.009,
+      "surgeM": 0.018,
+      "rainfallMmHr": 1.2,
+      "windKph": 19.4
+    },
+    {
+      "index": 167,
+      "hours": 41.75,
+      "tideM": -0.028,
+      "surgeM": 0.015,
+      "rainfallMmHr": 1.2,
+      "windKph": 18.8
+    },
+    {
+      "index": 168,
+      "hours": 42,
+      "tideM": -0.065,
+      "surgeM": 0.013,
+      "rainfallMmHr": 1.2,
+      "windKph": 18.3
+    },
+    {
+      "index": 169,
+      "hours": 42.25,
+      "tideM": -0.108,
+      "surgeM": 0.011,
+      "rainfallMmHr": 1.2,
+      "windKph": 17.9
+    },
+    {
+      "index": 170,
+      "hours": 42.5,
+      "tideM": -0.151,
+      "surgeM": 0.009,
+      "rainfallMmHr": 1.2,
+      "windKph": 17.4
+    },
+    {
+      "index": 171,
+      "hours": 42.75,
+      "tideM": -0.195,
+      "surgeM": 0.008,
+      "rainfallMmHr": 1.2,
+      "windKph": 17.1
+    },
+    {
+      "index": 172,
+      "hours": 43,
+      "tideM": -0.238,
+      "surgeM": 0.007,
+      "rainfallMmHr": 1.2,
+      "windKph": 16.7
+    },
+    {
+      "index": 173,
+      "hours": 43.25,
+      "tideM": -0.273,
+      "surgeM": 0.006,
+      "rainfallMmHr": 1.2,
+      "windKph": 16.4
+    },
+    {
+      "index": 174,
+      "hours": 43.5,
+      "tideM": -0.307,
+      "surgeM": 0.005,
+      "rainfallMmHr": 1.2,
+      "windKph": 16.1
+    },
+    {
+      "index": 175,
+      "hours": 43.75,
+      "tideM": -0.342,
+      "surgeM": 0.004,
+      "rainfallMmHr": 1.2,
+      "windKph": 15.9
+    },
+    {
+      "index": 176,
+      "hours": 44,
+      "tideM": -0.377,
+      "surgeM": 0.003,
+      "rainfallMmHr": 1.2,
+      "windKph": 15.7
+    },
+    {
+      "index": 177,
+      "hours": 44.25,
+      "tideM": -0.399,
+      "surgeM": 0.003,
+      "rainfallMmHr": 1.2,
+      "windKph": 15.5
+    },
+    {
+      "index": 178,
+      "hours": 44.5,
+      "tideM": -0.421,
+      "surgeM": 0.002,
+      "rainfallMmHr": 1.2,
+      "windKph": 15.3
+    },
+    {
+      "index": 179,
+      "hours": 44.75,
+      "tideM": -0.444,
+      "surgeM": 0.002,
+      "rainfallMmHr": 1.2,
+      "windKph": 15.1
+    },
+    {
+      "index": 180,
+      "hours": 45,
+      "tideM": -0.466,
+      "surgeM": 0.002,
+      "rainfallMmHr": 1.2,
+      "windKph": 15
+    },
+    {
+      "index": 181,
+      "hours": 45.25,
+      "tideM": -0.473,
+      "surgeM": 0.001,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.9
+    },
+    {
+      "index": 182,
+      "hours": 45.5,
+      "tideM": -0.48,
+      "surgeM": 0.001,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.8
+    },
+    {
+      "index": 183,
+      "hours": 45.75,
+      "tideM": -0.486,
+      "surgeM": 0.001,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.7
+    },
+    {
+      "index": 184,
+      "hours": 46,
+      "tideM": -0.493,
+      "surgeM": 0.001,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.6
+    },
+    {
+      "index": 185,
+      "hours": 46.25,
+      "tideM": -0.481,
+      "surgeM": 0.001,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.5
+    },
+    {
+      "index": 186,
+      "hours": 46.5,
+      "tideM": -0.47,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.4
+    },
+    {
+      "index": 187,
+      "hours": 46.75,
+      "tideM": -0.458,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.4
+    },
+    {
+      "index": 188,
+      "hours": 47,
+      "tideM": -0.446,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.3
+    },
+    {
+      "index": 189,
+      "hours": 47.25,
+      "tideM": -0.416,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.3
+    },
+    {
+      "index": 190,
+      "hours": 47.5,
+      "tideM": -0.387,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.2
+    },
+    {
+      "index": 191,
+      "hours": 47.75,
+      "tideM": -0.358,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.2
+    },
+    {
+      "index": 192,
+      "hours": 48,
+      "tideM": -0.328,
+      "surgeM": 0,
+      "rainfallMmHr": 1.2,
+      "windKph": 14.2
+    }
+  ]
+}

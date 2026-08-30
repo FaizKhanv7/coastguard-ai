@@ -18,6 +18,12 @@ export interface BBox {
 
 export interface Dem {
   name: string;
+  /** [minLon, minLat, maxLon, maxLat] as written by the ingest script. */
+  bounds?: number[];
+  resolution_m?: number;
+  datum?: string;
+  location?: string;
+  data_status?: string;
   bbox: BBox;
   cols: number;
   rows: number;
@@ -29,13 +35,22 @@ export interface Dem {
   elevations: number[];
 }
 
-/** The bundled Kalinaw Island DEM. */
+/** Bundled Miami-Dade DEM. Production builds are refreshed by scripts/generate-data.ts. */
 export const dem: Dem = demJson as Dem;
 
 /** Elevations as a typed array — meaningfully faster in the flood-fill loop. */
 export const elevations: Float32Array = Float32Array.from(dem.elevations);
 
 export const CELL_COUNT = dem.cols * dem.rows;
+
+/**
+ * No-data marker written by the ingest script where USGS 3DEP has no bare
+ * earth — chiefly open water. It sits far below any water level, so the flood
+ * fill naturally treats these cells as submerged, which is correct. Road
+ * sampling and depth readouts must exclude them: they are water, not ground.
+ */
+export const NO_DATA = -9000;
+export const isNoData = (v: number) => v <= NO_DATA;
 
 /** Flat index of a (row, col) cell. */
 export const cellIndex = (row: number, col: number) => row * dem.cols + col;
@@ -62,6 +77,17 @@ export function colToLng(col: number): number {
 export function rowToLat(row: number): number {
   const { latMin, latMax } = dem.bbox;
   return latMin + (row / (dem.rows - 1)) * (latMax - latMin);
+}
+
+
+/** Convert longitude/latitude to fractional Miami grid coordinates. */
+export function latLonToGrid(lat: number, lng: number): { row: number; col: number } {
+  return { row: latToRow(lat), col: lngToCol(lng) };
+}
+
+/** Convert fractional Miami grid coordinates back to latitude/longitude. */
+export function gridToLatLon(row: number, col: number): { lat: number; lng: number } {
+  return { lat: rowToLat(row), lng: colToLng(col) };
 }
 
 /**
@@ -96,6 +122,14 @@ export function elevationAt(lng: number, lat: number): number {
   const e10 = elevations[cellIndex(r0, c1)];
   const e01 = elevations[cellIndex(r1, c0)];
   const e11 = elevations[cellIndex(r1, c1)];
+
+  // Interpolating across a no-data cell would drag a real elevation towards
+  // -9999. Fall back to the nearest valid corner instead.
+  const corners = [e00, e10, e01, e11];
+  if (corners.some(isNoData)) {
+    const valid = corners.filter((v) => !isNoData(v));
+    return valid.length ? valid.reduce((a, b) => a + b, 0) / valid.length : NO_DATA;
+  }
 
   const top = e00 + (e10 - e00) * tx;
   const bottom = e01 + (e11 - e01) * tx;

@@ -1,90 +1,178 @@
 {
- "type": "FeatureCollection",
- "features": [
-  {
-   "type": "Feature",
-   "properties": {
-    "id": "hospital",
-    "name": "Kalinaw District Hospital",
-    "kind": "hospital",
-    "nodeId": "lm_hospital",
-    "elevation": 32.83
-   },
-   "geometry": {
-    "type": "Point",
-    "coordinates": [
-     126.0986,
-     9.8642
-    ]
-   }
-  },
-  {
-   "type": "Feature",
-   "properties": {
-    "id": "shelter",
-    "name": "Bayanihan School & Shelter",
-    "kind": "shelter",
-    "nodeId": "lm_shelter",
-    "elevation": 11.17
-   },
-   "geometry": {
-    "type": "Point",
-    "coordinates": [
-     126.0774,
-     9.8676
-    ]
-   }
-  },
-  {
-   "type": "Feature",
-   "properties": {
-    "id": "town-center",
-    "name": "Town Center Plaza",
-    "kind": "town-center",
-    "nodeId": "lm_town-center",
-    "elevation": 4.04
-   },
-   "geometry": {
-    "type": "Point",
-    "coordinates": [
-     126.0892,
-     9.8732
-    ]
-   }
-  },
-  {
-   "type": "Feature",
-   "properties": {
-    "id": "marina",
-    "name": "Kalinaw Marina",
-    "kind": "marina",
-    "nodeId": "lm_marina",
-    "elevation": 4.58
-   },
-   "geometry": {
-    "type": "Point",
-    "coordinates": [
-     126.0806,
-     9.86948
-    ]
-   }
-  },
-  {
-   "type": "Feature",
-   "properties": {
-    "id": "ferry",
-    "name": "Ferry Dock",
-    "kind": "ferry",
-    "nodeId": "lm_ferry",
-    "elevation": 2.45
-   },
-   "geometry": {
-    "type": "Point",
-    "coordinates": [
-     126.085,
-     9.87124
-    ]
-   }
-  }
- ]
+  "bounds": [
+    -80.25,
+    25.72,
+    -80.12,
+    25.82
+  ],
+  "resolution_m": 40.3,
+  "source_resolution": "USGS 3DEP best available (1 m where published)",
+  "datum": "NAVD88",
+  "location": "Miami-Dade Coastal Metro, FL",
+  "type": "FeatureCollection",
+  "source": "FDEM / City of Miami operational landmarks; coordinates supplied in migration specification",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "uscg-base-miami-beach",
+        "name": "USCG Base Miami Beach",
+        "kind": "uscg",
+        "nodeId": "n_-80.147890_25.772200",
+        "elevation": 3.63,
+        "roadSnapDistanceM": 76.7
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1472,
+          25.7725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "uscg-sector-miami",
+        "name": "USCG Sector Miami",
+        "kind": "uscg",
+        "nodeId": "n_-80.187240_25.774350",
+        "elevation": -9999,
+        "roadSnapDistanceM": 45.7
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.187,
+          25.774
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "jackson-memorial",
+        "name": "Jackson Memorial Hospital",
+        "kind": "hospital",
+        "nodeId": "n_-80.214930_25.790420",
+        "elevation": 1.16,
+        "roadSnapDistanceM": 185.4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.2132,
+          25.7905
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "portmiami-depot",
+        "name": "PortMiami Emergency Depot",
+        "kind": "depot",
+        "nodeId": "n_-80.170870_25.776140",
+        "elevation": 1.27,
+        "roadSnapDistanceM": 69.5
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1704,
+          25.7766
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "brickell-zone-a",
+        "name": "Brickell Ave / Evacuation Zone A",
+        "kind": "evacuation",
+        "nodeId": "n_-80.191960_25.761670",
+        "elevation": 3.11,
+        "roadSnapDistanceM": 16.4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1918,
+          25.7617
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "fire-rescue-hq",
+        "name": "City of Miami Fire Rescue HQ",
+        "kind": "fire",
+        "nodeId": "n_-80.202900_25.778700",
+        "elevation": 1.96,
+        "roadSnapDistanceM": 87.5
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.2033,
+          25.7794
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "venetian-checkpoint",
+        "name": "Venetian Causeway Checkpoint",
+        "kind": "checkpoint",
+        "nodeId": "n_-80.165280_25.790630",
+        "elevation": 0.92,
+        "roadSnapDistanceM": 92.6
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1652,
+          25.7898
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "macarthur-causeway",
+        "name": "MacArthur Causeway",
+        "kind": "causeway",
+        "nodeId": "n_-80.159450_25.790860",
+        "elevation": 4.3,
+        "roadSnapDistanceM": 630.3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1598,
+          25.7852
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "miami-beach-convention",
+        "name": "Miami Beach Convention Center Shelter",
+        "kind": "shelter",
+        "nodeId": "n_-80.134940_25.793360",
+        "elevation": 0.83,
+        "roadSnapDistanceM": 114.2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1339,
+          25.7946
+        ]
+      }
+    }
+  ]
 }

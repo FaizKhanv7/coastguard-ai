@@ -17,7 +17,7 @@ Beats 1–2 want the horizon on **Now**; beat 4 switches it to **+12h**.
 ---|---|
 | Time | Day 1 · 04:00 |
 | Horizon | **+12h** |
-| From → To | **Kalinaw Marina → Kalinaw District Hospital** |
+| From → To | **USCG Sector Miami → Jackson Memorial Hospital** |
 | Risk tolerance | **Fastest** |
 
 **One thing to understand before you present.** The horizon toggle shifts what
@@ -37,11 +37,11 @@ see the model verified outside the UI.
 Start on **Overview**. (If you want a cold open for judges, start on `/` and
 click "Open the dashboard" — the landing page states the pitch in one screen.)
 
-> "Kalinaw Island, a calm morning. Water about a metre, five of 97 road
+> "Miami-Dade, a calm morning. Water about a metre, five of 97 road
 > segments closed, everything reachable, safety score 97. The outlook strip
 > already knows what's coming though — look at +24 h."
 
-Point at the outlook: 1.1 m now, then **3.6 m at +24 h, 38 roads cut**.
+Point at the outlook: 0.1 m now, then **2.8 m at +24 h, thousands of roads cut**.
 
 ---
 
@@ -49,7 +49,7 @@ Point at the outlook: 1.1 m now, then **3.6 m at +24 h, 38 roads cut**.
 
 **Set the horizon to `Now`.**
 
-> "This is Kalinaw Island, an isolated coastal town. Right now it's a calm
+> "This is Miami-Dade, an isolated coastal town. Right now it's a calm
 > morning — water level about a metre, five of the 97 road segments closed,
 > everything reachable."
 
@@ -73,12 +73,12 @@ storm peak is marked on the scrubber).
 
 Watch, and narrate what's happening:
 
-- Water level climbs to **3.66 m** at hour 27.75 — tide, plus a 2.35 m storm
+- Water level climbs to **2.96 m** at hour 26.75 — tide, plus a 2.35 m storm
   surge, plus rainfall that accumulated over six hours and is draining away
   slowly.
 - The flood spreads *inland along the river channel*, not uniformly from the
   coast.
-- Closed segments jump from 5 to **38 of 97**. They go coral and dashed.
+- Closed segments jump from 31 to **3,643 of 4,659**. They go coral and dashed.
 - The header counter flips: **Ferry Dock is cut off.**
 
 > "Nothing here is being replayed from a recording. Every frame is the flood
@@ -87,9 +87,9 @@ Watch, and narrate what's happening:
 
 **The point to land — the Old Quarry Basin.** In the status panel:
 
-> "See this line: *95 cells sit below the water level but have no path to the
-> sea*. That's the Old Quarry Basin inland — its floor is two metres below sea
-> level, but it's ringed by twenty metres of high ground. A model that just
+> "See this line: *thousands of cells sit below the water level but have no path
+> to the sea*. Those are inland water bodies — Miami-Dade's quarry lakes and borrow pits sit below the water line but have
+> no channel to Biscayne Bay. A model that just
 > thresholds elevation floods it. We flood-fill from the ocean instead, so it
 > stays dry. That's the difference between a map that looks right and a map
 > that *is* right."
@@ -105,11 +105,10 @@ The route panel turns coral:
 > **No safe route** — "Every road out of the starting point is under water.
 > Shelter in place and request water rescue."
 
-> "The router doesn't throw an error or draw a broken line. The ferry dock is
-> at 2.5 metres and the water is at 3.66 — it is genuinely unreachable, and the
+> "The router doesn't throw an error or draw a broken line. The origin sits at sea level and the water is at 2.96 — it is genuinely unreachable, and the
 > answer a dispatcher needs is *don't send a vehicle*."
 
-**Now set From back to Kalinaw Marina and To to Ferry Dock.**
+**Now set From back to USCG Sector Miami and To to Miami Beach Convention Center.**
 
 > "Different failure, different answer. The marina can still move; it's the
 > destination that's gone. So the router runs a second pass and tells you where
@@ -120,7 +119,7 @@ The route panel turns coral:
 
 ## 2:10 — 3:00 · Safest mode reroutes around the *projected* flood
 
-**Set To back to Kalinaw District Hospital, the horizon to `+12h`, and drag the
+**Set To back to Jackson Memorial Hospital, the horizon to `+12h`, and drag the
 timeline back to hour 20.**
 
 Conditions look survivable again — water is under a metre, only a handful of
