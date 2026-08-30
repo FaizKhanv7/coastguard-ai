@@ -8,7 +8,7 @@ import { RoutePanel } from "./RoutePanel";
 import { LegendBar } from "./LegendBar";
 import { Badge } from "./ui";
 
-export const Dashboard: React.FC = () => {
+export function Dashboard() {
   const [hour, setHour] = useState<number>(3);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
@@ -74,4 +74,6 @@ export const Dashboard: React.FC = () => {
       </div>
     </div>
   );
-};
+}
+
+export default Dashboard;
