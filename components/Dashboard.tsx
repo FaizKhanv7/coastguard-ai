@@ -43,24 +43,33 @@ export const Dashboard: React.FC = () => {
         {/* Left / Center Map Viewport */}
         <div className="flex-1 flex flex-col gap-3 relative">
           <div className="flex-1 relative">
-            <FloodMap currentHour="{hour}"/>
+            <FloodMap currentHour={hour} />
             
             {/* Overlay Map Legend */}
             <div className="absolute bottom-4 left-4 z-10">
-              <LegendBar/>
+              <LegendBar />
             </div>
           </div>
 
           {/* Time Scrubber Timeline */}
-          <TimeScrubber currentHour="{hour}" isPlaying="{isPlaying}" maxHours="{24}" onHourChange="{setHour}" onTogglePlay="{()"> setIsPlaying(!isPlaying)}
+          <TimeScrubber
+            currentHour={hour}
+            isPlaying={isPlaying}
+            maxHours={24}
+            onHourChange={setHour}
+            onTogglePlay={() => setIsPlaying(!isPlaying)}
           />
         </div>
 
         {/* Right Telemetry & Action Drawer */}
         <div className="w-[380px] flex flex-col gap-4 overflow-y-auto pr-1">
-          <StatusPanel * + 0.08} 1.1} criticalAssetsAtRisk="{hour" hour inundationAreaKm2="{14.2" precipitation="{32.4}" waterLevel="{1.84"> 5 ? 3 : 1}
+          <StatusPanel
+            waterLevel={1.84 + hour * 0.08}
+            precipitation={32.4}
+            inundationAreaKm2={14.2 + hour * 1.1}
+            criticalAssetsAtRisk={hour > 5 ? 3 : 1}
           />
-          <RoutePanel/>
+          <RoutePanel />
         </div>
       </div>
     </div>
