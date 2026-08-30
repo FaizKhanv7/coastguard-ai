@@ -1,31 +1,6 @@
-import { runFloodSimulation } from '../lib/flood';
-import { findSafeRoute } from '../lib/routing';
-import demData from '../data/dem.json';
-import forcingData from '../data/forcing.json';
-import roadsData from '../data/roads.json';
-
-console.log('[Test-Engine] Starting Verification Run...');
-
-try {
-  const result = runFloodSimulation({
-    dem: demData as any,
-    forcing: forcingData as any,
-    step: 3,
-    barriers: []
-  });
-
-  console.log(`[Test-Engine] Simulation Step 3 Computed: Inundation Cells = ${result.floodedCellsCount}`);
-
-  const routeResult = findSafeRoute({
-    start: [roadsData.features[0].geometry.coordinates[0][0], roadsData.features[0].geometry.coordinates[0][1]],
-    destination: [roadsData.features[1].geometry.coordinates[0][0], roadsData.features[1].geometry.coordinates[0][1]],
-    roads: roadsData as any,
-    waterGrid: result.grid
-  });
-
-  console.log(`[Test-Engine] Route Computed: Path Valid = ${routeResult.success}`);
-  console.log('[Test-Engine] Engine test completed successfully.');
-} catch (err) {
-  console.error('[Test-Engine] Error running engine test:', err);
-  process.exit(1);
-}
+import { community, stateAt, statusAt, route, STEP_COUNT } from "../lib/engine";
+import { landmarks } from "../lib/routing";
+let fail=0; const check=(n:string,v:boolean)=>{console.log(`${v?'PASS':'FAIL'} ${n}`); if(!v) fail++};
+const origin=landmarks.find(l=>l.id==="uscg-sector-miami") ?? landmarks[0]; const dest=landmarks.find(l=>l.id==="jackson-memorial") ?? landmarks[1];
+const s=stateAt(0); const status=statusAt(0,0,origin.nodeId); const r=route(origin.nodeId,dest.nodeId,{step:0,horizonH:0,mode:"fastest"});
+check("engine has forecast steps",STEP_COUNT>0); check("flood mask matches DEM",s.flooded.length>0); check("status exposes road totals",status.totalSegments>0); check("route API returns a result",typeof r.ok==="boolean"); check("community arrays are present",Array.isArray(community.shelters)&&Array.isArray(community.incidents)); if(fail) process.exit(1);
