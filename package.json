@@ -3,16 +3,20 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/sync-mobile.mjs",
+    "predev": "node scripts/build-engine.mjs && node scripts/sync-mobile.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/sync-mobile.mjs",
+    "prebuild": "node scripts/build-engine.mjs && node scripts/sync-mobile.mjs",
     "build": "next build",
     "start": "next start",
     "sync-mobile": "node scripts/sync-mobile.mjs",
     "generate-data": "tsx scripts/generate-data.ts",
     "test:flood": "tsx scripts/test-flood.ts",
     "test:routing": "tsx scripts/test-routing.ts",
-    "test": "npm run test:flood && npm run test:routing"
+    "test": "npm run test:flood && npm run test:routing && npm run test:engine",
+    "build:engine": "node scripts/build-engine.mjs",
+    "generate-community": "tsx scripts/generate-community.ts",
+    "test:engine": "tsx scripts/test-engine.ts",
+    "pretest": "node scripts/build-engine.mjs"
   },
   "dependencies": {
     "maplibre-gl": "^5.6.0",
@@ -27,6 +31,7 @@
     "@types/node": "^22.15.0",
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",
+    "esbuild": "^0.28.2",
     "tailwindcss": "^4.1.11",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"

@@ -145,14 +145,31 @@ as the water crosses the threshold:
 > off; the model says the water closes it during the two minutes you would be
 > driving it. That is the difference between a snapshot and a forecast."
 
-### Closing beat — the other half of the product
+### Closing beat — one engine, two surfaces
 
-Click **Mobile app** in the header. It opens the field app in a new tab.
+First, switch the rail to **Community** while still at the storm peak.
 
-> "The dashboard is what the emergency operations centre sees. This is what the
-> people on the ground get — hazard reporting with photo analysis, resource
-> sharing, a volunteer board, and an assistant that still answers when the
-> network is gone. Same town, same palette, two ends of the same response."
+> "Same shelters, incidents and resources the field app shows — but run through
+> the flood model. The Harbor Rd incident isn't just a pin any more, it's
+> *under 3.61 m of water*. The generator isn't 240 m away, it's cut off. Every
+> distance here is by road through what's still passable."
+
+Now click **Mobile app** in the header.
+
+Go to the **Map** tab and drag its scrubber to the storm peak.
+
+> "That's the same flood model, the same road graph, the same router — on a
+> phone. Not a copy: the field app loads the exact compiled module the
+> dashboard imports. Look at the numbers: 3.66 metres, 38 of 97 roads cut, 95
+> isolated cells. Identical, because there's only one engine.
+>
+> The dashboard is what the operations centre sees. This is what the people on
+> the ground get — plus hazard reporting, resource sharing, a volunteer board,
+> and an assistant that still answers when the network is gone."
+
+If someone asks how you keep them in sync: `npm test` fails the build if the
+browser bundle stops exposing anything the field app calls, or if the two ever
+compute different conditions for the same moment.
 
 ## If you have 30 more seconds
 

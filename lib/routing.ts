@@ -780,38 +780,59 @@ function nearestReachableLandmark(
 }
 
 /**
- * Which landmarks cannot be reached from `fromNodeId` given a flood mask.
+ * Network distance in metres from `fromNodeId` to every node still reachable
+ * over passable roads. Nodes that are cut off are simply absent from the map.
+ *
+ * One Dijkstra pass answers "how far is everything from here", which is what
+ * both surfaces need to say whether a shelter, a resource or a volunteer job
+ * is still reachable and how far away it is. Over 66 nodes this is trivial,
+ * so it is cheaper to compute the whole field once than to route repeatedly.
+ */
+export function networkDistancesFrom(
+  fromNodeId: string,
+  frame: FloodFrame,
+): Map<string, number> {
+  const out = new Map<string, number>();
+  const startIdx = graph.nodeIndex.get(fromNodeId);
+  if (startIdx === undefined) return out;
+
+  const passable = passableEdgeFlags(frame);
+  const dist = new Float64Array(graph.nodes.length).fill(Infinity);
+  const done = new Uint8Array(graph.nodes.length);
+  dist[startIdx] = 0;
+
+  const heap = new MinHeap();
+  heap.push(startIdx, 0);
+  while (heap.size > 0) {
+    const cur = heap.pop();
+    if (done[cur]) continue;
+    done[cur] = 1;
+    out.set(graph.nodes[cur].id, dist[cur]);
+
+    for (const edgeIdx of graph.nodes[cur].edges) {
+      if (!passable[edgeIdx]) continue;
+      const edge = graph.edges[edgeIdx];
+      const next = edge.a === cur ? edge.b : edge.a;
+      const alt = dist[cur] + edge.lengthM;
+      if (alt < dist[next]) {
+        dist[next] = alt;
+        heap.push(next, alt);
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * Which landmarks cannot be reached from `fromNodeId` given a flood state.
  * Drives the "N landmarks cut off" figure in the status panel.
  */
 export function cutOffLandmarks(
   fromNodeId: string,
   frame: FloodFrame,
 ): Landmark[] {
-  const passable = passableEdgeFlags(frame);
-  const startIdx = graph.nodeIndex.get(fromNodeId);
-  if (startIdx === undefined) return [];
-
-  // Plain BFS — we only care about reachability, not distance.
-  const seen = new Uint8Array(graph.nodes.length);
-  const stack = [startIdx];
-  seen[startIdx] = 1;
-  while (stack.length) {
-    const cur = stack.pop()!;
-    for (const edgeIdx of graph.nodes[cur].edges) {
-      if (!passable[edgeIdx]) continue;
-      const edge = graph.edges[edgeIdx];
-      const next = edge.a === cur ? edge.b : edge.a;
-      if (!seen[next]) {
-        seen[next] = 1;
-        stack.push(next);
-      }
-    }
-  }
-
-  return landmarks.filter((lm) => {
-    const idx = graph.nodeIndex.get(lm.nodeId);
-    return idx === undefined || !seen[idx];
-  });
+  const reachable = networkDistancesFrom(fromNodeId, frame);
+  return landmarks.filter((lm) => !reachable.has(lm.nodeId));
 }
 
 /**

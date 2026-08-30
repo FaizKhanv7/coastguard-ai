@@ -8,12 +8,15 @@
  */
 
 import dynamic from "next/dynamic";
+import { useState } from "react";
 import { HORIZONS, useCoastguard, type Horizon } from "@/lib/useCoastguard";
+import CommunityPanel from "./CommunityPanel";
 import { Card, Segmented } from "./ui";
 import TimeScrubber from "./TimeScrubber";
 import StatusPanel from "./StatusPanel";
 import RoutePanel from "./RoutePanel";
 import LegendBar from "./LegendBar";
+import { landmarks } from "@/lib/routing";
 
 // MapLibre touches `window` on import, so it must not be server-rendered.
 const FloodMap = dynamic(() => import("./FloodMap"), {
@@ -21,9 +24,14 @@ const FloodMap = dynamic(() => import("./FloodMap"), {
   loading: () => <MapSkeleton label="Loading map…" />,
 });
 
+type RailTab = "conditions" | "community";
+
 export default function Dashboard() {
   const s = useCoastguard();
+  const [tab, setTab] = useState<RailTab>("conditions");
   const cutOffIds = new Set(s.cutOff.map((c) => c.id));
+  const originNodeId =
+    landmarks.find((l) => l.id === s.originId)?.nodeId ?? landmarks[0].nodeId;
 
   return (
     <div className="min-h-screen bg-sand">
@@ -96,28 +104,63 @@ export default function Dashboard() {
         {/* ---- Panel rail ---- */}
         <section
           className="flex flex-col gap-4 lg:max-h-[calc(100vh-104px)] lg:overflow-y-auto lg:pr-1"
-          aria-label="Conditions and routing"
+          aria-label="Conditions, routing and community"
         >
-          <StatusPanel
-            displayed={s.displayed}
-            horizon={s.horizon}
-            blockedCount={s.blockedEdges.size}
-            cutOff={s.cutOff}
-            floodedFraction={s.floodedFraction}
-          />
-          <RoutePanel
-            originId={s.originId}
-            destId={s.destId}
-            onOrigin={s.setOriginId}
-            onDest={s.setDestId}
-            onSwap={s.swapEnds}
-            mode={s.mode}
-            onMode={s.setMode}
-            horizon={s.horizon}
-            route={s.route}
-            comparison={s.comparison}
-          />
-          <ModelNote />
+          {/* The rail carries two views of the same moment: the physical
+              picture, and the people and places inside it. Tabs rather than
+              one long column so neither gets buried. */}
+          <div className="sticky top-0 z-10 -mt-1 bg-sand pb-1 pt-1">
+            <Segmented
+              name="rail"
+              label="Panel view"
+              value={tab}
+              onChange={(t) => setTab(t as RailTab)}
+              options={[
+                {
+                  value: "conditions" as const,
+                  label: "Conditions",
+                  hint: "water level, road closures and routing",
+                },
+                {
+                  value: "community" as const,
+                  label: "Community",
+                  hint: "shelters, incidents, resources and volunteers",
+                },
+              ]}
+            />
+          </div>
+
+          {tab === "conditions" ? (
+            <>
+              <StatusPanel
+                displayed={s.displayed}
+                horizon={s.horizon}
+                blockedCount={s.blockedEdges.size}
+                cutOff={s.cutOff}
+                floodedFraction={s.floodedFraction}
+              />
+              <RoutePanel
+                originId={s.originId}
+                destId={s.destId}
+                onOrigin={s.setOriginId}
+                onDest={s.setDestId}
+                onSwap={s.swapEnds}
+                mode={s.mode}
+                onMode={s.setMode}
+                horizon={s.horizon}
+                route={s.route}
+                comparison={s.comparison}
+              />
+              <ModelNote />
+            </>
+          ) : (
+            <CommunityPanel
+              originNodeId={originNodeId}
+              step={s.step}
+              horizonH={s.horizon}
+              mode={s.mode}
+            />
+          )}
         </section>
       </main>
     </div>

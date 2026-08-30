@@ -19,15 +19,55 @@ dependency, so they can be run and explained on their own:
 
 ## Two surfaces
 
-The project ships as two connected front ends:
+The project ships as two front ends **running on one engine**:
 
-| Surface | What it is | Where |
+| Surface | Who it is for | Where |
 |---|---|---|
-| **Operations dashboard** | The Next.js app. Full flood model, timeline scrubbing, risk-mode routing. Built for a desk. | `/` |
-| **Field app** | A self-contained phone-sized app for residents and volunteers — hazard reporting, resource sharing, volunteer board, offline assistant. | `/mobile.html` |
+| **Operations dashboard** | The emergency operations centre. A desk, a big screen, the whole town at once. | `/` |
+| **Field app** | Residents and volunteers on the ground, on a phone, possibly offline. | `/mobile.html` |
 
 The **Mobile app** button in the dashboard header opens the field app in a new
 tab.
+
+### They share everything that matters
+
+`lib/engine.ts` is the single API both surfaces drive. The dashboard imports it
+directly; the field app — a static HTML page with no build step of its own —
+loads the *same compiled module* as `window.CoastGuard`, bundled by
+`npm run build:engine`. There is no second implementation to drift.
+
+| | Dashboard | Field app |
+|---|---|---|
+| Flood model, projections, map overlay | ✅ | ✅ |
+| 48 h timeline + Now/+6/+12/+24 horizons | ✅ | ✅ |
+| Road closures from the model | ✅ | ✅ |
+| A\* safe routing, safest vs fastest | ✅ | ✅ (routes to shelters) |
+| Shelters, incidents, resources, volunteers | ✅ | ✅ |
+| Hazard reporting with photo analysis | — | ✅ |
+| Offline assistant | — | ✅ |
+| Side-by-side risk-mode comparison | ✅ | — |
+
+The last three rows are form-factor differences, not gaps: photo reporting
+needs a camera in your hand, and comparing two routes side by side needs a
+screen wide enough to see both.
+
+`data/community.json` is the other half of the sync. Shelters, incidents,
+resources and volunteer jobs used to be hardcoded arrays inside the field app
+with hand-picked coordinates that had no relationship to the DEM or the road
+graph — so the two surfaces disagreed about where everything was, and none of
+it could be routed to. Every entry now sits on a real road-network node, which
+is what lets both surfaces say "1.9 km by road" or "cut off" instead of a
+static distance that was true when someone typed it.
+
+Regenerate it with `npm run generate-community`.
+
+Two guards keep them in sync, both in `npm test`:
+
+- the browser bundle must expose every name the field app calls;
+- the bundle and the directly-imported module must compute **identical**
+  conditions for the same moment.
+
+The second one has already caught a stale bundle in practice.
 
 `coastguard-ai.html` at the repo root is the single source of truth for the
 field app — that is the file to edit. `npm run sync-mobile` mirrors it to
@@ -72,6 +112,10 @@ time):
 ```bash
 npm run generate-data
 ```
+
+`npm run dev` and `npm run build` first run `build:engine` (compiles
+`lib/engine.ts` into `public/coastguard-engine.js`) and `sync-mobile` (mirrors
+`coastguard-ai.html` into `public/mobile.html`), so neither can go stale.
 
 **There are no network calls at runtime.** Every input is a static file in
 `data/`, imported directly into the bundle. The only external request the app

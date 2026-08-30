@@ -380,6 +380,30 @@
   .chat-msg.bot{background:var(--card); color:var(--navy); align-self:flex-start; border-bottom-left-radius:4px;}
   .chat-msg.user{background:var(--navy); color:#fff; align-self:flex-end; border-bottom-right-radius:4px;}
   .chat-msg.error{background:var(--coral-tint); color:var(--coral-dark); align-self:flex-start;}
+
+  /* ---------- Flood simulation controls (shared engine) ---------- */
+  .sim-card{margin-top:12px; padding:14px;}
+  .sim-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;}
+  .sim-right{text-align:right;}
+  .sim-label{font-size:9.5px; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink-soft); font-weight:700;}
+  .sim-head b{font-family:'Fraunces',serif; font-size:16px; color:var(--navy); display:block; line-height:1.25;}
+  .sim-sub{font-size:10.5px; font-weight:700; color:var(--amber-dark); margin-top:1px;}
+  .sim-row{display:flex; align-items:center; gap:10px;}
+  .sim-play{width:38px; height:38px; flex-shrink:0; border-radius:50%; border:none; background:var(--navy); color:#fff; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center;}
+  .sim-row input[type=range]{flex:1; height:26px; -webkit-appearance:none; appearance:none; background:transparent; cursor:pointer;}
+  .sim-row input[type=range]::-webkit-slider-runnable-track{height:5px; border-radius:99px; background:var(--sand-dim);}
+  .sim-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; margin-top:-6px; width:17px; height:17px; border-radius:50%; background:var(--navy); border:3px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.3);}
+  .sim-row input[type=range]::-moz-range-track{height:5px; border-radius:99px; background:var(--sand-dim);}
+  .sim-row input[type=range]::-moz-range-thumb{width:17px; height:17px; border-radius:50%; background:var(--navy); border:3px solid #fff;}
+  .sim-horizons{display:flex; gap:5px; margin-top:10px;}
+  .sim-horizons button{flex:1; border:none; border-radius:20px; padding:7px 0; font-family:'Inter'; font-size:11px; font-weight:700; background:var(--sand-dim); color:var(--ink-soft); cursor:pointer;}
+  .sim-horizons button.active{background:var(--navy); color:#fff;}
+  .sim-stats{display:flex; gap:8px; margin-top:11px; padding-top:10px; border-top:1px solid var(--sand-dim);}
+  .sim-stats > div{flex:1; text-align:center;}
+  .sim-stats b{display:block; font-family:'Fraunces',serif; font-size:16px; color:var(--navy);}
+  .sim-stats b.alert{color:var(--coral-dark);}
+  .sim-stats span{font-size:9.5px; color:var(--ink-soft); font-weight:600;}
+  .sim-note{font-size:10.5px; color:var(--ink-soft); line-height:1.45; margin-top:9px;}
 </style>
 </head>
 <body>
@@ -426,12 +450,23 @@
       </div>
     </div>
 
+    <!-- Live from the shared flood model, not fixed text. -->
     <div class="card tidecard">
-      <div class="col"><div class="label">Tide</div><div class="val">1.8m ↑</div></div>
+      <div class="col"><div class="label">Water</div><div class="val" id="home-water">—</div></div>
       <div class="divider"></div>
-      <div class="col"><div class="label">Rainfall</div><div class="val">32mm</div></div>
+      <div class="col"><div class="label">Rainfall</div><div class="val" id="home-rain">—</div></div>
       <div class="divider"></div>
-      <div class="col"><div class="label">Wind</div><div class="val">14 km/h</div></div>
+      <div class="col"><div class="label">Wind</div><div class="val" id="home-wind">—</div></div>
+    </div>
+
+    <!-- Forecast outlook: the same projections the dashboard shows. -->
+    <div class="card">
+      <div class="section-title" style="margin:0 0 8px;">
+        <h3 style="font-size:13.5px;">Flood outlook</h3>
+        <a onclick="showScreen('map')">Open forecast</a>
+      </div>
+      <div class="sim-stats" style="border-top:none; padding-top:0; margin-top:0;" id="home-outlook"></div>
+      <p class="sim-note" id="home-outlook-note"></p>
     </div>
 
     <!-- Natural Coastal Buffer Health Dashboard -->
@@ -521,6 +556,35 @@
       <div class="maploading" id="map-loading">Loading cached map…</div>
       <button class="maplocate" onclick="locateMe()">📍</button>
     </div>
+    <!-- Flood forecast controls. Same model, road graph and horizons the
+         operations dashboard runs, sized for a phone. -->
+    <div class="card sim-card">
+      <div class="sim-head">
+        <div>
+          <div class="sim-label">Forecast time</div>
+          <b id="sim-clock">Day 1 · 04:00</b>
+          <div class="sim-sub" id="sim-horizon-note"></div>
+        </div>
+        <div class="sim-right">
+          <div class="sim-label">Water level</div>
+          <b id="sim-level">—</b>
+          <div class="sim-sub" id="sim-severity"></div>
+        </div>
+      </div>
+      <div class="sim-row">
+        <button class="sim-play" id="sim-play" onclick="toggleSimPlay()" aria-label="Play the flood forecast">▶</button>
+        <input type="range" id="sim-range" min="0" max="192" value="16"
+               oninput="setSimStep(+this.value)" aria-label="Forecast time across the 48 hour window">
+      </div>
+      <div class="sim-horizons" id="sim-horizons"></div>
+      <div class="sim-stats">
+        <div><b id="sim-roads">—</b><span>roads cut</span></div>
+        <div><b id="sim-cutoff">—</b><span>places cut off</span></div>
+        <div><b id="sim-rain">—</b><span>mm/h rain</span></div>
+      </div>
+      <p class="sim-note" id="sim-note"></p>
+    </div>
+
     <div class="legend">
       <div class="item"><div class="dot" style="background:var(--coral)"></div>Flood</div>
       <div class="item"><div class="dot" style="background:var(--purple-dark)"></div>Mobility Barrier</div>
@@ -761,6 +825,10 @@
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- The shared CoastGuard engine: the same compiled flood model, road graph
+     and router the operations dashboard runs on. Built by
+     `npm run build:engine` from lib/engine.ts. -->
+<script src="coastguard-engine.js"></script>
 <script>
 const GROQ_API_KEY = "nah";
 
@@ -774,43 +842,165 @@ const GROQ_API_KEY = "nah";
  */
 const AI_ENABLED = /^gsk_[A-Za-z0-9_-]{20,}$/.test(GROQ_API_KEY);
 
+/* ===========================================================================
+   SHARED ENGINE
+   ===========================================================================
+   `CoastGuard` is the same compiled module the operations dashboard imports
+   (lib/engine.ts, bundled by `npm run build:engine`). Shelters, incidents,
+   resources and jobs all come from one shared community dataset, and every
+   distance, ETA and "cut off" badge below is computed by the shared flood
+   model and router.
+
+   Before this existed the field app had no flood model at all and its own
+   hand-picked coordinates, so the two surfaces disagreed about where things
+   were and what was underwater. Now they cannot: there is one of each.
+   =========================================================================== */
+const CG = window.CoastGuard;
+
+/* Where Mira is standing, snapped onto the road network so the router can
+   actually path from here. */
+const USER_ORIGIN = CG.nearestNode(126.0892, 9.8756);
+
+/* Simulation state, driven by the scrubber on the map screen. */
+let simStep = CG.hoursToStep(4);
+let simHorizon = 0;
+let simPlaying = false;
+let simTimer = null;
+
+/* Photos are presentation rather than data, so they stay in the field app
+   instead of the shared dataset. They degrade to a gradient offline. */
+const SHELTER_PHOTOS = {
+  "shelter-school": "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=500&q=80",
+  "shelter-hospital": "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?w=500&q=80",
+  "shelter-hilltop": "https://images.unsplash.com/photo-1466442929976-97f336a657be?w=500&q=80",
+  "shelter-church": "https://images.unsplash.com/photo-1601979031925-424e53b6caaa?w=500&q=80"
+};
+
+const CATEGORY_BG = {
+  "Tools": "var(--amber-tint)",
+  "Water & food": "var(--blue-tint)",
+  "Transport": "var(--teal-tint)",
+  "Medical": "var(--coral-tint)"
+};
+
+/* --- Adapters -------------------------------------------------------------
+   The render functions below were written against the old hardcoded shapes.
+   Rather than rewrite all of them, these adapters present the shared data in
+   that same shape. `distanceM` and `location` are deliberately left blank
+   here: they are live values, refreshed by refreshLiveDistances() every time
+   the simulation moves. */
+
 let currentResourceFilter = 'All';
-let resourcesData = [
-  { id: 1, name: "Portable generator", category: "Tools", icon: "⚡", bg: "var(--amber-tint)", user: "Jun", verified: true, location: "240m away", status: "Available", claimed: false, coords: [9.8760, 126.0850] },
-  { id: 2, name: "Bottled water, 40 units", category: "Water & food", icon: "💧", bg: "var(--blue-tint)", user: "Shelter Manager Santos", verified: true, location: "90m away", status: "Available", claimed: false, coords: [9.8780, 126.0910] },
-  { id: 3, name: "Kayaks (x2)", category: "Transport", icon: "🛶", bg: "var(--teal-tint)", user: "Alma", verified: false, location: "510m away", status: "1 left", claimed: false, coords: [9.8730, 126.0870] },
-  { id: 4, name: "Medical supplies kit", category: "Medical", icon: "🩹", bg: "var(--coral-tint)", user: "Dr. Reyes (Clinic)", verified: true, location: "1.1km away", status: "Available", claimed: false, coords: [9.8800, 126.0940] }
-];
+let resourcesData = CG.community.resources.map((r, i) => ({
+  id: i + 1,
+  cgId: r.id,
+  nodeId: r.nodeId,
+  name: r.name,
+  category: r.category,
+  icon: r.icon,
+  bg: CATEGORY_BG[r.category] || "var(--sand-dim)",
+  user: r.owner,
+  verified: r.verified,
+  status: r.status,
+  claimed: false,
+  location: "—",
+  distanceM: null,
+  reachable: true,
+  coords: [r.lat, r.lng]
+}));
 
 let currentVolunteerFilter = 'All';
-let volunteerJobs = [
-  { id: 1, title: "Clear debris — Harbor Rd", isMatch: true, location: "320m away", needed: 3, duration: "~1.5 hr", joined: false, isUrgent: true, isAccess: false, verifiedBy: "Community Leader", coords: [9.8765, 126.0880] },
-  { id: 2, title: "Distribute water & medicines", isMatch: false, location: "90m away", needed: 2, duration: "~1 hr", joined: false, isUrgent: false, isAccess: false, verifiedBy: "Shelter Manager", coords: [9.8775, 126.0905] },
-  { id: 3, title: "Repair wheelchair access ramp", isMatch: false, location: "450m away", needed: 2, duration: "~1 hr", joined: false, isUrgent: true, isAccess: true, verifiedBy: "Local Medic", coords: [9.8745, 126.0830] }
-];
+let volunteerJobs = CG.community.volunteerJobs.map((j, i) => ({
+  id: i + 1,
+  cgId: j.id,
+  nodeId: j.nodeId,
+  title: j.title,
+  isMatch: i === 0,
+  location: "—",
+  distanceM: null,
+  reachable: true,
+  needed: j.needed,
+  joined: false,
+  duration: "~" + j.durationHours + " hr",
+  isUrgent: j.urgent,
+  isAccess: j.accessibility,
+  verifiedBy: j.verifiedBy,
+  coords: [j.lat, j.lng]
+}));
 
 let map, mapInitialized = false;
 let reportPickerMap, reportPickerMarker;
 let selectedReportCoords = [9.8756, 126.0892];
 
-let userIncidents = [
-  { title: "Flooding — Harbor Rd", category: "Flood", severity: "High", coords: [9.8772, 126.0898], icon: "🌊" },
-  { title: "Blockage — North Ramp", category: "Mobility Barrier", severity: "High", coords: [9.8745, 126.0830], icon: "♿" },
-  { title: "Marine Debris — East Shore", category: "Marine Debris / Erosion", severity: "Medium", coords: [9.8790, 126.0930], icon: "🪸" }
-];
+let userIncidents = CG.community.incidents.map(inc => ({
+  cgId: inc.id,
+  nodeId: inc.nodeId,
+  title: inc.title,
+  category: inc.category,
+  severity: inc.severity,
+  coords: [inc.lat, inc.lng],
+  icon: inc.icon,
+  elevationM: inc.elevationM,
+  confirmations: inc.confirmations,
+  reportedMinutesAgo: inc.reportedMinutesAgo
+}));
 
 let mapMarkersLayer = null;
+let floodOverlay = null;
+let blockedRoadsLayer = null;
+let routeLayer = null;
 let currentMapFilter = 'all';
 
-// Evacuation / high-ground shelters, ranked by elevation + open capacity
-let sheltersData = [
-  { id: 1, name: "Kalinaw Elementary School Gym", type: "Primary Evacuation Center", distanceM: 350, elevationM: 14, capacity: "Open · 40 spots left", full: false, coords: [9.8791, 126.0875], photo: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=500&q=80" },
-  { id: 2, name: "Hilltop Barangay Hall", type: "Secondary Evacuation Center", distanceM: 680, elevationM: 22, capacity: "Open · 15 spots left", full: false, coords: [9.8815, 126.0845], photo: "https://images.unsplash.com/photo-1466442929976-97f336a657be?w=500&q=80" },
-  { id: 3, name: "St. Isidro Church Hall", type: "Overflow Shelter", distanceM: 1150, elevationM: 18, capacity: "Standby, on request", full: false, coords: [9.8730, 126.0955], photo: "https://images.unsplash.com/photo-1601979031925-424e53b6caaa?w=500&q=80" }
-];
+/* Evacuation centres, from the shared dataset. Elevation is the real DEM
+   elevation at that node, not an estimate. */
+let sheltersData = CG.community.shelters.map((sh, i) => ({
+  id: i + 1,
+  cgId: sh.id,
+  nodeId: sh.nodeId,
+  name: sh.name,
+  type: sh.type,
+  distanceM: null,
+  reachable: true,
+  elevationM: sh.elevationM,
+  capacity: (sh.capacityTotal - sh.capacityUsed) > 0
+    ? "Open · " + (sh.capacityTotal - sh.capacityUsed) + " spots left"
+    : "Full",
+  full: sh.capacityUsed >= sh.capacityTotal,
+  accessible: sh.accessible,
+  coords: [sh.lat, sh.lng],
+  photo: SHELTER_PHOTOS[sh.id] || ""
+}));
 let selectedSafeSpotId = null;
 
+/* ---------------------------------------------------------------------------
+   Live distances
+   ---------------------------------------------------------------------------
+   One Dijkstra pass over the still-passable road network gives the distance
+   from Mira to everything at once. Anything the flood has severed comes back
+   unreachable, which is how a resource or shelter card earns its "Cut off"
+   badge instead of sitting there looking available while the road to it is
+   under a metre of water. */
+function refreshLiveDistances() {
+  const opts = { step: simStep, horizonH: simHorizon, mode: 'fastest' };
+
+  const apply = (list, cgList) => {
+    const reach = CG.reachability(cgList, USER_ORIGIN.id, opts);
+    list.forEach((row, i) => {
+      const r = reach[i];
+      row.reachable = r.reachable;
+      row.distanceM = r.distanceM;
+      row.location = r.reachable ? formatDistance(Math.round(r.distanceM)) : "Cut off";
+    });
+  };
+
+  apply(sheltersData, CG.community.shelters);
+  apply(resourcesData, CG.community.resources);
+  apply(volunteerJobs, CG.community.volunteerJobs);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  initSimControls();
+  onSimChange();
   renderHomeResources();
   renderResources();
   renderVolunteerJobs();
@@ -820,25 +1010,269 @@ document.addEventListener("DOMContentLoaded", () => {
   applyHudMode();
 });
 
-function formatDistance(m){ return m >= 1000 ? (m/1000).toFixed(1) + "km away" : m + "m away"; }
+/* ===========================================================================
+   FLOOD SIMULATION — driven entirely by the shared engine
+   ===========================================================================
+   Nothing here models anything itself. `CG.statusAt`, `CG.floodImage` and
+   `CG.route` are the same calls the operations dashboard makes, so the two
+   surfaces show the same water at the same hour by construction.
+   =========================================================================== */
 
-// Picks the safest reachable spot: prefers higher elevation among open shelters, closest as tiebreak
+const SEVERITY_TEXT = {
+  normal:   { label: "Normal conditions", tone: "var(--teal-dark)" },
+  elevated: { label: "Elevated tide",     tone: "var(--blue-dark)" },
+  flooding: { label: "Flooding",          tone: "var(--amber-dark)" },
+  severe:   { label: "Severe flooding",   tone: "var(--coral-dark)" }
+};
+
+function setSimStep(step) {
+  simStep = step;
+  onSimChange();
+}
+
+function setSimHorizon(h) {
+  simHorizon = h;
+  onSimChange();
+}
+
+function toggleSimPlay() {
+  simPlaying = !simPlaying;
+  const btn = document.getElementById('sim-play');
+  if (simPlaying) {
+    if (simStep >= CG.STEP_COUNT - 1) simStep = 0;
+    btn.textContent = "⏸";
+    btn.setAttribute('aria-label', 'Pause the flood forecast');
+    simTimer = setInterval(() => {
+      if (simStep >= CG.STEP_COUNT - 1) { toggleSimPlay(); return; }
+      simStep += 1;
+      onSimChange();
+    }, 90);
+  } else {
+    btn.textContent = "▶";
+    btn.setAttribute('aria-label', 'Play the flood forecast');
+    clearInterval(simTimer);
+    simTimer = null;
+  }
+}
+
+function initSimControls() {
+  const range = document.getElementById('sim-range');
+  if (range) {
+    range.max = String(CG.STEP_COUNT - 1);
+    range.value = String(simStep);
+  }
+  renderHorizonChips();
+}
+
+function renderHorizonChips() {
+  const wrap = document.getElementById('sim-horizons');
+  if (!wrap) return;
+  wrap.innerHTML = CG.HORIZONS.map(h => `
+    <button class="${h === simHorizon ? 'active' : ''}"
+            onclick="setSimHorizon(${h})"
+            aria-pressed="${h === simHorizon}">${h === 0 ? 'Now' : '+' + h + 'h'}</button>
+  `).join('');
+}
+
+/* One call, everything downstream. Kept deliberately central so the map, the
+   home screen and every list can never show different moments. */
+/*
+ * `lists` is false during playback: rebuilding four innerHTML lists eleven
+ * times a second is what makes a phone stutter, and none of those lists are
+ * on screen while you are watching the map animate. They refresh the moment
+ * playback stops or you change screen.
+ */
+function onSimChange({ lists = !simPlaying } = {}) {
+  const status = CG.statusAt(simStep, simHorizon, USER_ORIGIN.id);
+  refreshLiveDistances();
+
+  const range = document.getElementById('sim-range');
+  if (range && +range.value !== simStep) range.value = simStep;
+
+  const sev = SEVERITY_TEXT[status.severity];
+  const set = (id, text, colour) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text;
+    if (colour) el.style.color = colour;
+  };
+
+  // --- Map screen forecast panel ---
+  set('sim-clock', CG.formatClock(simStep));
+  set('sim-level', status.waterLevelM.toFixed(2) + " m");
+  set('sim-severity', sev.label, sev.tone);
+  set('sim-horizon-note', simHorizon
+    ? "showing +" + simHorizon + "h → " + CG.formatClock(simStep + CG.hoursToStep(simHorizon))
+    : "showing live conditions");
+  set('sim-roads', status.blockedCount + " / " + status.totalSegments);
+  set('sim-cutoff', String(status.cutOff.length));
+  set('sim-rain', status.rainfallMmHr.toFixed(1));
+
+  const roadsEl = document.getElementById('sim-roads');
+  const cutEl = document.getElementById('sim-cutoff');
+  if (roadsEl) roadsEl.className = status.blockedCount / status.totalSegments > 0.2 ? 'alert' : '';
+  if (cutEl) cutEl.className = status.cutOff.length ? 'alert' : '';
+
+  set('sim-note', status.isolatedCells > 0
+    ? status.isolatedCells + " low-lying cells sit below the water line but have no path to the sea, so the model correctly leaves them dry."
+    : "");
+
+  // --- Home screen ---
+  set('home-water', status.waterLevelM.toFixed(2) + " m");
+  set('home-rain', status.rainfallMmHr.toFixed(0) + " mm/h");
+  set('home-wind', status.windKph.toFixed(0) + " km/h");
+
+  const outlook = document.getElementById('home-outlook');
+  if (outlook) {
+    outlook.innerHTML = CG.HORIZONS.map(h => {
+      const st = CG.statusAt(simStep, h, USER_ORIGIN.id);
+      const alert = st.blockedCount / st.totalSegments > 0.2;
+      return `<div>
+        <b class="${alert ? 'alert' : ''}">${st.waterLevelM.toFixed(1)}m</b>
+        <span>${h === 0 ? 'now' : '+' + h + 'h'}</span>
+      </div>`;
+    }).join('');
+  }
+  const note = document.getElementById('home-outlook-note');
+  if (note) {
+    const worst = CG.HORIZONS.map(h => CG.statusAt(simStep, h, USER_ORIGIN.id))
+      .reduce((a, b) => (b.waterLevelM > a.waterLevelM ? b : a));
+    note.textContent = worst.cutOff.length
+      ? "By +" + worst.horizonH + "h the model expects " + worst.cutOff.length +
+        " key location(s) to be cut off — " + worst.cutOff.map(CG.shortName).join(", ") + "."
+      : "No key locations are expected to be cut off within 24 hours.";
+  }
+
+  // --- Lists that show live distances ---
+  if (lists) {
+    renderSafeSpot();
+    renderHomeResources();
+    renderResources();
+    renderVolunteerJobs();
+  }
+
+  // --- Map layers ---
+  updateFloodOverlay();
+  renderMapMarkers();
+}
+
+/* --- Map layers ---------------------------------------------------------- */
+
+function updateFloodOverlay() {
+  if (!map) return;
+
+  // Flood extent, painted by the same rasteriser the dashboard uses.
+  const url = CG.floodImage(simStep, simHorizon);
+  if (!floodOverlay) {
+    floodOverlay = L.imageOverlay(url, CG.leafletImageBounds, {
+      opacity: 0.72, interactive: false
+    }).addTo(map);
+  } else {
+    floodOverlay.setUrl(url);
+  }
+
+  // Impassable roads, dashed as well as coloured so the closure does not
+  // depend on telling coral from grey on a small screen in daylight.
+  if (!blockedRoadsLayer) {
+    blockedRoadsLayer = L.layerGroup().addTo(map);
+  }
+  blockedRoadsLayer.clearLayers();
+  const frame = CG.displayedState(simStep, simHorizon);
+  CG.graph.edges.forEach(edge => {
+    if (!CG.isEdgeBlocked(edge, frame)) return;
+    L.polyline(edge.coordinates.map(c => [c[1], c[0]]), {
+      color: "#E2572B", weight: 3, opacity: 0.95, dashArray: "5 4", interactive: false
+    }).addTo(blockedRoadsLayer);
+  });
+}
+
+/* Draws the safest still-open route from Mira to a shelter. */
+function showRouteTo(nodeId) {
+  if (!map) return;
+  const result = CG.route(USER_ORIGIN.id, nodeId, {
+    step: simStep, horizonH: simHorizon, mode: 'safest'
+  });
+
+  if (!routeLayer) routeLayer = L.layerGroup().addTo(map);
+  routeLayer.clearLayers();
+
+  if (!result.ok) {
+    document.getElementById('pin-title').textContent = "No safe route";
+    document.getElementById('pin-desc').textContent = result.message;
+    return result;
+  }
+
+  L.polyline(result.coordinates.map(c => [c[1], c[0]]), {
+    color: "#FFFFFF", weight: 9, opacity: 0.9, interactive: false
+  }).addTo(routeLayer);
+  L.polyline(result.coordinates.map(c => [c[1], c[0]]), {
+    color: "#1F8A70", weight: 5, opacity: 1, interactive: false
+  }).addTo(routeLayer);
+
+  map.fitBounds(result.coordinates.map(c => [c[1], c[0]]), { padding: [30, 30] });
+  return result;
+}
+
+/* Distances are live network distances now, so they can legitimately be
+   absent: null means the road network to that place is severed. */
+function formatDistance(m){
+  if (m === null || m === undefined || !isFinite(m)) return "Cut off";
+  return m >= 1000 ? (m/1000).toFixed(1) + "km by road" : Math.round(m) + "m by road";
+}
+
+/* Picks where to send Mira, using the shared router rather than straight-line
+   distance: a shelter 300 m away across a flooded causeway is further than one
+   800 m away on high ground, and during the surge it may be no distance at all
+   because there is no longer a road. Falls back to the highest open shelter if
+   everything is currently severed, so the card never goes blank. */
 function pickSafestSpot() {
+  const best = CG.bestShelter(USER_ORIGIN.id, {
+    step: simStep, horizonH: simHorizon, mode: 'safest'
+  });
+  if (best) {
+    const row = sheltersData.find(s => s.cgId === best.item.id);
+    if (row) return row;
+  }
   const open = sheltersData.filter(s => !s.full);
   const pool = open.length ? open : sheltersData;
-  return pool.slice().sort((a, b) => (b.elevationM - a.elevationM) || (a.distanceM - b.distanceM))[0];
+  return pool.slice().sort((a, b) => b.elevationM - a.elevationM)[0];
 }
 
 function renderSafeSpot() {
-  const spot = selectedSafeSpotId ? sheltersData.find(s => s.id === selectedSafeSpotId) : pickSafestSpot();
+  const spot = selectedSafeSpotId
+    ? sheltersData.find(s => s.id === selectedSafeSpotId)
+    : pickSafestSpot();
   if (!spot) return;
-  document.getElementById('safespot-photo').src = spot.photo;
-  document.getElementById('safespot-photo').alt = spot.name;
+
+  const photo = document.getElementById('safespot-photo');
+  photo.src = spot.photo;
+  photo.alt = spot.name;
+  photo.onerror = () => {
+    photo.style.background = 'linear-gradient(135deg,#cfd8d3,#e4ded0)';
+    photo.removeAttribute('src');
+  };
+
   document.getElementById('safespot-name').textContent = spot.name;
-  document.getElementById('safespot-badge').textContent = spot.id === pickSafestSpot().id ? "Safest nearby" : spot.type;
-  document.getElementById('safespot-distance').textContent = "📍 " + formatDistance(spot.distanceM);
-  document.getElementById('safespot-elevation').textContent = "⛰️ " + spot.elevationM + "m above sea level";
+
+  const badge = document.getElementById('safespot-badge');
+  const safest = pickSafestSpot();
+  if (!spot.reachable) {
+    badge.textContent = "Cut off";
+    badge.style.background = "var(--coral-tint)";
+    badge.style.color = "var(--coral-dark)";
+  } else {
+    badge.textContent = spot.id === safest.id ? "Safest route" : spot.type;
+    badge.style.background = "";
+    badge.style.color = "";
+  }
+
+  document.getElementById('safespot-distance').textContent = spot.reachable
+    ? "🛣️ " + formatDistance(Math.round(spot.distanceM)) + " by road"
+    : "⚠️ No road route right now";
+  document.getElementById('safespot-elevation').textContent =
+    "⛰️ " + spot.elevationM + "m above sea level";
   document.getElementById('safespot-capacity').textContent = "👥 " + spot.capacity;
+
   renderSafeSpotsList();
 }
 
@@ -846,12 +1280,18 @@ function renderSafeSpotsList() {
   const container = document.getElementById('safe-spots-list');
   if (!container) return;
   const safest = pickSafestSpot();
-  container.innerHTML = sheltersData.slice().sort((a,b) => (b.elevationM - a.elevationM) || (a.distanceM - b.distanceM)).map(s => `
+  // Reachable first, then nearest by road, then highest ground.
+  const ordered = sheltersData.slice().sort((a, b) =>
+    (Number(b.reachable) - Number(a.reachable)) ||
+    ((a.distanceM ?? Infinity) - (b.distanceM ?? Infinity)) ||
+    (b.elevationM - a.elevationM)
+  );
+  container.innerHTML = ordered.map(s => `
     <div class="row" onclick="chooseSafeSpot(${s.id})">
-      <img src="${s.photo}" alt="${s.name}">
+      <img src="${s.photo}" alt="${s.name}" onerror="this.style.background='linear-gradient(135deg,#cfd8d3,#e4ded0)';this.removeAttribute('src');">
       <div class="info">
         <b>${s.name} ${s.id === safest.id ? '✔' : ''}</b>
-        <span>${s.type} · ${formatDistance(s.distanceM)} · ${s.elevationM}m elevation</span>
+        <span>${s.type} · ${formatDistance(s.distanceM)} · ${s.elevationM}m elevation${s.reachable ? '' : ' · ⚠ no route'}</span>
       </div>
     </div>
   `).join('');
@@ -864,15 +1304,24 @@ function chooseSafeSpot(id) {
 }
 
 function goToSafeSpotOnMap() {
-  const spot = selectedSafeSpotId ? sheltersData.find(s => s.id === selectedSafeSpotId) : pickSafestSpot();
+  const spot = selectedSafeSpotId
+    ? sheltersData.find(s => s.id === selectedSafeSpotId)
+    : pickSafestSpot();
   showScreen('map');
   setTimeout(() => {
     if (!map) return;
-    setMapFilter('shelters', document.querySelector('#map-filters .chip:nth-child(6)') || document.querySelector('#map-filters .chip'));
-    map.setView(spot.coords, 16);
-    document.getElementById('pin-title').textContent = spot.name;
-    document.getElementById('pin-desc').textContent = `${spot.type} · ${formatDistance(spot.distanceM)} · ${spot.elevationM}m above sea level · ${spot.capacity}`;
-  }, 250);
+    const result = showRouteTo(spot.nodeId);
+    if (result && result.ok) {
+      document.getElementById('pin-title').textContent = "Route to " + spot.name;
+      document.getElementById('pin-desc').textContent =
+        (result.distanceM / 1000).toFixed(2) + " km · about " +
+        Math.round(result.etaMinutes) + " min · " + spot.elevationM +
+        "m above sea level · " + spot.capacity +
+        (result.warnings.length
+          ? " · " + result.warnings.length + " segment(s) flagged by the forecast"
+          : " · clear the whole way");
+    }
+  }, 280);
 }
 
 function showScreen(name){
@@ -1080,6 +1529,7 @@ function initMap() {
     
     document.getElementById('map-loading').style.display = 'none';
   }
+  updateFloodOverlay();
   renderMapMarkers();
 }
 
@@ -1133,7 +1583,7 @@ function renderMapMarkers() {
           iconAnchor: [14, 14]
         });
         L.marker(spot.coords, { icon }).addTo(mapMarkersLayer).bindPopup(
-          `<img src="${spot.photo}" style="width:180px;height:90px;object-fit:cover;border-radius:8px;margin-bottom:6px;display:block;"><b>${spot.name}${spot.id === safest.id ? ' (Safest nearby)' : ''}</b><br>${spot.type}<br>${formatDistance(spot.distanceM)} · ${spot.elevationM}m elevation<br>${spot.capacity}`
+          `<img src="${spot.photo}" style="width:180px;height:90px;object-fit:cover;border-radius:8px;margin-bottom:6px;display:block;" onerror="this.style.background='linear-gradient(135deg,#cfd8d3,#e4ded0)';this.removeAttribute('src');"><b>${spot.name}${spot.id === safest.id ? ' (Safest route)' : ''}</b><br>${spot.type}<br>${formatDistance(spot.distanceM)} · ${spot.elevationM}m elevation<br>${spot.capacity}<br><button class="popup-btn" onclick="showRouteTo('${spot.nodeId}')">Show safest route</button>`
         );
       }
     });
