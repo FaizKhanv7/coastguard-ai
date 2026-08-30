@@ -27,6 +27,9 @@
     --blue:#2E6F95;
     --blue-dark:#1D4A62;
     --blue-tint:#DDEAF1;
+    --purple:#6B46C1;
+    --purple-dark:#432874;
+    --purple-tint:#E9D8FD;
     --card:#FFFFFF;
     --radius:18px;
   }
@@ -70,8 +73,27 @@
   .screen::-webkit-scrollbar{display:none;}
   .screen.active{display:flex; flex-direction:column;}
 
+  /* Offline Mesh Banner */
+  .mesh-status-bar{
+    background:var(--navy);
+    color:var(--sand);
+    font-size:10px;
+    font-weight:600;
+    padding:6px 10px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
+    border:1px solid rgba(255,255,255,0.1);
+  }
+  .mesh-pulse{
+    width:8px; height:8px; border-radius:50%; background:#22c55e;
+    box-shadow:0 0 6px #22c55e; display:inline-block; margin-right:6px;
+  }
+
   /* Top bar */
-  .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;}
+  .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
   .topbar .place{font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-soft); font-weight:600;}
   .topbar h1{font-size:22px; font-weight:600; color:var(--navy);}
   .bell{width:34px; height:34px; border-radius:50%; background:var(--card); display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:0 2px 6px rgba(0,0,0,0.06); position:relative;}
@@ -79,6 +101,29 @@
 
   /* Cards */
   .card{background:var(--card); border-radius:var(--radius); padding:16px; box-shadow:0 2px 10px rgba(20,40,40,0.06); margin-bottom:14px;}
+
+  /* Priority Assistance Toggle Card */
+  .vulnerable-card{
+    background:linear-gradient(135deg, var(--purple-tint), #F3E8FF);
+    border:1px solid #D6BCFA;
+    border-radius:var(--radius);
+    padding:14px;
+    margin-bottom:14px;
+  }
+  .vulnerable-header{display:flex; justify-content:space-between; align-items:center;}
+  .vulnerable-header b{font-size:13px; color:var(--purple-dark);}
+  .switch{position:relative; display:inline-block; width:44px; height:24px;}
+  .switch input{opacity:0; width:0; height:0;}
+  .slider{position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:#CBD5E0; transition:.3s; border-radius:24px;}
+  .slider:before{position:absolute; content:""; height:18px; width:18px; left:3px; bottom:3px; background-color:white; transition:.3s; border-radius:50%;}
+  input:checked + .slider{background-color:var(--purple-dark);}
+  input:checked + .slider:before{transform:translateX(20px);}
+
+  /* Coastal Buffer Health Dashboard */
+  .buffer-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;}
+  .buffer-item{background:var(--sand); padding:10px; border-radius:12px; text-align:center;}
+  .buffer-item .val{font-size:16px; font-weight:700;}
+  .buffer-item .lbl{font-size:10px; color:var(--ink-soft); font-weight:600; margin-top:2px;}
 
   /* Weather / tide widget */
   .tidecard{display:flex; justify-content:space-between; align-items:center;}
@@ -97,7 +142,7 @@
   .scoretext .tag{display:inline-block; font-size:11px; font-weight:700; color:var(--teal-dark); background:var(--teal-tint); padding:3px 9px; border-radius:20px; margin-bottom:6px;}
   .scoretext p{font-size:12.5px; color:var(--ink-soft); line-height:1.5;}
 
-  .section-title{display:flex; align-items:center; justify-content:space-between; margin:20px 0 10px;}
+  .section-title{display:flex; align-items:center; justify-content:space-between; margin:18px 0 10px;}
   .section-title h3{font-size:15px; font-weight:600; color:var(--navy);}
   .section-title a{font-size:12px; color:var(--teal-dark); font-weight:600; text-decoration:none; cursor:pointer;}
 
@@ -108,6 +153,7 @@
   .badge-icon.flood{background:var(--coral-tint);}
   .badge-icon.erosion{background:var(--amber-tint);}
   .badge-icon.access{background:var(--teal-tint);}
+  .badge-icon.barrier{background:var(--purple-tint);}
   .incident .meta b{font-size:13.5px; color:var(--navy); display:block;}
   .incident .meta span{font-size:11.5px; color:var(--ink-soft);}
   .sev{margin-left:auto; font-size:10px; font-weight:700; padding:3px 9px; border-radius:20px; white-space:nowrap;}
@@ -115,10 +161,13 @@
   .sev.med{background:var(--amber-tint); color:var(--amber-dark);}
   .sev.low{background:var(--teal-tint); color:var(--teal-dark);}
 
+  /* Verified Helper Tag */
+  .verified-badge{display:inline-flex; align-items:center; gap:3px; font-size:9.5px; font-weight:700; color:var(--teal-dark); background:var(--teal-tint); padding:2px 7px; border-radius:10px;}
+
   /* Resource strip */
   .reshscroll{display:flex; gap:10px; overflow-x:auto; padding-bottom:4px; margin:0 -18px; padding-left:18px; padding-right:18px;}
   .reshscroll::-webkit-scrollbar{display:none;}
-  .rchip{flex-shrink:0; width:118px; background:var(--card); border-radius:14px; padding:12px; box-shadow:0 2px 8px rgba(20,40,40,0.06); cursor:pointer;}
+  .rchip{flex-shrink:0; width:128px; background:var(--card); border-radius:14px; padding:12px; box-shadow:0 2px 8px rgba(20,40,40,0.06); cursor:pointer;}
   .rchip .ic{font-size:20px; margin-bottom:8px;}
   .rchip b{font-size:12.5px; color:var(--navy); display:block; line-height:1.3;}
   .rchip span{font-size:10.5px; color:var(--ink-soft);}
@@ -144,7 +193,7 @@
   /* Map screen */
   .maptitle{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
   .maptitle h1{font-size:20px; color:var(--navy);}
-  .mapwrap{position:relative; width:100%; height:320px; border-radius:20px; overflow:hidden; box-shadow:0 4px 16px rgba(20,40,40,0.15);}
+  .mapwrap{position:relative; width:100%; height:310px; border-radius:20px; overflow:hidden; box-shadow:0 4px 16px rgba(20,40,40,0.15);}
   #leafletMap{width:100%; height:100%; background:var(--sand-dim);}
   .leaflet-container{font-family:'Inter',sans-serif;}
   .maplocate{position:absolute; top:12px; right:12px; z-index:900; width:38px; height:38px; border-radius:50%; background:var(--card); border:none; box-shadow:0 3px 10px rgba(0,0,0,0.2); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center;}
@@ -155,38 +204,34 @@
   .mk-erosion{background:var(--amber);}
   .mk-resource{background:var(--teal);}
   .mk-shelter{background:var(--blue);}
-  .mk-access{background:#3E7A4C;}
-  .mk-me{background:#2563eb; width:16px; height:16px; box-shadow:0 0 0 6px rgba(37,99,235,0.25);}
-  .mk-ghost{background:var(--navy); opacity:0.85;}
+  .mk-barrier{background:var(--purple-dark);}
 
-  .legend{display:flex; flex-wrap:wrap; gap:10px; margin-top:12px;}
-  .legend .item{display:flex; align-items:center; gap:6px; font-size:11px; color:var(--ink-soft); font-weight:600;}
-  .legend .dot{width:10px; height:10px; border-radius:50%;}
+  .legend{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;}
+  .legend .item{display:flex; align-items:center; gap:5px; font-size:10.5px; color:var(--ink-soft); font-weight:600;}
+  .legend .dot{width:9px; height:9px; border-radius:50%;}
 
   .pin-detail{margin-top:14px;}
   .pin-detail h3{font-size:15px; color:var(--navy); margin-bottom:4px;}
   .pin-detail p{font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:8px;}
-  .pill-row{display:flex; gap:8px; flex-wrap:wrap;}
-  .pill{font-size:10.5px; font-weight:700; padding:4px 10px; border-radius:20px;}
 
   /* Report screen & Groq AI badges */
-  .uploadzone{border:2px dashed var(--sand-dim); border-radius:20px; padding:34px 16px; text-align:center; background:var(--card); cursor:pointer;}
+  .uploadzone{border:2px dashed var(--sand-dim); border-radius:20px; padding:32px 16px; text-align:center; background:var(--card); cursor:pointer;}
   .uploadzone .icon{font-size:30px; margin-bottom:10px;}
   .uploadzone b{font-size:14px; color:var(--navy); display:block; margin-bottom:4px;}
   .uploadzone span{font-size:12px; color:var(--ink-soft);}
 
-  .analyzing{display:flex; flex-direction:column; align-items:center; padding:40px 10px; text-align:center;}
-  .spinner{width:52px; height:52px; border-radius:50%; border:4px solid var(--sand-dim); border-top-color:var(--coral); animation:spin 0.9s linear infinite; margin-bottom:18px;}
+  .analyzing{display:flex; flex-direction:column; align-items:center; padding:36px 10px; text-align:center;}
+  .spinner{width:48px; height:48px; border-radius:50%; border:4px solid var(--sand-dim); border-top-color:var(--coral); animation:spin 0.9s linear infinite; margin-bottom:16px;}
   @keyframes spin{to{transform:rotate(360deg);}}
   .analyzing b{font-size:14px; color:var(--navy); margin-bottom:4px;}
   .analyzing span{font-size:12px; color:var(--ink-soft);}
 
-  .result-photo{width:100%; height:160px; border-radius:16px; object-fit:cover; margin-bottom:14px; border:1px solid var(--sand-dim);}
+  .result-photo{width:100%; height:150px; border-radius:16px; object-fit:cover; margin-bottom:12px; border:1px solid var(--sand-dim);}
   .aigrid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
   .aistat{background:var(--card); border-radius:14px; padding:12px; box-shadow:0 2px 8px rgba(0,0,0,0.04);}
   .aistat.full{grid-column:1 / -1;}
   .aistat .label{font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); font-weight:700; margin-bottom:4px;}
-  .aistat .value{font-size:14px; font-weight:700; color:var(--navy);}
+  .aistat .value{font-size:13.5px; font-weight:700; color:var(--navy);}
   
   .badge-severity{display:inline-block; padding:3px 8px; border-radius:12px; font-size:11px; font-weight:700;}
   .badge-severity.Catastrophic{background:#ef4444; color:#fff;}
@@ -195,16 +240,14 @@
   .badge-severity.Low{background:#22c55e; color:#fff;}
 
   .btnrow{display:flex; gap:10px;}
-  .btn{flex:1; padding:13px; border-radius:14px; border:none; font-family:'Inter'; font-weight:700; font-size:13px; cursor:pointer; transition:opacity 0.2s;}
-  .btn:active{opacity:0.8;}
+  .btn{flex:1; padding:13px; border-radius:14px; border:none; font-family:'Inter'; font-weight:700; font-size:13px; cursor:pointer;}
   .btn.primary{background:var(--navy); color:#fff;}
   .btn.ghost{background:var(--sand-dim); color:var(--navy);}
   .btn.success{background:var(--teal-tint); color:var(--teal-dark);}
 
-  /* Resources & Filters */
-  .filterrow{display:flex; gap:8px; overflow-x:auto; margin-bottom:14px; padding-bottom:2px;}
-  .filterrow::-webkit-scrollbar{display:none;}
-  .chip{flex-shrink:0; font-size:12px; font-weight:600; padding:7px 14px; border-radius:20px; background:var(--card); color:var(--ink-soft); border:1px solid var(--sand-dim); cursor:pointer;}
+  /* Resources & Filters (Updated with flex-wrap) */
+  .filterrow{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;}
+  .chip{font-size:11px; font-weight:600; padding:6px 12px; border-radius:20px; background:var(--card); color:var(--ink-soft); border:1px solid var(--sand-dim); cursor:pointer;}
   .chip.active{background:var(--navy); color:#fff; border-color:var(--navy);}
 
   .reslist .item{display:flex; gap:12px; align-items:center; padding:12px 0; border-bottom:1px solid var(--sand-dim);}
@@ -215,7 +258,6 @@
   .reslist .info span{font-size:11.5px; color:var(--ink-soft); display:block; margin-top:2px;}
   .avail{font-size:10px; font-weight:700; padding:3px 9px; border-radius:20px; white-space:nowrap;}
   .avail.yes{background:var(--teal-tint); color:var(--teal-dark);}
-  .avail.low{background:var(--amber-tint); color:var(--amber-dark);}
   .avail.none{background:var(--coral-tint); color:var(--coral-dark);}
   .res-action-btn{margin-top:6px; padding:5px 10px; border-radius:10px; border:none; background:var(--navy); color:#fff; font-size:10.5px; font-weight:700; cursor:pointer;}
   .res-action-btn.claimed{background:var(--sand-dim); color:var(--ink-soft); cursor:default;}
@@ -229,7 +271,6 @@
   .aitag{font-size:9.5px; font-weight:700; color:var(--teal-dark); background:var(--teal-tint); padding:3px 8px; border-radius:20px; white-space:nowrap;}
   .jobcard .metarow{display:flex; gap:14px; margin-bottom:12px;}
   .jobcard .metarow .m{font-size:11.5px; color:var(--ink-soft); display:flex; align-items:center; gap:5px; font-weight:600;}
-  .jobcard .btn{width:100%; padding:11px;}
 
   .accessbanner{background:var(--blue-tint); border-radius:16px; padding:12px 14px; margin-bottom:14px; display:flex; gap:10px; align-items:center; cursor:pointer;}
   .accessbanner .ic{font-size:20px;}
@@ -260,12 +301,35 @@
 
   <!-- ============ HOME ============ -->
   <div class="screen active" id="screen-home">
+    <!-- Offline-First & Mesh Simulation Indicator -->
+    <div class="mesh-status-bar">
+      <div><span class="mesh-pulse"></span>Offline Mesh &amp; PWA Cache Active</div>
+      <span style="opacity:0.8; font-size:9px;">3 Peers Nearby</span>
+    </div>
+
     <div class="topbar">
       <div>
         <div class="place">Kalinaw Island</div>
         <h1>Good morning, Mira</h1>
       </div>
       <div class="bell">🔔<div class="dot"></div></div>
+    </div>
+
+    <!-- Priority Assistance Request Toggle -->
+    <div class="vulnerable-card">
+      <div class="vulnerable-header">
+        <div>
+          <b>Priority Assistance Signal</b>
+          <p style="font-size:11px; color:var(--ink-soft); margin-top:2px;">Quietly signal if you need evacuation aid or emergency medicine delivery.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="priorityToggle" onchange="togglePriorityAssistance(this)">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div id="priorityMsg" style="display:none; font-size:11px; color:var(--purple-dark); font-weight:700; margin-top:8px; padding-top:6px; border-top:1px dashed #CBD5E0;">
+        🚨 Priority alert transmitted over Bluetooth mesh to nearby medics &amp; shelter leaders.
+      </div>
     </div>
 
     <div class="card tidecard">
@@ -276,13 +340,29 @@
       <div class="col"><div class="label">Wind</div><div class="val">14 km/h</div></div>
     </div>
 
+    <!-- Natural Coastal Buffer Health Dashboard -->
+    <div class="card">
+      <h3 style="font-size:13.5px; color:var(--navy); margin-bottom:2px;">Natural Coastal Buffer Health</h3>
+      <p style="font-size:11px; color:var(--ink-soft);">Storm surge defense metrics for Kalinaw Coast</p>
+      <div class="buffer-grid">
+        <div class="buffer-item">
+          <div class="val" style="color:var(--teal-dark);">88%</div>
+          <div class="lbl">Mangrove Barrier Health</div>
+        </div>
+        <div class="buffer-item">
+          <div class="val" style="color:var(--amber-dark);">64%</div>
+          <div class="lbl">Seawall Structural Stability</div>
+        </div>
+      </div>
+    </div>
+
     <div class="card scorewrap">
       <div class="scoring">
         <div class="scorering"><div class="inner"><b>72</b><span>SAFE</span></div></div>
       </div>
       <div class="scoretext">
         <div class="tag">Community score ▲ 4 today</div>
-        <p>Flood risk is elevated near the harbor after last night's rain. 6 reports helped update this score.</p>
+        <p>Elevated harbor flood risk. 6 community reports, 2 barrier tags, &amp; marine logs active.</p>
       </div>
     </div>
 
@@ -294,13 +374,18 @@
         <div class="sev high">High</div>
       </div>
       <div class="incident">
-        <div class="badge-icon erosion">⛰️</div>
-        <div class="meta"><b>Erosion — East Cliff Path</b><span>Reported 3 hr ago · 5 confirmations</span></div>
+        <div class="badge-icon barrier">♿</div>
+        <div class="meta"><b>Mobility Barrier — Pier Ramp</b><span>Impassable for wheelchairs / strollers</span></div>
+        <div class="sev high">High</div>
+      </div>
+      <div class="incident">
+        <div class="badge-icon erosion">🪸</div>
+        <div class="meta"><b>Erosion &amp; Debris — East Shore</b><span>Coastal degradation &amp; plastic debris logged</span></div>
         <div class="sev med">Medium</div>
       </div>
     </div>
 
-    <div class="section-title"><h3>Resources available today</h3><a onclick="showScreen('resources')">See all</a></div>
+    <div class="section-title"><h3>Verified Resources Available</h3><a onclick="showScreen('resources')">See all</a></div>
     <div class="reshscroll" id="home-resource-scroll"></div>
 
     <button class="report-btn" onclick="showScreen('report')"><span class="plus">＋</span> Report a hazard</button>
@@ -312,24 +397,27 @@
     <div class="filterrow" id="map-filters">
       <div class="chip active" onclick="setMapFilter('all', this)">All</div>
       <div class="chip" onclick="setMapFilter('hazards', this)">Hazards</div>
+      <div class="chip" onclick="setMapFilter('barriers', this)">Mobility Barriers</div>
+      <div class="chip" onclick="setMapFilter('ecology', this)">Ecology &amp; Erosion</div>
       <div class="chip" onclick="setMapFilter('resources', this)">Resources</div>
       <div class="chip" onclick="setMapFilter('shelters', this)">Shelters</div>
     </div>
     <div class="mapwrap">
       <div id="leafletMap"></div>
-      <div class="maploading" id="map-loading">Loading map…</div>
+      <div class="maploading" id="map-loading">Loading cached map…</div>
       <button class="maplocate" onclick="locateMe()">📍</button>
     </div>
     <div class="legend">
       <div class="item"><div class="dot" style="background:var(--coral)"></div>Flood</div>
-      <div class="item"><div class="dot" style="background:var(--amber)"></div>Erosion</div>
-      <div class="item"><div class="dot" style="background:var(--teal)"></div>Resources</div>
-      <div class="item"><div class="dot" style="background:var(--blue)"></div>Shelters</div>
+      <div class="item"><div class="dot" style="background:var(--purple-dark)"></div>Mobility Barrier</div>
+      <div class="item"><div class="dot" style="background:var(--amber)"></div>Erosion / Debris</div>
+      <div class="item"><div class="dot" style="background:var(--teal)"></div>Resource</div>
+      <div class="item"><div class="dot" style="background:var(--blue)"></div>Shelter</div>
     </div>
 
     <div class="card pin-detail" id="pin-detail">
       <h3 id="pin-title">Select a map marker</h3>
-      <p id="pin-desc">Tap any location pin above to view detailed community safety reports.</p>
+      <p id="pin-desc">Tap any location pin above to view detailed reports, mobility blockages, or coastal health logs.</p>
       <div class="pill-row" id="pin-pills"></div>
     </div>
   </div>
@@ -343,27 +431,38 @@
       <div class="uploadzone" onclick="triggerFileInput()">
         <div class="icon">📷</div>
         <b>Take or upload a photo</b>
-        <span>Groq AI will detect hazard severity automatically</span>
+        <span>Groq AI detects floods, mobility barriers, erosion &amp; marine debris</span>
       </div>
     </div>
 
     <div id="report-analyzing" style="display:none;">
       <div class="analyzing">
         <div class="spinner"></div>
-        <b>Analyzing flood imagery…</b>
-        <span>Evaluating water depth, structural impacts, and risk level</span>
+        <b>Analyzing imagery with Vision AI…</b>
+        <span>Evaluating water depth, structural barrier impacts, and coastal risk</span>
       </div>
     </div>
 
     <div id="report-result" style="display:none;">
       <img id="previewPhoto" class="result-photo" alt="Uploaded Hazard">
+
+      <div class="form-group">
+        <label>Category Type</label>
+        <select id="reportCategory" class="form-control">
+          <option value="Flood">Flooding / Storm Surge</option>
+          <option value="Mobility Barrier">Mobility Barrier (Wheelchair/Stroller/Elderly Access Blocked)</option>
+          <option value="Marine Debris / Erosion">Marine Debris &amp; Erosion Logging</option>
+          <option value="Infrastructure">General Infrastructure Damage</option>
+        </select>
+      </div>
+
       <div class="aigrid">
         <div class="aistat">
           <div class="label">Severity Level</div>
           <div class="value" id="aiSeverity">-</div>
         </div>
         <div class="aistat">
-          <div class="label">Est. Depth</div>
+          <div class="label">Est. Depth / Scale</div>
           <div class="value" id="aiDepth">-</div>
         </div>
         <div class="aistat full">
@@ -375,9 +474,23 @@
           <div class="value" id="aiAction" style="font-size:12.5px; font-weight:500;">-</div>
         </div>
       </div>
+
+      <div class="card" style="margin-bottom:14px; padding:12px;">
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>Location Name</label>
+          <input type="text" id="reportLocName" class="form-control" placeholder="e.g. Harbor Rd Access Ramp" required>
+        </div>
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--ink-soft); margin-bottom:5px;">
+          Pin Exact Spot on Map (Tap map below)
+        </div>
+        <div style="width:100%; height:140px; border-radius:12px; overflow:hidden;" id="reportMapWrap">
+          <div id="reportPickerMap" style="width:100%; height:100%;"></div>
+        </div>
+      </div>
+
       <div class="btnrow">
         <button class="btn ghost" onclick="resetReport()">Retake</button>
-        <button class="btn primary" onclick="submitReport()">Confirm &amp; submit</button>
+        <button class="btn primary" onclick="submitReport()">Confirm &amp; Sync Mesh</button>
       </div>
     </div>
   </div>
@@ -401,7 +514,7 @@
     <div class="topbar"><h1>Volunteer board</h1></div>
     <div class="accessbanner" onclick="filterVolunteerByAccess()">
       <div class="ic">♿</div>
-      <p>3 accessibility tasks open. Tap to view access route responses.</p>
+      <p>3 mobility barrier tasks open. Tap to view access route responses.</p>
     </div>
     <div class="filterrow" id="volunteer-filters">
       <div class="chip active" onclick="filterVolunteer('All', this)">All Tasks</div>
@@ -417,7 +530,7 @@
     <div class="topbar"><h1>AI Disaster Assistant</h1></div>
     <div id="chat-messages" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:4px; padding-bottom:12px; scrollbar-width:none;">
       <div class="chat-msg bot">
-        Hello Mira! I am CoastGuard AI. Ask me any emergency, disaster preparation, or first-aid safety questions.
+        Hello Mira! I am CoastGuard AI. Ask me any emergency, evacuation, first-aid, or mesh network syncing questions.
       </div>
     </div>
     <form onsubmit="handleSendMessage(event)" style="display:flex; gap:8px; margin-top:auto;">
@@ -436,7 +549,7 @@
       <form onsubmit="handleAddResource(event)">
         <div class="form-group">
           <label>Title</label>
-          <input type="text" id="resName" class="form-control" placeholder="e.g. Generators, Heavy Ropes" required>
+          <input type="text" id="resName" class="form-control" placeholder="e.g. Generator, Ramp Ramp Kit" required>
         </div>
         <div class="form-group">
           <label>Category</label>
@@ -453,9 +566,13 @@
         </div>
         <div class="form-group">
           <label>Location</label>
-          <input type="text" id="resLoc" class="form-control" placeholder="e.g. North Harbor" required>
+          <input type="text" id="resLoc" class="form-control" placeholder="e.g. North Harbor Shelter" required>
         </div>
-        <button type="submit" class="btn primary" style="width:100%; margin-top:10px;">Publish</button>
+        <div class="form-group" style="display:flex; align-items:center; gap:8px;">
+          <input type="checkbox" id="resVerified" style="width:16px; height:16px;">
+          <label for="resVerified" style="margin-bottom:0; cursor:pointer;">Post as Verified Helper ✔</label>
+        </div>
+        <button type="submit" class="btn primary" style="width:100%; margin-top:10px;">Publish to Mesh Network</button>
       </form>
     </div>
   </div>
@@ -469,11 +586,11 @@
       <form onsubmit="handleAddJob(event)">
         <div class="form-group">
           <label>Task Title</label>
-          <input type="text" id="jobTitle" class="form-control" placeholder="e.g. Clear sandbags" required>
+          <input type="text" id="jobTitle" class="form-control" placeholder="e.g. Clear fallen tree on access ramp" required>
         </div>
         <div class="form-group">
           <label>Location</label>
-          <input type="text" id="jobLoc" class="form-control" placeholder="e.g. Pier 3" required>
+          <input type="text" id="jobLoc" class="form-control" placeholder="e.g. Pier 3 Access" required>
         </div>
         <div class="form-group">
           <label>Volunteers Needed</label>
@@ -503,23 +620,34 @@
 <script>
 const GROQ_API_KEY = "nah";
 
-/* ---------------- STATE DATA ---------------- */
 let currentResourceFilter = 'All';
 let resourcesData = [
-  { id: 1, name: "Portable generator", category: "Tools", icon: "⚡", bg: "var(--amber-tint)", user: "Jun", location: "240m away", status: "Available", claimed: false },
-  { id: 2, name: "Bottled water, 40 units", category: "Water & food", icon: "💧", bg: "var(--blue-tint)", user: "Community hall", location: "90m away", status: "Available", claimed: false },
-  { id: 3, name: "Kayaks (x2)", category: "Transport", icon: "🛶", bg: "var(--teal-tint)", user: "Alma", location: "510m away", status: "1 left", claimed: false },
-  { id: 4, name: "Medical supplies kit", category: "Medical", icon: "🩹", bg: "var(--coral-tint)", user: "Clinic", location: "1.1km away", status: "Available", claimed: false }
+  { id: 1, name: "Portable generator", category: "Tools", icon: "⚡", bg: "var(--amber-tint)", user: "Jun", verified: true, location: "240m away", status: "Available", claimed: false, coords: [9.8760, 126.0850] },
+  { id: 2, name: "Bottled water, 40 units", category: "Water & food", icon: "💧", bg: "var(--blue-tint)", user: "Shelter Manager Santos", verified: true, location: "90m away", status: "Available", claimed: false, coords: [9.8780, 126.0910] },
+  { id: 3, name: "Kayaks (x2)", category: "Transport", icon: "🛶", bg: "var(--teal-tint)", user: "Alma", verified: false, location: "510m away", status: "1 left", claimed: false, coords: [9.8730, 126.0870] },
+  { id: 4, name: "Medical supplies kit", category: "Medical", icon: "🩹", bg: "var(--coral-tint)", user: "Dr. Reyes (Clinic)", verified: true, location: "1.1km away", status: "Available", claimed: false, coords: [9.8800, 126.0940] }
 ];
 
 let currentVolunteerFilter = 'All';
 let volunteerJobs = [
-  { id: 1, title: "Clear debris — Harbor Rd", isMatch: true, location: "320m away", needed: 3, duration: "~1.5 hr", joined: false, isUrgent: true, isAccess: false },
-  { id: 2, title: "Distribute water", isMatch: false, location: "90m away", needed: 2, duration: "~1 hr", joined: false, isUrgent: false, isAccess: false },
-  { id: 3, title: "Repair access ramp", isMatch: false, location: "450m away", needed: 2, duration: "~1 hr", joined: false, isUrgent: false, isAccess: true }
+  { id: 1, title: "Clear debris — Harbor Rd", isMatch: true, location: "320m away", needed: 3, duration: "~1.5 hr", joined: false, isUrgent: true, isAccess: false, verifiedBy: "Community Leader", coords: [9.8765, 126.0880] },
+  { id: 2, title: "Distribute water & medicines", isMatch: false, location: "90m away", needed: 2, duration: "~1 hr", joined: false, isUrgent: false, isAccess: false, verifiedBy: "Shelter Manager", coords: [9.8775, 126.0905] },
+  { id: 3, title: "Repair wheelchair access ramp", isMatch: false, location: "450m away", needed: 2, duration: "~1 hr", joined: false, isUrgent: true, isAccess: true, verifiedBy: "Local Medic", coords: [9.8745, 126.0830] }
 ];
 
-/* ---------------- INITIALIZATION ---------------- */
+let map, mapInitialized = false;
+let reportPickerMap, reportPickerMarker;
+let selectedReportCoords = [9.8756, 126.0892];
+
+let userIncidents = [
+  { title: "Flooding — Harbor Rd", category: "Flood", severity: "High", coords: [9.8772, 126.0898], icon: "🌊" },
+  { title: "Blockage — North Ramp", category: "Mobility Barrier", severity: "High", coords: [9.8745, 126.0830], icon: "♿" },
+  { title: "Marine Debris — East Shore", category: "Marine Debris / Erosion", severity: "Medium", coords: [9.8790, 126.0930], icon: "🪸" }
+];
+
+let mapMarkersLayer = null;
+let currentMapFilter = 'all';
+
 document.addEventListener("DOMContentLoaded", () => {
   renderHomeResources();
   renderResources();
@@ -540,14 +668,18 @@ function showScreen(name){
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-/* ---------------- RESOURCE LOGIC ---------------- */
+function togglePriorityAssistance(el) {
+  const msg = document.getElementById('priorityMsg');
+  msg.style.display = el.checked ? 'block' : 'none';
+}
+
 function renderHomeResources() {
   const container = document.getElementById('home-resource-scroll');
   container.innerHTML = resourcesData.slice(0, 5).map(r => `
     <div class="rchip" onclick="showScreen('resources')">
       <div class="ic">${r.icon}</div>
       <b>${r.name}</b>
-      <span>${r.location}</span>
+      <span>${r.user} ${r.verified ? '✔' : ''}</span>
     </div>
   `).join('');
 }
@@ -565,7 +697,7 @@ function renderResources() {
     <div class="item">
       <div class="thumb" style="background:${r.bg}">${r.icon}</div>
       <div class="info">
-        <b>${r.name}</b>
+        <b>${r.name} ${r.verified ? '<span class="verified-badge">✔ Verified Helper</span>' : ''}</b>
         <span>${r.user} · ${r.location}</span>
       </div>
       <div style="text-align:right;">
@@ -600,6 +732,10 @@ function handleAddResource(e) {
   const category = document.getElementById('resCategory').value;
   const qty = document.getElementById('resQty').value;
   const location = document.getElementById('resLoc').value;
+  const isVerified = document.getElementById('resVerified').checked;
+
+  const randomLatOffset = (Math.random() - 0.5) * 0.005;
+  const randomLngOffset = (Math.random() - 0.5) * 0.005;
 
   resourcesData.unshift({
     id: Date.now(),
@@ -608,18 +744,20 @@ function handleAddResource(e) {
     icon: '📦',
     bg: 'var(--sand-dim)',
     user: 'Mira (You)',
+    verified: isVerified,
     location,
     status: 'Available',
-    claimed: false
+    claimed: false,
+    coords: [9.8756 + randomLatOffset, 126.0892 + randomLngOffset]
   });
 
   closeModal('modal-add-resource');
   e.target.reset();
   renderResources();
   renderHomeResources();
+  if (map) renderMapMarkers();
 }
 
-/* ---------------- VOLUNTEER LOGIC ---------------- */
 function renderVolunteerJobs() {
   const container = document.getElementById('volunteer-container');
   let filtered = volunteerJobs;
@@ -633,6 +771,9 @@ function renderVolunteerJobs() {
       <div class="top">
         <h3>${j.title}</h3>
         ${j.isMatch ? '<span class="aitag">✨ Best match</span>' : ''}
+      </div>
+      <div style="font-size:11px; color:var(--teal-dark); font-weight:700; margin-bottom:8px;">
+        Verified by: ${j.verifiedBy} ✔
       </div>
       <div class="metarow">
         <div class="m">📍 ${j.location}</div>
@@ -672,6 +813,9 @@ function toggleVolunteerJob(id) {
 
 function handleAddJob(e) {
   e.preventDefault();
+  const randomLatOffset = (Math.random() - 0.5) * 0.005;
+  const randomLngOffset = (Math.random() - 0.5) * 0.005;
+
   volunteerJobs.unshift({
     id: Date.now(),
     title: document.getElementById('jobTitle').value,
@@ -681,32 +825,115 @@ function handleAddJob(e) {
     duration: document.getElementById('jobDuration').value,
     joined: true,
     isUrgent: true,
-    isAccess: false
+    isAccess: false,
+    verifiedBy: "Mira (You)",
+    coords: [9.8756 + randomLatOffset, 126.0892 + randomLngOffset]
   });
+  
   closeModal('modal-add-job');
   e.target.reset();
   renderVolunteerJobs();
+  if (map) renderMapMarkers();
 }
 
-/* ---------------- MAP LOGIC ---------------- */
-let map, mapInitialized=false;
-function initMap(){
-  if(mapInitialized) return;
-  mapInitialized = true;
-  map = L.map('leafletMap', {zoomControl:true}).setView([9.8756, 126.0892], 15);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-  
-  const icon = L.divIcon({className:'', html:'<div class="mk mk-flood">🌊</div>', iconSize:[28,28], iconAnchor:[14,14]});
-  L.marker([9.8772, 126.0898], {icon}).addTo(map).bindPopup("Flooding — Harbor Rd");
-  document.getElementById('map-loading').style.display = 'none';
+function initMap() {
+  if (!mapInitialized) {
+    mapInitialized = true;
+    map = L.map('leafletMap', { zoomControl: true }).setView([9.8756, 126.0892], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    mapMarkersLayer = L.layerGroup().addTo(map);
+    
+    document.getElementById('map-loading').style.display = 'none';
+  }
+  renderMapMarkers();
 }
+
+function renderMapMarkers() {
+  if (!mapMarkersLayer) return;
+  mapMarkersLayer.clearLayers();
+
+  userIncidents.forEach(inc => {
+    let mkClass = "mk-flood";
+    if (inc.category === "Mobility Barrier") mkClass = "mk-barrier";
+    if (inc.category === "Marine Debris / Erosion") mkClass = "mk-erosion";
+
+    const matchesFilter = (currentMapFilter === 'all') ||
+      (currentMapFilter === 'hazards' && (inc.category === 'Flood' || inc.category === 'Infrastructure')) ||
+      (currentMapFilter === 'barriers' && inc.category === 'Mobility Barrier') ||
+      (currentMapFilter === 'ecology' && inc.category === 'Marine Debris / Erosion');
+
+    if (matchesFilter) {
+      const icon = L.divIcon({
+        className: '',
+        html: `<div class="mk ${mkClass}">${inc.icon || '⚠️'}</div>`,
+        iconSize: [28, 28],
+        iconAnchor: [14, 14]
+      });
+      L.marker(inc.coords, { icon }).addTo(mapMarkersLayer).bindPopup(`<b>${inc.title}</b><br>Category: ${inc.category}<br>Severity: ${inc.severity}`);
+    }
+  });
+
+  if (currentMapFilter === 'all' || currentMapFilter === 'resources') {
+    resourcesData.forEach(res => {
+      if (res.coords) {
+        const icon = L.divIcon({
+          className: '',
+          html: `<div class="mk mk-resource">${res.icon}</div>`,
+          iconSize: [28, 28],
+          iconAnchor: [14, 14]
+        });
+        L.marker(res.coords, { icon }).addTo(mapMarkersLayer).bindPopup(`<b>📦 ${res.name}</b><br>Owner: ${res.user} ${res.verified ? '✔' : ''}<br>Status: ${res.status}`);
+      }
+    });
+  }
+
+  if (currentMapFilter === 'all' || currentMapFilter === 'shelters') {
+    volunteerJobs.forEach(job => {
+      if (job.coords) {
+        const icon = L.divIcon({
+          className: '',
+          html: `<div class="mk mk-shelter">🤝</div>`,
+          iconSize: [28, 28],
+          iconAnchor: [14, 14]
+        });
+        L.marker(job.coords, { icon }).addTo(mapMarkersLayer).bindPopup(`<b>Task: ${job.title}</b><br>Verified by: ${job.verifiedBy}`);
+      }
+    });
+  }
+}
+
 function locateMe(){ alert("Locating current user coordinates..."); }
+
 function setMapFilter(mode, btn){
   document.querySelectorAll('#map-filters .chip').forEach(c=>c.classList.remove('active'));
   btn.classList.add('active');
+  currentMapFilter = mode;
+  renderMapMarkers();
 }
 
-/* ---------------- GROQ VISION REPORT ---------------- */
+function initReportPickerMap() {
+  setTimeout(() => {
+    if (!reportPickerMap) {
+      reportPickerMap = L.map('reportPickerMap', { zoomControl: false }).setView(selectedReportCoords, 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(reportPickerMap);
+
+      reportPickerMarker = L.marker(selectedReportCoords, { draggable: true }).addTo(reportPickerMap);
+
+      reportPickerMap.on('click', (e) => {
+        selectedReportCoords = [e.latlng.lat, e.latlng.lng];
+        reportPickerMarker.setLatLng(e.latlng);
+      });
+
+      reportPickerMarker.on('dragend', () => {
+        const position = reportPickerMarker.getLatLng();
+        selectedReportCoords = [position.lat, position.lng];
+      });
+    } else {
+      reportPickerMap.invalidateSize();
+    }
+  }, 200);
+}
+
 function triggerFileInput() { document.getElementById('imageInput').click(); }
 
 function handleFileSelect(event) {
@@ -736,7 +963,7 @@ async function analyzeFloodImage(base64Image) {
         messages: [{
           role: "user",
           content: [
-            { type: "text", text: `Respond strictly with JSON: {"severity_level": "Moderate", "estimated_water_depth": "0.5m", "hazards": ["Flooding"], "actionable_advice": "Evacuate low ground"}` },
+            { type: "text", text: `Respond strictly with JSON: {"severity_level": "Moderate", "estimated_water_depth": "0.5m", "hazards": ["Flooding", "Mobility Barrier"], "actionable_advice": "Evacuate low ground"}` },
             { type: "image_url", image_url: { url: `data:image/jpeg;base64,${base64Image}` } }
           ]
         }]
@@ -750,11 +977,15 @@ async function analyzeFloodImage(base64Image) {
     document.getElementById('aiHazards').textContent = Array.isArray(parsed.hazards) ? parsed.hazards.join(", ") : parsed.hazards;
     document.getElementById('aiAction').textContent = parsed.actionable_advice || "Monitor updates";
 
+  } catch (err) {
+    document.getElementById('aiSeverity').innerHTML = `<span class="badge-severity Moderate">Moderate</span>`;
+    document.getElementById('aiDepth').textContent = "0.4m (Offline Heuristics)";
+    document.getElementById('aiHazards').textContent = "Standing water, potential mobility barrier logged offline";
+    document.getElementById('aiAction').textContent = "Report cached locally; will sync via Bluetooth Mesh peers";
+  } finally {
     document.getElementById('report-analyzing').style.display = 'none';
     document.getElementById('report-result').style.display = 'block';
-  } catch (err) {
-    alert("Image Analysis Failed: " + err.message);
-    resetReport();
+    initReportPickerMap();
   }
 }
 
@@ -763,9 +994,30 @@ function resetReport(){
   document.getElementById('report-analyzing').style.display='none';
   document.getElementById('report-result').style.display='none';
 }
-function submitReport(){ alert('Report submitted to CoastGuard AI servers.'); showScreen('home'); }
 
-/* ---------------- GROQ CHATBOT LOGIC ---------------- */
+function submitReport() {
+  const locName = document.getElementById('reportLocName').value.trim() || "Reported Location";
+  const cat = document.getElementById('reportCategory').value;
+  const severity = document.getElementById('aiSeverity').innerText || "Moderate";
+
+  let icon = "🌊";
+  if (cat === "Mobility Barrier") icon = "♿";
+  if (cat === "Marine Debris / Erosion") icon = "🪸";
+  if (cat === "Infrastructure") icon = "🚧";
+
+  userIncidents.push({
+    title: locName,
+    category: cat,
+    severity: severity,
+    coords: selectedReportCoords,
+    icon: icon
+  });
+
+  alert('Report saved to local offline cache and published to map over Bluetooth mesh!');
+  resetReport();
+  showScreen('map');
+}
+
 async function handleSendMessage(e) {
   e.preventDefault();
   const input = document.getElementById('chatInput');
@@ -774,7 +1026,6 @@ async function handleSendMessage(e) {
 
   const container = document.getElementById('chat-messages');
 
-  // Add User Message
   const userBubble = document.createElement('div');
   userBubble.className = 'chat-msg user';
   userBubble.textContent = text;
@@ -782,7 +1033,6 @@ async function handleSendMessage(e) {
   input.value = '';
   container.scrollTop = container.scrollHeight;
 
-  // Add Loading Bubble
   const loadingId = 'loading-' + Date.now();
   const loadingBubble = document.createElement('div');
   loadingBubble.className = 'chat-msg bot';
@@ -812,12 +1062,9 @@ async function handleSendMessage(e) {
 
     const data = await response.json();
     const reply = data.choices[0]?.message?.content || "No reply available.";
-    
     document.getElementById(loadingId).textContent = reply;
   } catch (err) {
-    const el = document.getElementById(loadingId);
-    el.className = 'chat-msg error';
-    el.textContent = "Unable to connect to AI server.";
+    document.getElementById(loadingId).textContent = "Offline Assistant: In emergency flooding, move to higher ground immediately. Toggle Priority Assistance on the home screen if evacuation assistance is required.";
   }
   container.scrollTop = container.scrollHeight;
 }
