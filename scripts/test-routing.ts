@@ -1,21 +1,11 @@
-import { findSafeRoute } from '../lib/routing';
-import roadsData from '../data/roads.json';
-
-console.log('[Test-Routing] Testing safe pathfinding algorithm...');
-
-const mockWaterGrid = new Float32Array(128 * 128);
-// simulate water depth in lower corner
-for (let i = 0; i < 2000; i++) {
-  mockWaterGrid[i] = 1.2;
-}
-
-const result = findSafeRoute({
-  start: [-74.006, 40.7128],
-  destination: [-73.985, 40.7484],
-  roads: roadsData as any,
-  waterGrid: mockWaterGrid
-});
-
-console.log(`[Test-Routing] Computed Path Waypoints: ${result.path.length}`);
-console.log(`[Test-Routing] Total Safe Distance: ${result.distance} km`);
-console.log(`[Test-Routing] Status: ${result.safe ? 'SUCCESS (Safe)' : 'BLOCKED'}`);
+import { simulateAllSteps, worstCaseThroughHorizon, STEP_HOURS } from "../lib/flood";
+import { graph, landmarks, findRoute, STANDARD_PATROL_DEPTH_LIMIT_M, HIGH_WATER_VEHICLE_DEPTH_LIMIT_M, SHALLOW_DRAFT_VESSEL_MIN_DEPTH_M } from "../lib/routing";
+let fail=0; const check=(n:string,v:boolean)=>{console.log(`${v?'PASS':'FAIL'} ${n}`); if(!v) fail++};
+const states=simulateAllSteps();
+const origin=landmarks.find(l=>l.id==="uscg-sector-miami") ?? landmarks[0];
+const dest=landmarks.find(l=>l.id==="jackson-memorial") ?? landmarks[1];
+const current=states[0], horizon=worstCaseThroughHorizon(states,0,12);
+const patrol=findRoute(origin.nodeId,dest.nodeId,{current,horizon,mode:"fastest",horizonH:12,timeline:states,startStep:0,stepHours:STEP_HOURS,vehicle:"standard-patrol"});
+const high=findRoute(origin.nodeId,dest.nodeId,{current,horizon,mode:"fastest",horizonH:12,timeline:states,startStep:0,stepHours:STEP_HOURS,vehicle:"high-water"});
+check("Miami road graph has edges",graph.edges.length>0); check("critical landmarks are road-snapped",!!origin.nodeId&&!!dest.nodeId); check("standard patrol clearance is 0.15 m",STANDARD_PATROL_DEPTH_LIMIT_M===0.15); check("high-water clearance is 0.90 m",HIGH_WATER_VEHICLE_DEPTH_LIMIT_M===0.9); check("shallow-draft minimum is 0.60 m",SHALLOW_DRAFT_VESSEL_MIN_DEPTH_M===0.6); check("routing returns a discriminated result",typeof patrol.ok==="boolean"&&typeof high.ok==="boolean");
+if(fail) process.exit(1);
