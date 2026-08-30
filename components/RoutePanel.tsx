@@ -17,7 +17,7 @@ interface RoutePanelProps {
   onRecalculate?: () => void;
 }
 
-export const RoutePanel: React.FC<RoutePanelProps> = ({
+export function RoutePanel({
   routes = [
     {
       origin: "South Pier Station",
@@ -37,7 +37,7 @@ export const RoutePanel: React.FC<RoutePanelProps> = ({
     },
   ],
   onRecalculate,
-}) => {
+}: RoutePanelProps) {
   return (
     <div className="glass-panel p-4 rounded-xl flex flex-col gap-3">
       <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
@@ -100,4 +100,6 @@ export const RoutePanel: React.FC<RoutePanelProps> = ({
       </div>
     </div>
   );
-};
+}
+
+export default RoutePanel;
