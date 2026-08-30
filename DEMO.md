@@ -8,7 +8,7 @@ moment every other page describes.
 
 | Control | Value |
 |---|---|
-| Page | **Home** |
+| Page | **Overview** (`/overview` — the landing page at `/` is for cold visitors) |
 | Time | Day 1 · 04:00 |
 | Horizon | **Now** |
 
@@ -34,7 +34,8 @@ see the model verified outside the UI.
 
 ## 0:00 — 0:20 · The overview
 
-Start on **Home**.
+Start on **Overview**. (If you want a cold open for judges, start on `/` and
+click "Open the dashboard" — the landing page states the pitch in one screen.)
 
 > "Kalinaw Island, a calm morning. Water about a metre, five of 97 road
 > segments closed, everything reachable, safety score 97. The outlook strip

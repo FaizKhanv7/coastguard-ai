@@ -837,7 +837,6 @@
 <script>
 const GROQ_API_KEY = "nah";
 
-<<<<<<< HEAD
 /*
  * The key ships as a placeholder on purpose: this file is committed and served
  * to the browser, so a real credential here would be public to anyone who
@@ -896,8 +895,6 @@ const CATEGORY_BG = {
    here: they are live values, refreshed by refreshLiveDistances() every time
    the simulation moves. */
 
-=======
->>>>>>> a39820e9fad2837966b761289dc0f356afe1ac41
 let currentResourceFilter = 'All';
 let resourcesData = CG.community.resources.map((r, i) => ({
   id: i + 1,
@@ -1756,6 +1753,7 @@ async function analyzeFloodImage(base64Image) {
   document.getElementById('report-analyzing').style.display = 'block';
 
   try {
+    if (!AI_ENABLED) throw new Error("AI assistant offline: no API key configured");
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
@@ -1848,6 +1846,7 @@ async function handleSendMessage(e) {
   container.scrollTop = container.scrollHeight;
 
   try {
+    if (!AI_ENABLED) throw new Error("AI assistant offline: no API key configured");
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {

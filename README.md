@@ -59,7 +59,8 @@ the same order, so someone who has used one can use the other:
 
 | Page | What it is |
 |---|---|
-| `/` | Operations overview: conditions, 24 h outlook, safety score, where to send people, live incidents |
+| `/` | Landing page — what the project is, the two algorithms, the two surfaces. Its headline figures are read live from the engine so they cannot drift from the dashboard. |
+| `/overview` | Operations overview: conditions, 24 h outlook, safety score, where to send people, live incidents |
 | `/map` | The forecast map, 48 h timeline, horizons and the router |
 | `/report` | Hazard intake, corroborated against the model at the reported location |
 | `/resources` | Shared inventory with live road distances; reserve or log items |
