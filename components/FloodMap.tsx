@@ -19,7 +19,7 @@ export const FloodMap: React.FC<FloodMapProps> = ({
   landmarks = [],
   currentHour,
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement null |>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
