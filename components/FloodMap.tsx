@@ -1,362 +1,187 @@
-"use client";
+'use client';
 
-/**
- * The map centrepiece: OSM raster basemap, flood overlay, road network
- * coloured by passability, the two candidate routes, and landmark markers.
- *
- * Every layer that carries meaning is encoded twice — colour plus either a
- * dash pattern, a texture or a label — so nothing critical is lost to a
- * viewer who cannot separate the hues.
- */
+import React, { useRef, useEffect, useState } from 'react';
+import { useFloodStore } from '@/lib/store';
+import { Layers, Shield, Navigation, AlertCircle, Plus, Eye, EyeOff } from 'lucide-react';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Map, {
-  Layer,
-  Marker,
-  NavigationControl,
-  Source,
-  type MapRef,
-} from "react-map-gl/maplibre";
-import type { FeatureCollection, LineString, Feature } from "geojson";
+export function FloodMap() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const { 
+    dem, 
+    floodDepthGrid, 
+    currentStep, 
+    barriers, 
+    toggleBarrier, 
+    selectedRoute,
+    activeLayer,
+    setActiveLayer 
+  } = useFloodStore();
 
-import { dem } from "@/lib/dem";
-import { graph, landmarks, shortName, type RouteResult } from "@/lib/routing";
-import type { FloodState } from "@/lib/flood";
-import { renderFloodImage, floodImageCoordinates } from "@/lib/raster";
+  const [hoverInfo, setHoverInfo] = useState<{ lon: number; lat: number; depth: number } | null>(null);
+  const [showBarriers, setShowBarriers] = useState(true);
 
-const INITIAL_VIEW = {
-  longitude: (dem.bbox.lngMin + dem.bbox.lngMax) / 2,
-  latitude: (dem.bbox.latMin + dem.bbox.latMax) / 2,
-  zoom: 13,
-};
-
-/** The town's extent, used to frame the map once the container is sized. */
-const TOWN_BOUNDS: [[number, number], [number, number]] = [
-  [dem.bbox.lngMin, dem.bbox.latMin],
-  [dem.bbox.lngMax, dem.bbox.latMax],
-];
-
-/** Free raster basemap — no API key, which keeps the demo offline-safe. */
-const BASEMAP_STYLE = {
-  version: 8 as const,
-  sources: {
-    osm: {
-      type: "raster" as const,
-      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-      tileSize: 256,
-      attribution: "&copy; OpenStreetMap contributors",
-    },
-  },
-  layers: [
-    {
-      id: "osm",
-      type: "raster" as const,
-      source: "osm",
-      paint: { "raster-opacity": 0.55, "raster-saturation": -0.4 },
-    },
-  ],
-};
-
-const ICONS: Record<string, string> = {
-  hospital: "H",
-  shelter: "S",
-  "town-center": "T",
-  marina: "M",
-  ferry: "F",
-};
-
-const KIND_COLOR: Record<string, string> = {
-  hospital: "var(--color-coral)",
-  shelter: "var(--color-blue)",
-  "town-center": "var(--color-navy)",
-  marina: "var(--color-teal)",
-  ferry: "var(--color-amber)",
-};
-
-interface Props {
-  displayed: FloodState;
-  blockedEdges: Set<string>;
-  route: RouteResult;
-  comparison: RouteResult;
-  originId: string;
-  destId: string;
-  cutOffIds: Set<string>;
-  onPickLandmark: (id: string) => void;
-}
-
-export default function FloodMap({
-  displayed,
-  blockedEdges,
-  route,
-  comparison,
-  originId,
-  destId,
-  cutOffIds,
-  onPickLandmark,
-}: Props) {
-  const mapRef = useRef<MapRef>(null);
-  const shellRef = useRef<HTMLDivElement>(null);
-  const [floodUrl, setFloodUrl] = useState<string | null>(null);
-
-  /** Set once the operator pans or zooms, so we stop re-framing on them. */
-  const userMoved = useRef(false);
-
-  const fitTown = useCallback(() => {
-    mapRef.current?.fitBounds(TOWN_BOUNDS, { padding: 28, duration: 0 });
-  }, []);
-
-  // MapLibre sizes its canvas once at construction. This dashboard mounts the
-  // map behind a loading skeleton and sits in a responsive grid, so the
-  // container almost always changes size after that — without this observer
-  // the canvas keeps whatever size it happened to be born with.
-  //
-  // Re-fitting after the resize matters just as much: `resize()` preserves
-  // centre and zoom, so a map first framed in a small container and then
-  // grown keeps the tighter zoom and leaves the town as a small square in
-  // the middle of a much wider view. We stop doing it the moment the
-  // operator moves the map themselves.
   useEffect(() => {
-    const shell = shellRef.current;
-    if (!shell) return;
-    const observer = new ResizeObserver(() => {
-      const map = mapRef.current;
-      if (!map) return;
-      map.resize();
-      if (!userMoved.current) fitTown();
-    });
-    observer.observe(shell);
-    return () => observer.disconnect();
-  }, [fitTown]);
+    const canvas = canvasRef.current;
+    if (!canvas || !dem) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-  // Frame the whole town once the style is up and the container is laid out.
-  const handleLoad = useCallback(() => fitTown(), [fitTown]);
+    const width = dem.width || 128;
+    const height = dem.height || 128;
+    canvas.width = width;
+    canvas.height = height;
 
-  // `originalEvent` is only present when a human drove the movement, which is
-  // how we tell an operator pan apart from our own fitBounds call.
-  const handleMoveStart = useCallback(
-    (e: { originalEvent?: unknown }) => {
-      if (e.originalEvent) userMoved.current = true;
-    },
-    [],
-  );
+    const imgData = ctx.createImageData(width, height);
+    const data = imgData.data;
 
-  // Repaint the flood raster whenever the displayed timestep changes.
-  useEffect(() => {
-    setFloodUrl(renderFloodImage(displayed));
-  }, [displayed]);
+    for (let i = 0; i < width * height; i++) {
+      const pixelIdx = i * 4;
+      const elev = dem.elevation[i];
+      const depth = floodDepthGrid ? floodDepthGrid[i] : 0;
 
-  // Road network, split into passable and impassable collections so each can
-  // carry its own paint. Rebuilt only when the closure set changes.
-  const { openRoads, blockedRoads } = useMemo(() => {
-    const open: Feature<LineString>[] = [];
-    const blocked: Feature<LineString>[] = [];
-    for (const edge of graph.edges) {
-      const feature: Feature<LineString> = {
-        type: "Feature",
-        properties: { name: edge.name, id: edge.id },
-        geometry: { type: "LineString", coordinates: edge.coordinates },
-      };
-      (blockedEdges.has(edge.id) ? blocked : open).push(feature);
+      if (activeLayer === 'elevation') {
+        const normElev = Math.min(255, Math.max(0, elev * 12));
+        data[pixelIdx] = 30 + normElev * 0.4;
+        data[pixelIdx + 1] = 60 + normElev * 0.7;
+        data[pixelIdx + 2] = 40 + normElev * 0.2;
+        data[pixelIdx + 3] = 255;
+      } else {
+        // Base terrain dark map
+        data[pixelIdx] = 15;
+        data[pixelIdx + 1] = 23;
+        data[pixelIdx + 2] = 42;
+        data[pixelIdx + 3] = 255;
+
+        // Flood Overlay
+        if (depth > 0.05) {
+          const depthAlpha = Math.min(220, Math.max(80, depth * 90));
+          data[pixelIdx] = 30;
+          data[pixelIdx + 1] = 120 + Math.min(100, depth * 40);
+          data[pixelIdx + 2] = 245;
+          data[pixelIdx + 3] = depthAlpha;
+        }
+      }
     }
-    return {
-      openRoads: { type: "FeatureCollection", features: open } as FeatureCollection,
-      blockedRoads: {
-        type: "FeatureCollection",
-        features: blocked,
-      } as FeatureCollection,
-    };
-  }, [blockedEdges]);
 
-  const routeLine = useMemo(() => toLine(route), [route]);
-  const comparisonLine = useMemo(() => toLine(comparison), [comparison]);
-  const fallbackLine = useMemo(
-    () =>
-      !route.ok && route.nearestReachable
-        ? lineFrom(route.nearestReachable.coordinates)
-        : null,
-    [route],
-  );
+    ctx.putImageData(imgData, 0, 0);
+
+    // Render Route overlay if present
+    if (selectedRoute && selectedRoute.coordinates.length > 1) {
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      selectedRoute.coordinates.forEach(([lon, lat], idx) => {
+        if (!dem.bounds) return;
+        const [minX, minY, maxX, maxY] = dem.bounds;
+        const x = ((lon - minX) / (maxX - minX)) * width;
+        const y = (1 - (lat - minY) / (maxY - minY)) * height;
+        if (idx === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    }
+  }, [dem, floodDepthGrid, activeLayer, selectedRoute]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!dem || !dem.bounds || !canvasRef.current) return;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = Math.floor(((e.clientX - rect.left) / rect.width) * dem.width);
+    const y = Math.floor(((e.clientY - rect.top) / rect.height) * dem.height);
+
+    if (x >= 0 && x < dem.width && y >= 0 && y < dem.height) {
+      const idx = y * dem.width + x;
+      const depth = floodDepthGrid ? floodDepthGrid[idx] : 0;
+      const [minX, minY, maxX, maxY] = dem.bounds;
+      const lon = minX + (x / dem.width) * (maxX - minX);
+      const lat = maxY - (y / dem.height) * (maxY - minY);
+      setHoverInfo({ lon, lat, depth });
+    }
+  };
 
   return (
-    <div ref={shellRef} className="h-full w-full">
-    <Map
-      ref={mapRef}
-      initialViewState={INITIAL_VIEW}
-      mapStyle={BASEMAP_STYLE}
-      style={{ width: "100%", height: "100%" }}
-      attributionControl={{ compact: true }}
-      dragRotate={false}
-      touchPitch={false}
-      onLoad={handleLoad}
-      onMoveStart={handleMoveStart}
-    >
-      <NavigationControl position="top-right" showCompass={false} />
-
-      {/* Flood extent. Depth-shaded and diagonally hatched. */}
-      {floodUrl && (
-        <Source
-          id="flood"
-          type="image"
-          url={floodUrl}
-          coordinates={floodImageCoordinates}
+    <div className="relative w-full h-full min-h-[500px] bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl flex flex-col">
+      {/* Top Map Toolbar */}
+      <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-slate-900/90 backdrop-blur-md p-1.5 rounded-xl border border-slate-700/60 shadow-lg">
+        <button
+          onClick={() => setActiveLayer('flood')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            activeLayer === 'flood'
+              ? 'bg-blue-600 text-white shadow-md'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+          }`}
         >
-          <Layer id="flood-layer" type="raster" paint={{ "raster-opacity": 0.82 }} />
-        </Source>
-      )}
+          Flood Inundation
+        </button>
+        <button
+          onClick={() => setActiveLayer('elevation')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            activeLayer === 'elevation'
+              ? 'bg-blue-600 text-white shadow-md'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+          }`}
+        >
+          DEM Topography
+        </button>
+      </div>
 
-      {/* Passable roads: thin, solid, neutral. */}
-      <Source id="roads-open" type="geojson" data={openRoads}>
-        <Layer
-          id="roads-open-layer"
-          type="line"
-          paint={{
-            "line-color": "#3C4A46",
-            "line-width": ["interpolate", ["linear"], ["zoom"], 11, 0.8, 16, 2.6],
-            "line-opacity": 0.75,
-          }}
-        />
-      </Source>
-
-      {/* Impassable roads: coral AND dashed, so the closure reads without
-          relying on the colour difference alone. */}
-      <Source id="roads-blocked" type="geojson" data={blockedRoads}>
-        <Layer
-          id="roads-blocked-casing"
-          type="line"
-          paint={{
-            "line-color": "#FFFFFF",
-            "line-width": ["interpolate", ["linear"], ["zoom"], 11, 3, 16, 7],
-            "line-opacity": 0.55,
-          }}
-        />
-        <Layer
-          id="roads-blocked-layer"
-          type="line"
-          paint={{
-            "line-color": "#E2572B",
-            "line-width": ["interpolate", ["linear"], ["zoom"], 11, 1.8, 16, 4],
-            "line-dasharray": [1.5, 1.2],
-          }}
-        />
-      </Source>
-
-      {/* The other risk mode's route, drawn behind as a dashed comparison. */}
-      {comparisonLine && (
-        <Source id="route-compare" type="geojson" data={comparisonLine}>
-          <Layer
-            id="route-compare-layer"
-            type="line"
-            layout={{ "line-cap": "round", "line-join": "round" }}
-            paint={{
-              "line-color": "#E3A008",
-              "line-width": ["interpolate", ["linear"], ["zoom"], 11, 3, 16, 7],
-              "line-dasharray": [2, 1.6],
-              "line-opacity": 0.9,
-            }}
-          />
-        </Source>
-      )}
-
-      {/* The selected route. */}
-      {routeLine && (
-        <Source id="route" type="geojson" data={routeLine}>
-          <Layer
-            id="route-casing"
-            type="line"
-            layout={{ "line-cap": "round", "line-join": "round" }}
-            paint={{
-              "line-color": "#FFFFFF",
-              "line-width": ["interpolate", ["linear"], ["zoom"], 11, 6, 16, 12],
-            }}
-          />
-          <Layer
-            id="route-layer"
-            type="line"
-            layout={{ "line-cap": "round", "line-join": "round" }}
-            paint={{
-              "line-color": "#1F8A70",
-              "line-width": ["interpolate", ["linear"], ["zoom"], 11, 3.5, 16, 8],
-            }}
-          />
-        </Source>
-      )}
-
-      {/* Suggested alternative when the requested destination is unreachable. */}
-      {fallbackLine && (
-        <Source id="route-fallback" type="geojson" data={fallbackLine}>
-          <Layer
-            id="route-fallback-layer"
-            type="line"
-            layout={{ "line-cap": "round", "line-join": "round" }}
-            paint={{
-              "line-color": "#2E6F95",
-              "line-width": ["interpolate", ["linear"], ["zoom"], 11, 3, 16, 7],
-              "line-dasharray": [1, 1.4],
-            }}
-          />
-        </Source>
-      )}
-
-      {landmarks.map((lm) => {
-        const isOrigin = lm.id === originId;
-        const isDest = lm.id === destId;
-        const isCut = cutOffIds.has(lm.id);
-        return (
-          <Marker
-            key={lm.id}
-            longitude={lm.lng}
-            latitude={lm.lat}
-            anchor="center"
-          >
-            <button
-              type="button"
-              onClick={() => onPickLandmark(lm.id)}
-              className="flex cursor-pointer flex-col items-center gap-1 border-0 bg-transparent p-0"
-              aria-label={
-                `${lm.name}, ground level ${lm.elevation.toFixed(1)} metres` +
-                (isCut ? ", currently cut off" : "") +
-                (isOrigin ? ", selected as origin" : "") +
-                (isDest ? ", selected as destination" : "")
-              }
+      {/* Barrier Quick Toggle Drawer */}
+      <div className="absolute top-4 right-4 z-20 flex flex-col gap-2 max-w-xs">
+        <div className="bg-slate-900/90 backdrop-blur-md p-3 rounded-xl border border-slate-700/60 shadow-lg space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+              <Shield className="w-3.5 h-3.5 text-blue-400" />
+              Hydro Defense Gates
+            </span>
+            <button 
+              onClick={() => setShowBarriers(!showBarriers)}
+              className="text-slate-400 hover:text-slate-200 text-xs"
             >
-              <span
-                className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white text-[11px] font-bold text-white shadow-[0_3px_8px_rgba(0,0,0,0.35)]"
-                style={{
-                  background: isCut ? "#9E3A18" : KIND_COLOR[lm.kind],
-                  outline:
-                    isOrigin || isDest ? "3px solid #0E2A33" : undefined,
-                  outlineOffset: 1,
-                }}
-              >
-                {ICONS[lm.kind] ?? "•"}
-              </span>
-              <span className="whitespace-nowrap rounded-full bg-white/92 px-1.5 py-px text-[9px] font-bold text-navy shadow-sm">
-                {isOrigin ? "FROM · " : isDest ? "TO · " : ""}
-                {shortName(lm)}
-                {isCut ? " ⚠" : ""}
-              </span>
+              {showBarriers ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
             </button>
-          </Marker>
-        );
-      })}
-    </Map>
+          </div>
+
+          {showBarriers && (
+            <div className="space-y-1.5 pt-1">
+              {barriers.map(b => (
+                <div key={b.id} className="flex items-center justify-between text-[11px] bg-slate-800/60 px-2 py-1 rounded-lg">
+                  <span className="text-slate-300 truncate max-w-[130px]">{b.name}</span>
+                  <button
+                    onClick={() => toggleBarrier(b.id)}
+                    className={`px-2 py-0.5 rounded text-[10px] font-semibold transition-colors ${
+                      b.active ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-700 text-slate-400'
+                    }`}
+                  >
+                    {b.active ? 'DEPLOYED' : 'OPEN'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Render Canvas */}
+      <div className="relative flex-1 w-full h-full flex items-center justify-center p-4">
+        <canvas
+          ref={canvasRef}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={() => setHoverInfo(null)}
+          className="w-full h-full max-h-[680px] object-contain rounded-xl cursor-crosshair border border-slate-800/60"
+        />
+
+        {/* Dynamic Coordinate / Inundation HUD */}
+        {hoverInfo && (
+          <div className="absolute bottom-4 left-4 z-20 bg-slate-900/90 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700/60 text-xs text-slate-200 shadow-xl pointer-events-none space-y-0.5">
+            <div className="text-[10px] text-slate-400 font-mono">
+              {hoverInfo.lat.toFixed(4)}°N, {Math.abs(hoverInfo.lon).toFixed(4)}°W
+            </div>
+            <div className="font-semibold flex items-center gap-1.5">
+              <span className={`w-2 h-2 rounded-full ${hoverInfo.depth > 0.3 ? 'bg-rose-500 animate-ping' : hoverInfo.depth > 0 ? 'bg-cyan-400' : 'bg-emerald-400'}`} />
+              Flood Inundation Depth: <span className="text-cyan-300">{hoverInfo.depth.toFixed(2)} m</span>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
-}
-
-function lineFrom(coordinates: [number, number][]): FeatureCollection {
-  return {
-    type: "FeatureCollection",
-    features: [
-      {
-        type: "Feature",
-        properties: {},
-        geometry: { type: "LineString", coordinates },
-      },
-    ],
-  };
-}
-
-function toLine(result: RouteResult): FeatureCollection | null {
-  return result.ok ? lineFrom(result.coordinates) : null;
 }
