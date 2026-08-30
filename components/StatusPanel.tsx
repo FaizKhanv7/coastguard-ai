@@ -1,69 +1,106 @@
 "use client";
 
-import React from "react";
-import { Badge, MetricCard } from "./ui";
+/**
+ * Conditions readout for whatever timestep the map is showing.
+ *
+ * The whole panel is an aria-live region so a screen-reader user hears the
+ * situation change as the timeline plays, rather than having to go looking.
+ */
 
-interface StatusPanelProps {
-  waterLevel: number;
-  precipitation: number;
-  inundationAreaKm2: number;
-  criticalAssetsAtRisk: number;
-  stormCategory?: string;
+import { Card, Pill, SectionTitle, Stat } from "./ui";
+import type { FloodState } from "@/lib/flood";
+import { shortName, type Landmark } from "@/lib/routing";
+import { totalSegments } from "@/lib/useCoastguard";
+
+interface Props {
+  displayed: FloodState;
+  horizon: number;
+  blockedCount: number;
+  cutOff: Landmark[];
+  floodedFraction: number;
 }
 
-export function StatusPanel({
-  waterLevel,
-  precipitation,
-  inundationAreaKm2,
-  criticalAssetsAtRisk,
-  stormCategory = "CATEGORY 2 SURGE",
-}: StatusPanelProps) {
+export default function StatusPanel({
+  displayed,
+  horizon,
+  blockedCount,
+  cutOff,
+  floodedFraction,
+}: Props) {
+  const severity =
+    displayed.waterLevelM > 2.5
+      ? { tone: "coral" as const, label: "Severe flooding" }
+      : displayed.waterLevelM > 1.5
+        ? { tone: "amber" as const, label: "Flooding" }
+        : displayed.waterLevelM > 0.6
+          ? { tone: "blue" as const, label: "Elevated tide" }
+          : { tone: "teal" as const, label: "Normal conditions" };
+
+  const blockedPct = Math.round((blockedCount / totalSegments) * 100);
+
   return (
-    <div className="glass-panel p-4 rounded-xl flex flex-col gap-4">
-      <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-cyan-400 radar-live" />
-          <h3 className="font-mono text-sm font-semibold tracking-wider text-slate-100">
-            METEOROLOGICAL TELEMETRY
-          </h3>
-        </div>
-        <Badge variant={criticalAssetsAtRisk > 0 ? "rose" : "emerald"}>
-          {stormCategory}
-        </Badge>
+    <Card>
+      <SectionTitle
+        action={<Pill tone={severity.tone}>{severity.label}</Pill>}
+      >
+        {horizon === 0 ? "Conditions now" : `Projected +${horizon} h`}
+      </SectionTitle>
+
+      <div
+        className="grid grid-cols-2 gap-2.5"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <Stat
+          label="Water level"
+          value={`${displayed.waterLevelM.toFixed(2)} m`}
+          detail={`tide ${displayed.tideM.toFixed(2)} + surge ${displayed.surgeM.toFixed(2)}`}
+          tone={displayed.waterLevelM > 2.5 ? "danger" : undefined}
+        />
+        <Stat
+          label="Rainfall"
+          value={`${displayed.rainfallMmHr.toFixed(1)} mm/h`}
+          detail={`${(displayed.rainAccumM * 100).toFixed(0)} cm accumulated`}
+          tone={displayed.rainfallMmHr > 20 ? "warn" : undefined}
+        />
+        <Stat
+          label="Roads impassable"
+          value={`${blockedCount} / ${totalSegments}`}
+          detail={`${blockedPct}% of the network`}
+          tone={blockedPct > 25 ? "danger" : blockedPct > 10 ? "warn" : "ok"}
+        />
+        <Stat
+          label="Landmarks cut off"
+          value={String(cutOff.length)}
+          detail={
+            cutOff.length
+              ? cutOff.map(shortName).join(", ")
+              : "all reachable"
+          }
+          tone={cutOff.length ? "danger" : "ok"}
+        />
       </div>
 
-      <div className="grid grid-cols-2 gap-2.5">
-        <MetricCard
-          label="Surge Level"
-          value={waterLevel.toFixed(2)}
-          unit="m MSL"
-          trend="+0.14m/hr tide cycle"
-          color="text-cyan-400"
-        />
-        <MetricCard
-          label="Precipitation"
-          value={precipitation.toFixed(1)}
-          unit="mm/h"
-          trend="Severe downpour"
-          color="text-sky-400"
-        />
-        <MetricCard
-          label="Flood Extent"
-          value={inundationAreaKm2.toFixed(1)}
-          unit="km²"
-          trend="Calculated overland"
-          color="text-amber-400"
-        />
-        <MetricCard
-          label="Impacted Nodes"
-          value={criticalAssetsAtRisk}
-          unit="critical"
-          trend={criticalAssetsAtRisk > 0 ? "Action Required" : "Sector Clear"}
-          color={criticalAssetsAtRisk > 0 ? "text-rose-400" : "text-emerald-400"}
-        />
+      <div className="mt-3 space-y-2 border-t border-sand-dim pt-3 text-[11.5px] leading-relaxed text-ink-soft">
+        <p>
+          <strong className="text-navy">
+            {(floodedFraction * 100).toFixed(1)}%
+          </strong>{" "}
+          of the town&rsquo;s land area is under water, and wind is gusting to{" "}
+          <strong className="text-navy">
+            {displayed.windKph.toFixed(0)} km/h
+          </strong>
+          .
+        </p>
+        {displayed.isolatedCells > 0 && (
+          <p>
+            <strong className="text-navy">{displayed.isolatedCells}</strong>{" "}
+            cells sit below the water level but have no path to the sea, so the
+            model correctly leaves them dry. A plain elevation threshold would
+            have flooded them.
+          </p>
+        )}
       </div>
-    </div>
+    </Card>
   );
 }
-
-export default StatusPanel;

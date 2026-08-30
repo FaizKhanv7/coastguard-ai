@@ -17,6 +17,33 @@ dependency, so they can be run and explained on their own:
 
 ---
 
+## Two surfaces
+
+The project ships as two connected front ends:
+
+| Surface | What it is | Where |
+|---|---|---|
+| **Operations dashboard** | The Next.js app. Full flood model, timeline scrubbing, risk-mode routing. Built for a desk. | `/` |
+| **Field app** | A self-contained phone-sized app for residents and volunteers — hazard reporting, resource sharing, volunteer board, offline assistant. | `/mobile.html` |
+
+The **Mobile app** button in the dashboard header opens the field app in a new
+tab.
+
+`coastguard-ai.html` at the repo root is the single source of truth for the
+field app — that is the file to edit. `npm run sync-mobile` mirrors it to
+`public/mobile.html`, which is what actually gets served, and it runs
+automatically on `npm run dev` and `npm run build` so the two cannot drift.
+
+> The field app's AI assistant calls the Groq API from the browser. The key in
+> the source is the placeholder `"nah"`, deliberately: this file is served to
+> the client, so a real credential here would be readable by anyone who views
+> source. With no key set the assistant short-circuits to its offline
+> responses instead of making a request that would fail. If you want the live
+> assistant for a demo, put a real key in a local copy only — never in a
+> deployed or committed one.
+
+---
+
 ## Running it
 
 ```bash
@@ -33,12 +60,11 @@ The two algorithms have standalone harnesses that print their behaviour and
 assert the properties that matter. They need no browser and no test runner:
 
 ```bash
-npm run test:flood
+npm test
 ```
 
-```bash
-npm run test:routing
-```
+That runs both; `npm run test:flood` and `npm run test:routing` run them
+individually.
 
 To rebuild the synthetic town from scratch (deterministic — same bytes every
 time):
@@ -267,6 +293,24 @@ debouncing anywhere in the UI.
   landmarks carry a ⚠ glyph and a text label. The legend shows the actual mark
   used, not a colour chip.
 - All text passes WCAG AA contrast against its real composited background.
+
+---
+
+## Deploying
+
+It is a static Next.js app with no database, no auth, no server state and no
+environment variables, so any Node host works; on Vercel it deploys from the
+repo with no configuration.
+
+```bash
+npm run build && npm start
+```
+
+`prebuild` syncs the field app into `public/` first, so `public/mobile.html`
+is always present and current in the deployed bundle. The only runtime network
+request is for OpenStreetMap basemap tiles — if those fail, the flood overlay,
+roads, routes and every figure on screen still render, because all of it is
+computed locally from the bundled data.
 
 ---
 

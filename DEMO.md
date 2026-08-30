@@ -145,6 +145,15 @@ as the water crosses the threshold:
 > off; the model says the water closes it during the two minutes you would be
 > driving it. That is the difference between a snapshot and a forecast."
 
+### Closing beat — the other half of the product
+
+Click **Mobile app** in the header. It opens the field app in a new tab.
+
+> "The dashboard is what the emergency operations centre sees. This is what the
+> people on the ground get — hazard reporting with photo analysis, resource
+> sharing, a volunteer board, and an assistant that still answers when the
+> network is gone. Same town, same palette, two ends of the same response."
+
 ## If you have 30 more seconds
 
 - **`npm run test:flood`** — prints the water level and flooded-cell count over

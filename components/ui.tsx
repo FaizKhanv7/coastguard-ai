@@ -1,95 +1,204 @@
-import React from "react";
+"use client";
 
-export function Badge({
+/**
+ * Shared primitives, lifted straight from coastguard-ai.html so the two
+ * surfaces share one visual language: the white card, the tinted pill badge,
+ * the sand stat tile and the navy segmented control.
+ */
+
+import type { ReactNode } from "react";
+
+export type Tone = "coral" | "teal" | "amber" | "blue" | "neutral";
+
+const TONE_BG: Record<Tone, string> = {
+  coral: "bg-coral-tint text-coral-dark",
+  teal: "bg-teal-tint text-teal-dark",
+  amber: "bg-amber-tint text-amber-dark",
+  blue: "bg-blue-tint text-blue-dark",
+  neutral: "bg-sand-dim text-ink-soft",
+};
+
+/** The mockup's `.card`. */
+export function Card({
   children,
-  variant = "cyan",
   className = "",
 }: {
-  children: React.ReactNode;
-  variant?: "cyan" | "emerald" | "amber" | "rose" | "slate";
+  children: ReactNode;
   className?: string;
 }) {
-  const variantStyles = {
-    cyan: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
-    emerald: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
-    amber: "bg-amber-500/10 text-amber-400 border-amber-500/30",
-    rose: "bg-rose-500/10 text-rose-400 border-rose-500/30",
-    slate: "bg-slate-700/30 text-slate-300 border-slate-600/30",
-  };
+  return (
+    <div
+      className={`rounded-card bg-card p-4 shadow-card ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
 
+/** The mockup's `.section-title`. */
+export function SectionTitle({
+  children,
+  action,
+}: {
+  children: ReactNode;
+  action?: ReactNode;
+}) {
+  return (
+    <div className="mb-2.5 flex items-center justify-between">
+      <h3 className="font-serif text-[15px] font-semibold text-navy">
+        {children}
+      </h3>
+      {action}
+    </div>
+  );
+}
+
+/** The mockup's `.pill` / `.sev` badge. */
+export function Pill({
+  children,
+  tone = "neutral",
+}: {
+  children: ReactNode;
+  tone?: Tone;
+}) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border font-mono tracking-wide ${variantStyles[variant]} ${className}`}
+      className={`inline-block rounded-chip px-2.5 py-1 text-[10.5px] font-bold ${TONE_BG[tone]}`}
     >
       {children}
     </span>
   );
 }
 
-export function Button({
-  children,
-  onClick,
-  variant = "primary",
-  size = "md",
-  disabled = false,
-  className = "",
+/** The mockup's `.aistat` tile. */
+export function Stat({
+  label,
+  value,
+  detail,
+  tone,
 }: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  variant?: "primary" | "secondary" | "danger" | "ghost";
-  size?: "sm" | "md" | "lg";
-  disabled?: boolean;
-  className?: string;
+  label: string;
+  value: ReactNode;
+  detail?: ReactNode;
+  tone?: "danger" | "warn" | "ok";
 }) {
-  const sizeStyles = {
-    sm: "px-2.5 py-1 text-xs",
-    md: "px-3.5 py-1.5 text-sm",
-    lg: "px-5 py-2.5 text-base font-semibold",
-  };
-
-  const variantStyles = {
-    primary:
-      "bg-cyan-600 hover:bg-cyan-500 text-white shadow-lg shadow-cyan-950/50 border border-cyan-400/40 active:scale-[0.98]",
-    secondary:
-      "bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border border-slate-600/40 active:scale-[0.98]",
-    danger:
-      "bg-rose-600/80 hover:bg-rose-500 text-white border border-rose-400/40 active:scale-[0.98]",
-    ghost:
-      "bg-transparent hover:bg-slate-800/50 text-slate-300 active:scale-[0.98]",
-  };
-
+  const valueColor =
+    tone === "danger"
+      ? "text-coral-dark"
+      : tone === "warn"
+        ? "text-amber-dark"
+        : tone === "ok"
+          ? "text-teal-dark"
+          : "text-navy";
   return (
-    <button
-      disabled={disabled}
-      onClick={onClick}
-      className={`relative inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
-    >
-      {children}
-    </button>
+    <div className="rounded-[14px] bg-sand p-3">
+      <div className="mb-1 text-[10px] font-bold uppercase tracking-[0.06em] text-ink-soft">
+        {label}
+      </div>
+      <div className={`text-[15px] font-bold ${valueColor}`}>{value}</div>
+      {detail && (
+        <div className="mt-0.5 text-[11px] text-ink-soft">{detail}</div>
+      )}
+    </div>
   );
 }
 
-export function MetricCard({
+/**
+ * The mockup's `.maptoggle` segmented control, as a proper radio group so it
+ * is reachable and operable from the keyboard with arrow keys.
+ */
+export function Segmented<T extends string | number>({
   label,
+  options,
   value,
-  unit,
-  trend,
-  color = "text-cyan-400",
+  onChange,
+  name,
 }: {
   label: string;
-  value: string | number;
-  unit?: string;
-  trend?: string;
-  color?: string;
+  options: { value: T; label: string; hint?: string }[];
+  value: T;
+  onChange: (v: T) => void;
+  name: string;
+}) {
+  // Arrow keys move between options, which is what the radiogroup role
+  // promises a screen-reader user. Tab still reaches every button, so the
+  // control stays operable either way.
+  const step = (from: number, delta: number) => {
+    const next = (from + delta + options.length) % options.length;
+    onChange(options[next].value);
+    const group = document.querySelector<HTMLElement>(
+      `[data-segmented="${name}"]`,
+    );
+    group?.querySelectorAll("button")[next]?.focus();
+  };
+
+  return (
+    <div
+      role="radiogroup"
+      aria-label={label}
+      data-segmented={name}
+      className="inline-flex rounded-chip bg-sand-dim p-[3px]"
+    >
+      {options.map((opt, i) => {
+        const selected = opt.value === value;
+        return (
+          <button
+            key={String(opt.value)}
+            type="button"
+            role="radio"
+            aria-checked={selected}
+            aria-label={opt.hint ? `${opt.label}, ${opt.hint}` : opt.label}
+            name={name}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+                e.preventDefault();
+                step(i, 1);
+              } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+                e.preventDefault();
+                step(i, -1);
+              }
+            }}
+            onClick={() => onChange(opt.value)}
+            className={`cursor-pointer rounded-[16px] border-0 px-3 py-1.5 text-[11px] font-semibold transition-colors ${
+              selected
+                ? "bg-navy text-white"
+                : "bg-transparent text-ink-soft hover:text-navy"
+            }`}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/** The mockup's `.btn`. */
+export function Button({
+  children,
+  onClick,
+  variant = "ghost",
+  ariaLabel,
+  className = "",
+}: {
+  children: ReactNode;
+  onClick?: () => void;
+  variant?: "primary" | "ghost";
+  ariaLabel?: string;
+  className?: string;
 }) {
   return (
-    <div className="flex flex-col p-3 rounded-lg bg-slate-900/60 border border-slate-800/80">
-      <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400">{label}</span>
-      <div className="flex items-baseline gap-1 mt-1">
-        <span className={`text-xl font-bold font-mono ${color}`}>{value}</span>
-        {unit && <span className="text-xs text-slate-400 font-mono">{unit}</span>}
-      </div>
-      {trend && <span className="text-[10px] text-slate-400 mt-1 font-mono">{trend}</span>}
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={ariaLabel}
+      className={`cursor-pointer rounded-[14px] border-0 px-4 py-3 text-[13px] font-bold transition-opacity hover:opacity-90 ${
+        variant === "primary"
+          ? "bg-navy text-white"
+          : "bg-sand text-navy"
+      } ${className}`}
+    >
+      {children}
+    </button>
   );
 }

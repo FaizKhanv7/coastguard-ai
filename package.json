@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/sync-mobile.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/sync-mobile.mjs",
     "build": "next build",
     "start": "next start",
+    "sync-mobile": "node scripts/sync-mobile.mjs",
     "generate-data": "tsx scripts/generate-data.ts",
     "test:flood": "tsx scripts/test-flood.ts",
-    "test:routing": "tsx scripts/test-routing.ts"
+    "test:routing": "tsx scripts/test-routing.ts",
+    "test": "npm run test:flood && npm run test:routing"
   },
   "dependencies": {
     "maplibre-gl": "^5.6.0",

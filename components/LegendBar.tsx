@@ -1,41 +1,109 @@
 "use client";
 
-import React from "react";
+/**
+ * Map legend. Every entry shows the actual mark used on the map — the dash
+ * pattern for closed roads, the hatch for flooded ground — rather than a
+ * plain colour chip, so the legend works for a viewer who cannot tell the
+ * colours apart.
+ */
 
-export function LegendBar() {
+export default function LegendBar() {
   return (
-    <div className="glass-panel px-3.5 py-2.5 rounded-lg flex items-center gap-4 text-xs font-mono text-slate-300">
-      <span className="text-[11px] font-semibold tracking-wider text-slate-400">WATER DEPTH:</span>
-      
-      <div className="flex items-center gap-1.5">
-        <div className="flex h-2.5 w-32 rounded overflow-hidden border border-slate-700/60">
-          <span className="flex-1 bg-[#38bdf8]/40" />
-          <span className="flex-1 bg-[#0284c7]/70" />
-          <span className="flex-1 bg-[#0369a1]" />
-          <span className="flex-1 bg-[#1e40af]" />
-          <span className="flex-1 bg-[#4338ca]" />
-        </div>
-        <div className="flex justify-between w-32 text-[9px] text-slate-400">
-          <span>0.1m</span>
-          <span>0.5m</span>
-          <span>1.5m</span>
-          <span>&gt;3.0m</span>
-        </div>
-      </div>
+    <div className="rounded-card bg-card px-4 py-3 shadow-card">
+      <h2 className="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-ink-soft">
+        Legend
+      </h2>
+      <ul className="flex flex-wrap gap-x-5 gap-y-2.5">
+        <Item label="Flooded (hatched, darker = deeper)">
+          <svg width="26" height="14" aria-hidden="true">
+            <defs>
+              <pattern
+                id="lg-hatch"
+                width="6"
+                height="6"
+                patternUnits="userSpaceOnUse"
+                patternTransform="rotate(45)"
+              >
+                <rect width="6" height="6" fill="#4E86A6" />
+                <rect width="2" height="6" fill="#1D4A62" />
+              </pattern>
+            </defs>
+            <rect width="26" height="14" rx="3" fill="url(#lg-hatch)" />
+          </svg>
+        </Item>
 
-      <div className="h-3 w-px bg-slate-800 mx-1" />
+        <Item label="Road open">
+          <svg width="26" height="14" aria-hidden="true">
+            <line x1="1" y1="7" x2="25" y2="7" stroke="#3C4A46" strokeWidth="2.5" />
+          </svg>
+        </Item>
 
-      <div className="flex items-center gap-2">
-        <span className="w-2.5 h-2.5 rounded-sm bg-rose-500/80 border border-rose-400/50 inline-block" />
-        <span className="text-[11px]">Submerged Roads</span>
-      </div>
+        <Item label="Road impassable (dashed)">
+          <svg width="26" height="14" aria-hidden="true">
+            <line
+              x1="1"
+              y1="7"
+              x2="25"
+              y2="7"
+              stroke="#E2572B"
+              strokeWidth="3"
+              strokeDasharray="4 3"
+            />
+          </svg>
+        </Item>
 
-      <div className="flex items-center gap-2">
-        <span className="w-2.5 h-2.5 rounded-sm bg-emerald-400 border border-emerald-300 inline-block" />
-        <span className="text-[11px]">Evacuation Route</span>
-      </div>
+        <Item label="Selected route (solid)">
+          <svg width="26" height="14" aria-hidden="true">
+            <line
+              x1="1"
+              y1="7"
+              x2="25"
+              y2="7"
+              stroke="#1F8A70"
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
+          </svg>
+        </Item>
+
+        <Item label="Other risk mode (dashed)">
+          <svg width="26" height="14" aria-hidden="true">
+            <line
+              x1="1"
+              y1="7"
+              x2="25"
+              y2="7"
+              stroke="#E3A008"
+              strokeWidth="3.5"
+              strokeDasharray="5 3"
+            />
+          </svg>
+        </Item>
+
+        <Item label="Cut off">
+          <svg width="26" height="14" aria-hidden="true">
+            <circle cx="9" cy="7" r="6" fill="#9E3A18" stroke="#fff" strokeWidth="1.6" />
+            <text x="18" y="11" fontSize="11" fill="#9E3A18">
+              ⚠
+            </text>
+          </svg>
+        </Item>
+      </ul>
     </div>
   );
 }
 
-export default LegendBar;
+function Item({
+  children,
+  label,
+}: {
+  children: React.ReactNode;
+  label: string;
+}) {
+  return (
+    <li className="flex items-center gap-2 text-[11px] font-semibold text-ink-soft">
+      {children}
+      <span>{label}</span>
+    </li>
+  );
+}
