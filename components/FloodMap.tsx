@@ -6,19 +6,17 @@ interface FloodMapProps {
   waterRaster?: Float32Array | null;
   gridWidth?: number;
   gridHeight?: number;
-  roads?: any[];
-  landmarks?: any[];
+  roads?: unknown[];
+  landmarks?: unknown[];
   currentHour: number;
 }
 
-export const FloodMap: React.FC<FloodMapProps> = ({
+export function FloodMap({
   waterRaster,
   gridWidth = 100,
   gridHeight = 100,
-  roads = [],
-  landmarks = [],
   currentHour,
-}) => {
+}: FloodMapProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -112,4 +110,6 @@ export const FloodMap: React.FC<FloodMapProps> = ({
       </div>
     </div>
   );
-};
+}
+
+export default FloodMap;
