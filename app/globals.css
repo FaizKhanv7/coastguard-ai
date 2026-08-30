@@ -1,54 +1,125 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 224.3 76.3% 48%;
+/* ============================================================
+   Design tokens ported directly from coastguard-ai.html.
+   Values are unchanged from the teammate's mockup so the two
+   surfaces stay visually identical.
+   ============================================================ */
+@theme {
+  --color-navy: #0e2a33;
+  --color-navy-deep: #081a20;
+  --color-sand: #f3eedf;
+  --color-sand-dim: #e7e0cb;
+  --color-ink: #1c2624;
+  --color-ink-soft: #5b655f;
+
+  --color-coral: #e2572b;
+  --color-coral-dark: #9e3a18;
+  --color-coral-tint: #fbe4da;
+
+  --color-teal: #1f8a70;
+  --color-teal-dark: #0f5a48;
+  --color-teal-tint: #def0ea;
+
+  --color-amber: #e3a008;
+  --color-amber-dark: #8a6006;
+  --color-amber-tint: #fbedd0;
+
+  --color-blue: #2e6f95;
+  --color-blue-dark: #1d4a62;
+  --color-blue-tint: #ddeaf1;
+
+  --color-card: #ffffff;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  --radius-card: 18px;
+  --radius-chip: 20px;
+
+  --shadow-card: 0 2px 10px rgba(20, 40, 40, 0.06);
+  --shadow-panel: 0 4px 16px rgba(20, 40, 40, 0.15);
+  --shadow-float: 0 8px 20px rgba(14, 42, 51, 0.4);
 }
 
-* {
-  box-sizing: border-box;
+/* Named the same as the mockup's palette so map layers and legend
+   can be driven from one place. */
+:root {
+  --map-flood: #2e6f95;
+  --map-flood-deep: #1d4a62;
+  --map-road: #5b655f;
+  --map-road-blocked: #e2572b;
+  --map-route: #1f8a70;
+  --map-route-alt: #e3a008;
+}
+
+html,
+body {
+  height: 100%;
 }
 
 body {
-  background-color: #020617;
-  color: #f8fafc;
-  overflow-x: hidden;
+  background: var(--color-navy-deep);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Custom scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+h1,
+h2,
+h3,
+.serif {
+  font-family: var(--font-serif);
 }
 
-::-webkit-scrollbar-track {
-  background: #090d16;
+/* Visible focus ring on every interactive control — the mockup had
+   none, and this is a judged accessibility requirement. */
+:where(button, a, input, select, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-amber);
+  outline-offset: 2px;
+  border-radius: 6px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 3px;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+/* Hide scrollbars on the horizontal chip rows, as in the mockup. */
+.no-scrollbar {
+  scrollbar-width: none;
 }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* MapLibre chrome restyled to match the mockup's card language. */
+.maplibregl-ctrl-attrib {
+  font-family: var(--font-sans);
+  font-size: 10px;
+}
+.maplibregl-popup-content {
+  font-family: var(--font-sans);
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: var(--shadow-panel);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Fastshot-style single-viewport landing architecture */
+.fastshot-stage{position:fixed;inset:0;overflow:hidden;background:radial-gradient(circle at 50% 42%,#243241 0,#111820 38%,#0a0d12 72%);color:#fff;z-index:60;font-family:Inter,-apple-system,"Segoe UI",sans-serif}.fastshot-stage:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(64,132,155,.14),transparent 38%),repeating-linear-gradient(25deg,transparent 0 28px,rgba(255,255,255,.012) 29px 30px);pointer-events:none}.fastshot-frame{position:absolute;inset:0;display:flex;flex-direction:column;padding:clamp(20px,4vh,42px) clamp(24px,14.4vw,225px) clamp(24px,9vh,74px)}.fastshot-nav{height:43px;display:flex;align-items:center;justify-content:space-between;position:relative}.fastshot-brand{display:inline-flex;align-items:center;gap:12px;color:#fff;text-decoration:none;font-weight:500}.fastshot-mark{width:34px;height:34px;border-radius:50%;background:#75a9b8;display:grid;place-items:center;box-shadow:0 8px 24px #0006}.fastshot-mark:before{content:"";width:17px;height:17px;border-radius:50%;background:#fff;display:block}.fastshot-mark i{position:absolute;width:7px;height:7px;border-radius:50%;background:#151519}.fastshot-links{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:42px}.fastshot-links a,.fastshot-cta{color:#fff;text-decoration:none}.fastshot-links a{font-size:15px;opacity:.92}.fastshot-cta{padding:12px 18px;border-radius:12px;background:linear-gradient(#3d3d3f,#1d1d20);font-size:13px;font-weight:600}.fastshot-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}.fastshot-eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:10px;color:#9dafbb}.fastshot-hero h1{font-size:clamp(30px,3vw,48px);font-weight:420;letter-spacing:-.02em;text-align:center;text-shadow:0 3px 22px #0008}.fastshot-card{width:min(760px,70vw);min-height:152px;border-radius:26px;padding:24px;background:rgba(41,41,43,.955);backdrop-filter:blur(26px);box-shadow:inset 0 0 0 1px rgba(214,228,255,.14),0 22px 60px #0006;display:flex;flex-direction:column;justify-content:space-between;gap:24px}.fastshot-status{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.fastshot-status div{padding:10px 12px;border-radius:12px;background:#ffffff0a}.fastshot-status span{display:block;color:#91959b;font-size:9px;text-transform:uppercase;letter-spacing:.09em}.fastshot-status strong{display:block;margin-top:4px;font-size:17px;font-weight:520}.fastshot-tools{display:flex;align-items:center;gap:12px}.fastshot-zones{display:flex;gap:6px;flex-wrap:wrap}.fastshot-chip{height:30px;padding:0 10px;border-radius:9px;display:inline-flex;align-items:center;color:#a8aaad;text-decoration:none;font-size:9px;font-weight:500;background:linear-gradient(#ffffff16,#ffffff0a);border:1px solid #ffffff0d}.fastshot-right{margin-left:auto;display:flex;align-items:center;gap:14px;color:#98999c;font-size:10px;white-space:nowrap}.fastshot-send{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(163deg,#9ec6d1,#4f8797);color:#fff;text-decoration:none;font-size:16px;box-shadow:0 3px 12px rgba(66,132,150,.35)}.fastshot-proof{display:flex;flex-direction:column;align-items:center;gap:18px;font-size:11px}.fastshot-proof p{color:#d9dde0}.fastshot-proof div{display:flex;gap:52px;color:#fff;font-weight:600;letter-spacing:.02em}@media(max-width:1180px){.fastshot-frame{padding:28px clamp(28px,5vw,60px) 34px}.fastshot-card{width:min(760px,90vw)}.fastshot-links{gap:24px}}@media(max-width:599px),(max-height:599px) and (max-width:1180px){.fastshot-frame{padding:max(18px,env(safe-area-inset-top)) 18px max(20px,env(safe-area-inset-bottom))}.fastshot-links{display:none}.fastshot-cta{padding:10px 13px}.fastshot-hero{gap:14px}.fastshot-hero h1{max-width:12ch;line-height:1.08}.fastshot-card{width:100%;min-height:auto;padding:16px;border-radius:20px}.fastshot-status{grid-template-columns:repeat(3,1fr)}.fastshot-status strong{font-size:14px}.fastshot-tools{align-items:flex-end}.fastshot-zones{max-width:72%}.fastshot-right span{display:none}.fastshot-proof div{gap:20px;font-size:10px}}
