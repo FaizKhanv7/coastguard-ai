@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { CoastguardProvider } from "@/lib/store";
+import AppShell from "@/components/AppShell";
 
 // Same two families the mockup loaded from Google Fonts.
 const inter = Inter({
@@ -37,7 +39,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
-      <body>{children}</body>
+      <body>
+        {/* One provider for the whole app: the flood model is precomputed
+            once, and simulation state survives navigation between pages. */}
+        <CoastguardProvider>
+          <AppShell>{children}</AppShell>
+        </CoastguardProvider>
+      </body>
     </html>
   );
 }

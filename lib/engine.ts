@@ -196,6 +196,11 @@ export interface Status {
 const severityOf = (level: number): Status["severity"] =>
   level > 2.5 ? "severe" : level > 1.5 ? "flooding" : level > 0.6 ? "elevated" : "normal";
 
+/** Ids of the road segments impassable at the displayed moment. */
+export function blockedEdgeIdsAt(step: number, horizonH = 0): string[] {
+  return blockedEdgeIds(displayedState(step, horizonH));
+}
+
 /** Everything a status readout needs, for whichever moment is on screen. */
 export function statusAt(
   step: number,
@@ -274,7 +279,7 @@ const NOMINAL_KPH = 32;
  * what lets a shelter card say "cut off" instead of just sitting there
  * looking available while the road to it is under a metre of water.
  */
-export function reachability<T extends CommunityPlace>(
+export function reachability<T extends { nodeId: string }>(
   items: T[],
   fromNodeId: string,
   { step, horizonH = 0, mode = "fastest" }: RouteOptions,

@@ -10,7 +10,9 @@
 import { Card, Pill, SectionTitle, Stat } from "./ui";
 import type { FloodState } from "@/lib/flood";
 import { shortName, type Landmark } from "@/lib/routing";
-import { totalSegments } from "@/lib/useCoastguard";
+import { graph } from "@/lib/engine";
+
+const totalSegments = graph.edges.length;
 
 interface Props {
   displayed: FloodState;

@@ -41,15 +41,42 @@ loads the *same compiled module* as `window.CoastGuard`, bundled by
 | Flood model, projections, map overlay | ✅ | ✅ |
 | 48 h timeline + Now/+6/+12/+24 horizons | ✅ | ✅ |
 | Road closures from the model | ✅ | ✅ |
-| A\* safe routing, safest vs fastest | ✅ | ✅ (routes to shelters) |
+| A\* safe routing, safest vs fastest | ✅ | ✅ |
 | Shelters, incidents, resources, volunteers | ✅ | ✅ |
-| Hazard reporting with photo analysis | — | ✅ |
-| Offline assistant | — | ✅ |
+| Report a hazard | ✅ | ✅ |
+| Reserve a resource / post one | ✅ | ✅ |
+| Join / dispatch volunteer jobs | ✅ | ✅ |
+| Assistant | ✅ grounded in the model | ✅ hosted LLM + offline fallback |
+| Photo hazard analysis | — | ✅ |
 | Side-by-side risk-mode comparison | ✅ | — |
 
-The last three rows are form-factor differences, not gaps: photo reporting
-needs a camera in your hand, and comparing two routes side by side needs a
-screen wide enough to see both.
+The last two rows are form-factor differences, not gaps: photo analysis needs
+a camera in your hand, and comparing two routes side by side needs a screen
+wide enough to see both.
+
+The dashboard is laid out like the field app on purpose — the same sections in
+the same order, so someone who has used one can use the other:
+
+| Page | What it is |
+|---|---|
+| `/` | Operations overview: conditions, 24 h outlook, safety score, where to send people, live incidents |
+| `/map` | The forecast map, 48 h timeline, horizons and the router |
+| `/report` | Hazard intake, corroborated against the model at the reported location |
+| `/resources` | Shared inventory with live road distances; reserve or log items |
+| `/volunteer` | Dispatch board; jobs whose site is cut off cannot be assigned |
+| `/assistant` | Answers questions from the flood model and router, offline |
+
+Simulation state lives in one provider (`lib/store.tsx`) mounted in the root
+layout, so the flood model is precomputed once and scrubbing to the storm peak
+on `/map` then walking to `/resources` shows you resources at the storm peak.
+
+### The assistant is not a chatbot
+
+`lib/assistant.ts` matches a question to something the engine can actually
+answer — a route, a water depth, a shelter recommendation — and generates the
+reply from the result. Every answer names its source. It needs no API key, so
+it works with the network down, which is when a flood response needs it, and
+it cannot invent a road that does not exist.
 
 `data/community.json` is the other half of the sync. Shelters, incidents,
 resources and volunteer jobs used to be hardcoded arrays inside the field app

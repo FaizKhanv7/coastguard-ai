@@ -11,8 +11,13 @@
  */
 
 import { useMemo } from "react";
-import { STEP_COUNT, STEP_HOURS } from "@/lib/flood";
-import { formatClock, levelSeries, stormPeakHour } from "@/lib/useCoastguard";
+import {
+  STEP_COUNT,
+  STEP_HOURS,
+  formatClock,
+  levelSeries,
+  stormPeakHour,
+} from "@/lib/engine";
 
 interface Props {
   step: number;
@@ -40,7 +45,7 @@ export default function TimeScrubber({
     const min = Math.min(...levelSeries);
     const max = Math.max(...levelSeries);
     const span = max - min || 1;
-    const pts = levelSeries.map((v, i) => {
+    const pts = levelSeries.map((v: number, i: number) => {
       const x = (i / (STEP_COUNT - 1)) * 100;
       const y = 100 - ((v - min) / span) * 100;
       return `${x.toFixed(2)},${y.toFixed(2)}`;

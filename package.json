@@ -12,11 +12,12 @@
     "generate-data": "tsx scripts/generate-data.ts",
     "test:flood": "tsx scripts/test-flood.ts",
     "test:routing": "tsx scripts/test-routing.ts",
-    "test": "npm run test:flood && npm run test:routing && npm run test:engine",
+    "test": "npm run test:flood && npm run test:routing && npm run test:engine && npm run test:assistant",
     "build:engine": "node scripts/build-engine.mjs",
     "generate-community": "tsx scripts/generate-community.ts",
     "test:engine": "tsx scripts/test-engine.ts",
-    "pretest": "node scripts/build-engine.mjs"
+    "pretest": "node scripts/build-engine.mjs",
+    "test:assistant": "tsx scripts/test-assistant.ts"
   },
   "dependencies": {
     "maplibre-gl": "^5.6.0",

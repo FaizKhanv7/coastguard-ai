@@ -1,10 +1,20 @@
 # CoastGuard AI — 3-minute demo script
 
-**Before you start:** `npm run dev`, open <http://localhost:3000>, and let the
-loading state finish (~250 ms). Leave the defaults as they load:
+**Before you start:** `npm run dev`, open <http://localhost:3000>.
+
+The dashboard is six pages sharing one simulation clock — Home, Map, Report,
+Resources, Volunteer, Assistant. Whatever moment you scrub to on **Map** is the
+moment every other page describes.
 
 | Control | Value |
 |---|---|
+| Page | **Home** |
+| Time | Day 1 · 04:00 |
+| Horizon | **Now** |
+
+Beats 1–2 want the horizon on **Now**; beat 4 switches it to **+12h**.
+
+---|---|
 | Time | Day 1 · 04:00 |
 | Horizon | **+12h** |
 | From → To | **Kalinaw Marina → Kalinaw District Hospital** |
@@ -19,6 +29,18 @@ can always tell which is which. Beats 1 and 2 below want **Now**; beat 3 wants
 
 Have a second tab ready with `npm run test:flood` output if the judges want to
 see the model verified outside the UI.
+
+---
+
+## 0:00 — 0:20 · The overview
+
+Start on **Home**.
+
+> "Kalinaw Island, a calm morning. Water about a metre, five of 97 road
+> segments closed, everything reachable, safety score 97. The outlook strip
+> already knows what's coming though — look at +24 h."
+
+Point at the outlook: 1.1 m now, then **3.6 m at +24 h, 38 roads cut**.
 
 ---
 
