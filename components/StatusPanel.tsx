@@ -11,13 +11,13 @@ interface StatusPanelProps {
   stormCategory?: string;
 }
 
-export const StatusPanel: React.FC<StatusPanelProps> = ({
+export function StatusPanel({
   waterLevel,
   precipitation,
   inundationAreaKm2,
   criticalAssetsAtRisk,
   stormCategory = "CATEGORY 2 SURGE",
-}) => {
+}: StatusPanelProps) {
   return (
     <div className="glass-panel p-4 rounded-xl flex flex-col gap-4">
       <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
@@ -64,4 +64,6 @@ export const StatusPanel: React.FC<StatusPanelProps> = ({
       </div>
     </div>
   );
-};
+}
+
+export default StatusPanel;
