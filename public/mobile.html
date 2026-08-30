@@ -403,6 +403,10 @@
   .sim-stats b{display:block; font-family:'Fraunces',serif; font-size:16px; color:var(--navy);}
   .sim-stats b.alert{color:var(--coral-dark);}
   .sim-stats span{font-size:9.5px; color:var(--ink-soft); font-weight:600;}
+  .model-hint{font-size:11px; font-weight:600; line-height:1.45; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .model-hint.danger{background:var(--coral-tint); color:var(--coral-dark);}
+  .model-hint.warn{background:var(--amber-tint); color:var(--amber-dark);}
+  .model-hint.ok{background:var(--teal-tint); color:var(--teal-dark);}
   .sim-note{font-size:10.5px; color:var(--ink-soft); line-height:1.45; margin-top:9px;}
 </style>
 </head>
@@ -683,6 +687,7 @@
         </div>
         <div style="width:100%; height:140px; border-radius:12px; overflow:hidden;" id="reportMapWrap">
           <div id="reportPickerMap" style="width:100%; height:100%;"></div>
+        <p class="model-hint" id="model-depth-hint" style="display:none;"></p>
         </div>
       </div>
 
@@ -1610,15 +1615,18 @@ function initReportPickerMap() {
       reportPickerMap.on('click', (e) => {
         selectedReportCoords = [e.latlng.lat, e.latlng.lng];
         reportPickerMarker.setLatLng(e.latlng);
+        updateModelDepthHint();
       });
 
       reportPickerMarker.on('dragend', () => {
         const position = reportPickerMarker.getLatLng();
         selectedReportCoords = [position.lat, position.lng];
+        updateModelDepthHint();
       });
     } else {
       reportPickerMap.invalidateSize();
     }
+    updateModelDepthHint();
   }, 200);
 }
 
@@ -1687,6 +1695,36 @@ function updateDepthViz(cmValue) {
 
 // Seeds the slider/figure from the AI's text estimate (e.g. "0.5m"), which the
 // user can then drag to correct against what they're actually seeing.
+/* What the shared flood model predicts at the spot the reporter picked.
+   This is the field app's half of the same forecast the operations dashboard
+   is looking at, so a report can be corroborated (or contradicted) by the
+   model before anyone is dispatched. */
+function updateModelDepthHint() {
+  const el = document.getElementById('model-depth-hint');
+  if (!el) return;
+  const [lat, lng] = selectedReportCoords;
+  const now = CG.floodDepthAt(lng, lat, simStep, 0);
+  const soon = CG.floodDepthAt(lng, lat, simStep, 6);
+
+  if (now > 0.02) {
+    el.style.display = 'block';
+    el.className = 'model-hint danger';
+    el.textContent = `Model: about ${now.toFixed(2)} m of water here right now.`;
+    // Pre-fill the depth slider from the model so the reporter starts from
+    // the forecast rather than from an arbitrary 50 cm.
+    const slider = document.getElementById('depthSlider');
+    if (slider) { slider.value = String(Math.min(200, Math.round(now * 100))); updateDepthViz(slider.value); }
+  } else if (soon > 0.02) {
+    el.style.display = 'block';
+    el.className = 'model-hint warn';
+    el.textContent = `Model: dry now, but about ${soon.toFixed(2)} m of water expected here within 6 hours.`;
+  } else {
+    el.style.display = 'block';
+    el.className = 'model-hint ok';
+    el.textContent = 'Model: this spot is dry now and not expected to flood in the next 6 hours.';
+  }
+}
+
 function setDepthFromAIEstimate(text) {
   const match = String(text || '').match(/([\d.]+)/);
   let cm = match ? Math.round(parseFloat(match[1]) * 100) : 50;
