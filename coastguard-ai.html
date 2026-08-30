@@ -764,16 +764,6 @@
 <script>
 const GROQ_API_KEY = "nah";
 
-/*
- * The key ships as a placeholder on purpose: this file is committed and served
- * to the browser, so a real credential here would be public to anyone who
- * views source. Set a real key only in a local copy, never in a deployed one.
- *
- * When it is unset we skip the request entirely and go straight to the offline
- * fallbacks below, instead of making the user wait on a call that will 401.
- */
-const AI_ENABLED = /^gsk_[A-Za-z0-9_-]{20,}$/.test(GROQ_API_KEY);
-
 let currentResourceFilter = 'All';
 let resourcesData = [
   { id: 1, name: "Portable generator", category: "Tools", icon: "⚡", bg: "var(--amber-tint)", user: "Jun", verified: true, location: "240m away", status: "Available", claimed: false, coords: [9.8760, 126.0850] },
@@ -1265,7 +1255,6 @@ async function analyzeFloodImage(base64Image) {
   document.getElementById('report-analyzing').style.display = 'block';
 
   try {
-    if (!AI_ENABLED) throw new Error("AI assistant offline: no API key configured");
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
@@ -1358,7 +1347,6 @@ async function handleSendMessage(e) {
   container.scrollTop = container.scrollHeight;
 
   try {
-    if (!AI_ENABLED) throw new Error("AI assistant offline: no API key configured");
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
