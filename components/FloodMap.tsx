@@ -1,0 +1,341 @@
+"use client";
+
+/**
+ * The map centrepiece: OSM raster basemap, flood overlay, road network
+ * coloured by passability, the two candidate routes, and landmark markers.
+ *
+ * Every layer that carries meaning is encoded twice — colour plus either a
+ * dash pattern, a texture or a label — so nothing critical is lost to a
+ * viewer who cannot separate the hues.
+ */
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Map, {
+  Layer,
+  Marker,
+  NavigationControl,
+  Source,
+  type MapRef,
+} from "react-map-gl/maplibre";
+import type { FeatureCollection, LineString, Feature } from "geojson";
+
+import { dem } from "@/lib/dem";
+import { graph, landmarks, shortName, type RouteResult } from "@/lib/routing";
+import type { FloodState } from "@/lib/flood";
+import { renderFloodImage, floodImageCoordinates } from "@/lib/raster";
+
+const INITIAL_VIEW = {
+  longitude: (dem.bbox.lngMin + dem.bbox.lngMax) / 2,
+  latitude: (dem.bbox.latMin + dem.bbox.latMax) / 2,
+  zoom: 13,
+};
+
+/** The town's extent, used to frame the map once the container is sized. */
+const TOWN_BOUNDS: [[number, number], [number, number]] = [
+  [dem.bbox.lngMin, dem.bbox.latMin],
+  [dem.bbox.lngMax, dem.bbox.latMax],
+];
+
+/** Free raster basemap — no API key, which keeps the demo offline-safe. */
+const BASEMAP_STYLE = {
+  version: 8 as const,
+  sources: {
+    osm: {
+      type: "raster" as const,
+      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      tileSize: 256,
+      attribution: "&copy; OpenStreetMap contributors",
+    },
+  },
+  layers: [
+    {
+      id: "osm",
+      type: "raster" as const,
+      source: "osm",
+      paint: { "raster-opacity": 0.55, "raster-saturation": -0.4 },
+    },
+  ],
+};
+
+const ICONS: Record<string, string> = {
+  hospital: "H",
+  shelter: "S",
+  "town-center": "T",
+  marina: "M",
+  ferry: "F",
+};
+
+const KIND_COLOR: Record<string, string> = {
+  hospital: "var(--color-coral)",
+  shelter: "var(--color-blue)",
+  "town-center": "var(--color-navy)",
+  marina: "var(--color-teal)",
+  ferry: "var(--color-amber)",
+};
+
+interface Props {
+  displayed: FloodState;
+  blockedEdges: Set<string>;
+  route: RouteResult;
+  comparison: RouteResult;
+  originId: string;
+  destId: string;
+  cutOffIds: Set<string>;
+  onPickLandmark: (id: string) => void;
+}
+
+export default function FloodMap({
+  displayed,
+  blockedEdges,
+  route,
+  comparison,
+  originId,
+  destId,
+  cutOffIds,
+  onPickLandmark,
+}: Props) {
+  const mapRef = useRef<MapRef>(null);
+  const shellRef = useRef<HTMLDivElement>(null);
+  const [floodUrl, setFloodUrl] = useState<string | null>(null);
+
+  // MapLibre sizes its canvas once at construction. This dashboard mounts the
+  // map behind a loading skeleton and sits in a responsive grid, so the
+  // container almost always changes size after that — without this observer
+  // the canvas keeps whatever size it happened to be born with.
+  useEffect(() => {
+    const shell = shellRef.current;
+    if (!shell) return;
+    const observer = new ResizeObserver(() => mapRef.current?.resize());
+    observer.observe(shell);
+    return () => observer.disconnect();
+  }, []);
+
+  // Frame the whole town once, after the container has its real size.
+  // Doing this here rather than through `initialViewState: {bounds}` means the
+  // fit is computed against the laid-out container, not the pre-layout one.
+  const framed = useRef(false);
+  const handleLoad = useCallback(() => {
+    if (framed.current) return;
+    framed.current = true;
+    mapRef.current?.fitBounds(TOWN_BOUNDS, { padding: 28, duration: 0 });
+  }, []);
+
+  // Repaint the flood raster whenever the displayed timestep changes.
+  useEffect(() => {
+    setFloodUrl(renderFloodImage(displayed));
+  }, [displayed]);
+
+  // Road network, split into passable and impassable collections so each can
+  // carry its own paint. Rebuilt only when the closure set changes.
+  const { openRoads, blockedRoads } = useMemo(() => {
+    const open: Feature<LineString>[] = [];
+    const blocked: Feature<LineString>[] = [];
+    for (const edge of graph.edges) {
+      const feature: Feature<LineString> = {
+        type: "Feature",
+        properties: { name: edge.name, id: edge.id },
+        geometry: { type: "LineString", coordinates: edge.coordinates },
+      };
+      (blockedEdges.has(edge.id) ? blocked : open).push(feature);
+    }
+    return {
+      openRoads: { type: "FeatureCollection", features: open } as FeatureCollection,
+      blockedRoads: {
+        type: "FeatureCollection",
+        features: blocked,
+      } as FeatureCollection,
+    };
+  }, [blockedEdges]);
+
+  const routeLine = useMemo(() => toLine(route), [route]);
+  const comparisonLine = useMemo(() => toLine(comparison), [comparison]);
+  const fallbackLine = useMemo(
+    () =>
+      !route.ok && route.nearestReachable
+        ? lineFrom(route.nearestReachable.coordinates)
+        : null,
+    [route],
+  );
+
+  return (
+    <div ref={shellRef} className="h-full w-full">
+    <Map
+      ref={mapRef}
+      initialViewState={INITIAL_VIEW}
+      mapStyle={BASEMAP_STYLE}
+      style={{ width: "100%", height: "100%" }}
+      attributionControl={{ compact: true }}
+      dragRotate={false}
+      touchPitch={false}
+      onLoad={handleLoad}
+    >
+      <NavigationControl position="top-right" showCompass={false} />
+
+      {/* Flood extent. Depth-shaded and diagonally hatched. */}
+      {floodUrl && (
+        <Source
+          id="flood"
+          type="image"
+          url={floodUrl}
+          coordinates={floodImageCoordinates}
+        >
+          <Layer id="flood-layer" type="raster" paint={{ "raster-opacity": 0.82 }} />
+        </Source>
+      )}
+
+      {/* Passable roads: thin, solid, neutral. */}
+      <Source id="roads-open" type="geojson" data={openRoads}>
+        <Layer
+          id="roads-open-layer"
+          type="line"
+          paint={{
+            "line-color": "#3C4A46",
+            "line-width": ["interpolate", ["linear"], ["zoom"], 11, 0.8, 16, 2.6],
+            "line-opacity": 0.75,
+          }}
+        />
+      </Source>
+
+      {/* Impassable roads: coral AND dashed, so the closure reads without
+          relying on the colour difference alone. */}
+      <Source id="roads-blocked" type="geojson" data={blockedRoads}>
+        <Layer
+          id="roads-blocked-casing"
+          type="line"
+          paint={{
+            "line-color": "#FFFFFF",
+            "line-width": ["interpolate", ["linear"], ["zoom"], 11, 3, 16, 7],
+            "line-opacity": 0.55,
+          }}
+        />
+        <Layer
+          id="roads-blocked-layer"
+          type="line"
+          paint={{
+            "line-color": "#E2572B",
+            "line-width": ["interpolate", ["linear"], ["zoom"], 11, 1.8, 16, 4],
+            "line-dasharray": [1.5, 1.2],
+          }}
+        />
+      </Source>
+
+      {/* The other risk mode's route, drawn behind as a dashed comparison. */}
+      {comparisonLine && (
+        <Source id="route-compare" type="geojson" data={comparisonLine}>
+          <Layer
+            id="route-compare-layer"
+            type="line"
+            layout={{ "line-cap": "round", "line-join": "round" }}
+            paint={{
+              "line-color": "#E3A008",
+              "line-width": ["interpolate", ["linear"], ["zoom"], 11, 3, 16, 7],
+              "line-dasharray": [2, 1.6],
+              "line-opacity": 0.9,
+            }}
+          />
+        </Source>
+      )}
+
+      {/* The selected route. */}
+      {routeLine && (
+        <Source id="route" type="geojson" data={routeLine}>
+          <Layer
+            id="route-casing"
+            type="line"
+            layout={{ "line-cap": "round", "line-join": "round" }}
+            paint={{
+              "line-color": "#FFFFFF",
+              "line-width": ["interpolate", ["linear"], ["zoom"], 11, 6, 16, 12],
+            }}
+          />
+          <Layer
+            id="route-layer"
+            type="line"
+            layout={{ "line-cap": "round", "line-join": "round" }}
+            paint={{
+              "line-color": "#1F8A70",
+              "line-width": ["interpolate", ["linear"], ["zoom"], 11, 3.5, 16, 8],
+            }}
+          />
+        </Source>
+      )}
+
+      {/* Suggested alternative when the requested destination is unreachable. */}
+      {fallbackLine && (
+        <Source id="route-fallback" type="geojson" data={fallbackLine}>
+          <Layer
+            id="route-fallback-layer"
+            type="line"
+            layout={{ "line-cap": "round", "line-join": "round" }}
+            paint={{
+              "line-color": "#2E6F95",
+              "line-width": ["interpolate", ["linear"], ["zoom"], 11, 3, 16, 7],
+              "line-dasharray": [1, 1.4],
+            }}
+          />
+        </Source>
+      )}
+
+      {landmarks.map((lm) => {
+        const isOrigin = lm.id === originId;
+        const isDest = lm.id === destId;
+        const isCut = cutOffIds.has(lm.id);
+        return (
+          <Marker
+            key={lm.id}
+            longitude={lm.lng}
+            latitude={lm.lat}
+            anchor="center"
+          >
+            <button
+              type="button"
+              onClick={() => onPickLandmark(lm.id)}
+              className="flex cursor-pointer flex-col items-center gap-1 border-0 bg-transparent p-0"
+              aria-label={
+                `${lm.name}, ground level ${lm.elevation.toFixed(1)} metres` +
+                (isCut ? ", currently cut off" : "") +
+                (isOrigin ? ", selected as origin" : "") +
+                (isDest ? ", selected as destination" : "")
+              }
+            >
+              <span
+                className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white text-[11px] font-bold text-white shadow-[0_3px_8px_rgba(0,0,0,0.35)]"
+                style={{
+                  background: isCut ? "#9E3A18" : KIND_COLOR[lm.kind],
+                  outline:
+                    isOrigin || isDest ? "3px solid #0E2A33" : undefined,
+                  outlineOffset: 1,
+                }}
+              >
+                {ICONS[lm.kind] ?? "•"}
+              </span>
+              <span className="whitespace-nowrap rounded-full bg-white/92 px-1.5 py-px text-[9px] font-bold text-navy shadow-sm">
+                {isOrigin ? "FROM · " : isDest ? "TO · " : ""}
+                {shortName(lm)}
+                {isCut ? " ⚠" : ""}
+              </span>
+            </button>
+          </Marker>
+        );
+      })}
+    </Map>
+    </div>
+  );
+}
+
+function lineFrom(coordinates: [number, number][]): FeatureCollection {
+  return {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        properties: {},
+        geometry: { type: "LineString", coordinates },
+      },
+    ],
+  };
+}
+
+function toLine(result: RouteResult): FeatureCollection | null {
+  return result.ok ? lineFrom(result.coordinates) : null;
+}

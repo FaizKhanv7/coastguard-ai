@@ -243,6 +243,61 @@ check(
   ferryPeak.ok ? "unexpectedly routed" : ferryPeak.message,
 );
 
+// 4d. When the DESTINATION is the thing that is cut off, the router must
+//     suggest somewhere else worth driving to — not the place you are
+//     already standing, and not the place it just told you is unreachable.
+const toFerry = route("marina", "ferry", PEAK, "safest");
+check(
+  "an unreachable destination is reported as destination-flooded",
+  !toFerry.ok && toFerry.reason === "destination-flooded",
+  toFerry.ok ? "unexpectedly routed" : toFerry.message,
+);
+if (!toFerry.ok) {
+  const suggested = toFerry.nearestReachable;
+  check(
+    "a reachable alternative is offered",
+    !!suggested,
+    suggested
+      ? `${suggested.landmark.name} at ${km(suggested.distanceM)}`
+      : "none offered",
+  );
+  check(
+    "the alternative is neither the origin nor the failed destination",
+    !!suggested &&
+      suggested.landmark.id !== "marina" &&
+      suggested.landmark.id !== "ferry",
+    suggested?.landmark.id ?? "-",
+  );
+  check(
+    "the message does not mention a zero-hour horizon",
+    !toFerry.message.includes("0 h"),
+    toFerry.message,
+  );
+}
+
+// 4e. The arrival-window check: a segment that is open when you set off but
+//     goes under before you are clear of it must be flagged. The whole
+//     journey is shorter than one 15-minute timestep, so this only works
+//     because the exposure window is rounded outwards rather than floored.
+const onsetStep = hoursToStep(23.5);
+const onsetRoute = findRoute(lm("shelter").nodeId, lm("town-center").nodeId, {
+  current: states[onsetStep],
+  horizon: worstCaseThroughHorizon(states, onsetStep, 6),
+  mode: "fastest",
+  horizonH: 6,
+  timeline: states,
+  startStep: onsetStep,
+  stepHours: STEP_HOURS,
+});
+const onsetWarnings = onsetRoute.ok
+  ? onsetRoute.warnings.filter((w) => /goes under while you are still on it/.test(w.message))
+  : [];
+check(
+  "a road that floods mid-journey is flagged as such",
+  onsetWarnings.length > 0,
+  onsetWarnings[0]?.message ?? "no arrival-window warning fired",
+);
+
 // 5. A returned route must actually be passable end to end.
 function routeIsClean(r: RouteResult, frame: { flooded: Uint8Array; waterLevelM: number }): boolean {
   if (!r.ok) return true;

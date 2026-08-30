@@ -18,9 +18,12 @@
  *
  * 2. Elevation sampling.  At build time each edge is sampled every ~15 m and
  *    the DEM cell index for each sample is cached on the edge. Deciding
- *    whether an edge is flooded is then just "is any cached cell set in this
- *    flood mask", which is a handful of array lookups. Doing this once is what
- *    lets the timeline scrub at 60 fps.
+ *    whether an edge is flooded is then a handful of array lookups against a
+ *    flood mask. Doing this once is what lets the timeline scrub smoothly.
+ *
+ *    A segment closes when any sampled point is standing in more than
+ *    VEHICLE_DEPTH_LIMIT_M of water — not merely when it is wet. Roads get
+ *    damp at every high tide; they stop being drivable at about 30 cm.
  *
  * 3. A*.  Standard A* over the passable subgraph, with a haversine
  *    straight-line heuristic. That heuristic is admissible because edge
@@ -32,13 +35,17 @@
  *      - `fastest`  excludes only edges flooded *right now*. Shorter, but it
  *                   may run through ground that is about to go under.
  *      - `safest`   excludes any edge flooded at *any* timestep between now
- *                   and the horizon (the union mask from lib/flood.ts). Longer,
- *                   but it will still be there when you need it.
+ *                   and the horizon — that is `worstCaseThroughHorizon` from
+ *                   lib/flood.ts. Longer, but it will still be there when you
+ *                   need it.
  *
- * 5. Arrival-time check.  For a `fastest` route we walk the path accumulating
- *    travel time, work out which timestep you would reach each segment at, and
- *    flag any segment the model says is under water by then. That is the
- *    "this route floods before you finish driving it" warning.
+ * 5. Arrival-window check.  We walk the path accumulating travel time and, for
+ *    each segment, check every flood frame the interval you are on it touches.
+ *    A segment that is open when you set off but goes under before you are
+ *    clear of it gets flagged. Because the whole journey is shorter than one
+ *    15-minute timestep, the window is rounded outwards rather than floored —
+ *    flooring it would collapse onto the departure frame and the check could
+ *    never fire.
  *
  * NO-ROUTE HANDLING
  * `findRoute` never throws. If the destination is unreachable it returns
@@ -583,10 +590,15 @@ export function findRoute(
 
     const alternative = originStranded
       ? undefined
-      : nearestReachableLandmark(startIdx, destNodeId, passable);
+      : nearestReachableLandmark(startIdx, [destNodeId, originNodeId], passable);
 
     const destName =
       landmarks.find((l) => l.nodeId === destNodeId)?.name ?? "the destination";
+
+    // Only mention the horizon when there actually is one — with the horizon
+    // set to "Now", "within the next 0 h" is nonsense.
+    const withinHorizon =
+      mode === "safest" && horizonH > 0 ? ` within the next ${horizonH} h` : "";
 
     let message: string;
     if (originStranded) {
@@ -594,11 +606,9 @@ export function findRoute(
         "Every road out of the starting point is under water. " +
         "Shelter in place and request water rescue.";
     } else if (destStranded) {
-      message = `${destName} is surrounded by flooded roads and cannot be reached${
-        mode === "safest" ? ` within the next ${horizonH} h` : ""
-      }.`;
+      message = `${destName} is surrounded by flooded roads and cannot be reached${withinHorizon}.`;
     } else {
-      message = `No ${mode === "safest" ? "safe " : ""}route to ${destName} — the road network is severed between here and there.`;
+      message = `No ${mode === "safest" ? "safe " : ""}route to ${destName}${withinHorizon} — the road network is severed between here and there.`;
     }
 
     return {
@@ -625,17 +635,30 @@ export function findRoute(
     const arrivalH = etaHours;
     etaHours += edgeTravelHours(edge);
 
-    // Does the model say this segment is under water by the time you reach it?
+    // Does the model say this segment goes under while you are on it?
+    //
+    // The exposure window is [arrivalH, arrivalH + time on this segment]. The
+    // flood timeline only has 15-minute resolution and the whole journey is
+    // shorter than that, so we round the window OUTWARDS — floor the start,
+    // ceil the end — and check every frame it touches. Flooring both ends
+    // would collapse the window onto the departure timestep, where a
+    // `fastest` route is passable by construction, and the check could never
+    // fire at all.
     if (opts.timeline && opts.stepHours) {
-      const step =
-        (opts.startStep ?? 0) + Math.floor(arrivalH / opts.stepHours);
-      const frame = opts.timeline[Math.min(step, opts.timeline.length - 1)];
-      if (frame && isEdgeBlocked(edge, frame)) {
+      const base = opts.startStep ?? 0;
+      const first = base + Math.floor(arrivalH / opts.stepHours);
+      const last = base + Math.ceil(etaHours / opts.stepHours);
+      let goesUnder = false;
+      for (let st = first; st <= last && !goesUnder; st++) {
+        const frame = opts.timeline[Math.min(st, opts.timeline.length - 1)];
+        if (frame && isEdgeBlocked(edge, frame)) goesUnder = true;
+      }
+      if (goesUnder) {
         warnings.push({
           edgeId: edge.id,
           roadName: edge.name,
           arrivalH,
-          message: `${edge.name} is under water by the time you reach it (${formatLead(arrivalH)} in).`,
+          message: `${edge.name} goes under while you are still on it — you reach it ${formatLead(arrivalH)} in.`,
         });
         continue;
       }
@@ -677,12 +700,16 @@ function formatLead(hours: number): string {
 
 /**
  * Dijkstra from `startIdx` over passable edges, returning the closest landmark
- * that is not the one we already failed to reach. This is what turns a
- * dead-end into an actionable "go here instead".
+ * that is still reachable. This is what turns a dead end into an actionable
+ * "go here instead".
+ *
+ * `excludeNodeIds` holds the destination we already failed to reach and the
+ * origin itself — suggesting the place you are currently standing in would be
+ * technically true and completely useless.
  */
 function nearestReachableLandmark(
   startIdx: number,
-  excludeNodeId: string,
+  excludeNodeIds: string[],
   passable: Uint8Array,
 ): RouteFailure["nearestReachable"] {
   const { nodes, edges } = graph;
@@ -716,7 +743,7 @@ function nearestReachableLandmark(
   let best: Landmark | null = null;
   let bestDist = Infinity;
   for (const lm of landmarks) {
-    if (lm.nodeId === excludeNodeId) continue;
+    if (excludeNodeIds.includes(lm.nodeId)) continue;
     const idx = graph.nodeIndex.get(lm.nodeId);
     if (idx === undefined) continue;
     if (dist[idx] < bestDist) {
@@ -786,6 +813,21 @@ export function cutOffLandmarks(
     return idx === undefined || !seen[idx];
   });
 }
+
+/**
+ * Compact label for a landmark, for places where the full name will not fit
+ * (map pins, the "cut off" list). Keyed on kind rather than sliced off the
+ * name, so "Ferry Dock" does not become "Dock".
+ */
+const SHORT_NAMES: Record<string, string> = {
+  hospital: "Hospital",
+  shelter: "Shelter",
+  "town-center": "Town Center",
+  marina: "Marina",
+  ferry: "Ferry Dock",
+};
+
+export const shortName = (lm: Landmark) => SHORT_NAMES[lm.kind] ?? lm.name;
 
 /** Look up a landmark by id. */
 export const landmarkById = (id: string) =>
