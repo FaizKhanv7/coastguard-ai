@@ -1,8 +1,8 @@
-import Dashboard from '@/components/Dashboard';
+import { Dashboard } from "@/components/Dashboard";
 
 export default function Page() {
   return (
-    <main className="min-h-screen bg-[#05080f] text-slate-100">
+    <main className="min-h-screen w-full bg-[#070a13]">
       <Dashboard />
     </main>
   );
