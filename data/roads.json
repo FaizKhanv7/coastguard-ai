@@ -1,0 +1,2818 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "id": 0,
+   "properties": {
+    "id": "seg0",
+    "name": "Harbor Rd",
+    "from": "n0_0",
+    "to": "n0_1",
+    "lengthM": 516.7,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.073161,
+      9.859116
+     ],
+     [
+      126.075517,
+      9.859022
+     ],
+     [
+      126.077853,
+      9.8587
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 1,
+   "properties": {
+    "id": "seg1",
+    "name": "Harbor Rd",
+    "from": "n0_1",
+    "to": "n0_2",
+    "lengthM": 497,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.077853,
+      9.8587
+     ],
+     [
+      126.080088,
+      9.858319
+     ],
+     [
+      126.082333,
+      9.858001
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 2,
+   "properties": {
+    "id": "seg2",
+    "name": "Harbor Rd",
+    "from": "n0_2",
+    "to": "n0_3",
+    "lengthM": 579.6,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.082333,
+      9.858001
+     ],
+     [
+      126.084922,
+      9.858536
+     ],
+     [
+      126.087516,
+      9.859048
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 3,
+   "properties": {
+    "id": "seg3",
+    "name": "Harbor Rd",
+    "from": "n0_3",
+    "to": "n0_4",
+    "lengthM": 435.9,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.087516,
+      9.859048
+     ],
+     [
+      126.089503,
+      9.858959
+     ],
+     [
+      126.091479,
+      9.859188
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 4,
+   "properties": {
+    "id": "seg4",
+    "name": "Harbor Rd",
+    "from": "n0_4",
+    "to": "n0_5",
+    "lengthM": 594.7,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.091479,
+      9.859188
+     ],
+     [
+      126.094166,
+      9.858808
+     ],
+     [
+      126.096877,
+      9.858694
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 5,
+   "properties": {
+    "id": "seg5",
+    "name": "Harbor Rd",
+    "from": "n0_6",
+    "to": "n0_7",
+    "lengthM": 606.8,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.100758,
+      9.859431
+     ],
+     [
+      126.103526,
+      9.859513
+     ],
+     [
+      126.106294,
+      9.859598
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 6,
+   "properties": {
+    "id": "seg6",
+    "name": "Marina Way",
+    "from": "n1_0",
+    "to": "n1_1",
+    "lengthM": 604.3,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.072125,
+      9.86315
+     ],
+     [
+      126.07487,
+      9.86288
+     ],
+     [
+      126.077604,
+      9.862523
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 7,
+   "properties": {
+    "id": "seg7",
+    "name": "Marina Way",
+    "from": "n1_1",
+    "to": "n1_2",
+    "lengthM": 486.5,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.077604,
+      9.862523
+     ],
+     [
+      126.079824,
+      9.86257
+     ],
+     [
+      126.082038,
+      9.8624
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 8,
+   "properties": {
+    "id": "seg8",
+    "name": "Marina Way",
+    "from": "n1_2",
+    "to": "n1_3",
+    "lengthM": 603.9,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.082038,
+      9.8624
+     ],
+     [
+      126.084788,
+      9.862586
+     ],
+     [
+      126.087538,
+      9.862759
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 9,
+   "properties": {
+    "id": "seg9",
+    "name": "Marina Way",
+    "from": "n1_3",
+    "to": "n1_4",
+    "lengthM": 485,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.087538,
+      9.862759
+     ],
+     [
+      126.089724,
+      9.8631
+     ],
+     [
+      126.091895,
+      9.863527
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 10,
+   "properties": {
+    "id": "seg10",
+    "name": "Marina Way",
+    "from": "n1_4",
+    "to": "n1_5",
+    "lengthM": 531.1,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.091895,
+      9.863527
+     ],
+     [
+      126.094291,
+      9.863161
+     ],
+     [
+      126.096702,
+      9.86292
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 11,
+   "properties": {
+    "id": "seg11",
+    "name": "Marina Way",
+    "from": "n1_6",
+    "to": "n1_7",
+    "lengthM": 613.6,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.100543,
+      9.862893
+     ],
+     [
+      126.103337,
+      9.863082
+     ],
+     [
+      126.106137,
+      9.863133
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 12,
+   "properties": {
+    "id": "seg12",
+    "name": "Kalinaw High St",
+    "from": "n2_0",
+    "to": "n2_1",
+    "lengthM": 535.4,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.072248,
+      9.867059
+     ],
+     [
+      126.07469,
+      9.867125
+     ],
+     [
+      126.077097,
+      9.867544
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 13,
+   "properties": {
+    "id": "seg13",
+    "name": "Kalinaw High St",
+    "from": "n2_1",
+    "to": "n2_2",
+    "lengthM": 639.2,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.077097,
+      9.867544
+     ],
+     [
+      126.079974,
+      9.867074
+     ],
+     [
+      126.082818,
+      9.86643
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 14,
+   "properties": {
+    "id": "seg14",
+    "name": "Kalinaw High St",
+    "from": "n2_2",
+    "to": "n2_3",
+    "lengthM": 443.9,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.082818,
+      9.86643
+     ],
+     [
+      126.084832,
+      9.866652
+     ],
+     [
+      126.086857,
+      9.8666
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 15,
+   "properties": {
+    "id": "seg15",
+    "name": "Kalinaw High St",
+    "from": "n2_5",
+    "to": "n2_6",
+    "lengthM": 382.7,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.096836,
+      9.8667
+     ],
+     [
+      126.098569,
+      9.866483
+     ],
+     [
+      126.10031,
+      9.866349
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 16,
+   "properties": {
+    "id": "seg16",
+    "name": "Kalinaw High St",
+    "from": "n2_6",
+    "to": "n2_7",
+    "lengthM": 672.8,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.10031,
+      9.866349
+     ],
+     [
+      126.103375,
+      9.86651
+     ],
+     [
+      126.10636,
+      9.867225
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 17,
+   "properties": {
+    "id": "seg17",
+    "name": "Bayfront Ave",
+    "from": "n3_0",
+    "to": "n3_1",
+    "lengthM": 507.6,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.072619,
+      9.871157
+     ],
+     [
+      126.074931,
+      9.871021
+     ],
+     [
+      126.077212,
+      9.87062
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 18,
+   "properties": {
+    "id": "seg18",
+    "name": "Bayfront Ave",
+    "from": "n3_1",
+    "to": "n3_2",
+    "lengthM": 564,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.077212,
+      9.87062
+     ],
+     [
+      126.079656,
+      9.871418
+     ],
+     [
+      126.082167,
+      9.871974
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 19,
+   "properties": {
+    "id": "seg19",
+    "name": "Bayfront Ave",
+    "from": "n3_2",
+    "to": "n3_3",
+    "lengthM": 608.8,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.082167,
+      9.871974
+     ],
+     [
+      126.084919,
+      9.871596
+     ],
+     [
+      126.087695,
+      9.871484
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 20,
+   "properties": {
+    "id": "seg20",
+    "name": "Bayfront Ave",
+    "from": "n3_4",
+    "to": "n3_5",
+    "lengthM": 498.6,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.092235,
+      9.870462
+     ],
+     [
+      126.094478,
+      9.870838
+     ],
+     [
+      126.096677,
+      9.871417
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 21,
+   "properties": {
+    "id": "seg21",
+    "name": "Bayfront Ave",
+    "from": "n3_5",
+    "to": "n3_6",
+    "lengthM": 572.6,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.096677,
+      9.871417
+     ],
+     [
+      126.099257,
+      9.871831
+     ],
+     [
+      126.101865,
+      9.871993
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 22,
+   "properties": {
+    "id": "seg22",
+    "name": "Bayfront Ave",
+    "from": "n3_6",
+    "to": "n3_7",
+    "lengthM": 554.7,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.101865,
+      9.871993
+     ],
+     [
+      126.104396,
+      9.871981
+     ],
+     [
+      126.106892,
+      9.871558
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 23,
+   "properties": {
+    "id": "seg23",
+    "name": "Coral Lane",
+    "from": "n4_0",
+    "to": "n4_1",
+    "lengthM": 587.2,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.072677,
+      9.8749
+     ],
+     [
+      126.075324,
+      9.874485
+     ],
+     [
+      126.078002,
+      9.874578
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 24,
+   "properties": {
+    "id": "seg24",
+    "name": "Coral Lane",
+    "from": "n4_1",
+    "to": "n4_2",
+    "lengthM": 441.2,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.078002,
+      9.874578
+     ],
+     [
+      126.080012,
+      9.874708
+     ],
+     [
+      126.082023,
+      9.874803
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 25,
+   "properties": {
+    "id": "seg25",
+    "name": "Coral Lane",
+    "from": "n4_2",
+    "to": "n4_3",
+    "lengthM": 425.6,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.082023,
+      9.874803
+     ],
+     [
+      126.083965,
+      9.874815
+     ],
+     [
+      126.085902,
+      9.874662
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 26,
+   "properties": {
+    "id": "seg26",
+    "name": "Coral Lane",
+    "from": "n4_4",
+    "to": "n4_5",
+    "lengthM": 603.7,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.090708,
+      9.875999
+     ],
+     [
+      126.093461,
+      9.875884
+     ],
+     [
+      126.09621,
+      9.876075
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 27,
+   "properties": {
+    "id": "seg27",
+    "name": "Coral Lane",
+    "from": "n4_5",
+    "to": "n4_6",
+    "lengthM": 523.1,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.09621,
+      9.876075
+     ],
+     [
+      126.09858,
+      9.87579
+     ],
+     [
+      126.100967,
+      9.875815
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 28,
+   "properties": {
+    "id": "seg28",
+    "name": "Coral Lane",
+    "from": "n4_6",
+    "to": "n4_7",
+    "lengthM": 567.2,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.100967,
+      9.875815
+     ],
+     [
+      126.103555,
+      9.87586
+     ],
+     [
+      126.106121,
+      9.875522
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 29,
+   "properties": {
+    "id": "seg29",
+    "name": "Fishermans Walk",
+    "from": "n5_0",
+    "to": "n5_1",
+    "lengthM": 524.3,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.071673,
+      9.879061
+     ],
+     [
+      126.073981,
+      9.879687
+     ],
+     [
+      126.076366,
+      9.879866
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 30,
+   "properties": {
+    "id": "seg30",
+    "name": "Fishermans Walk",
+    "from": "n5_1",
+    "to": "n5_2",
+    "lengthM": 553.2,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.076366,
+      9.879866
+     ],
+     [
+      126.078844,
+      9.879394
+     ],
+     [
+      126.081282,
+      9.878744
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 31,
+   "properties": {
+    "id": "seg31",
+    "name": "Fishermans Walk",
+    "from": "n5_2",
+    "to": "n5_3",
+    "lengthM": 772,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.081282,
+      9.878744
+     ],
+     [
+      126.083885,
+      9.876401
+     ],
+     [
+      126.08669,
+      9.874303
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 32,
+   "properties": {
+    "id": "seg32",
+    "name": "Fishermans Walk",
+    "from": "n5_5",
+    "to": "n5_6",
+    "lengthM": 688.4,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.09571,
+      9.878931
+     ],
+     [
+      126.098832,
+      9.879272
+     ],
+     [
+      126.101878,
+      9.880037
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 33,
+   "properties": {
+    "id": "seg33",
+    "name": "Fishermans Walk",
+    "from": "n5_6",
+    "to": "n5_7",
+    "lengthM": 496.7,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.101878,
+      9.880037
+     ],
+     [
+      126.104123,
+      9.879726
+     ],
+     [
+      126.106381,
+      9.879523
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 34,
+   "properties": {
+    "id": "seg34",
+    "name": "East Cliff Path",
+    "from": "n6_0",
+    "to": "n6_1",
+    "lengthM": 513.1,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.071965,
+      9.884292
+     ],
+     [
+      126.074307,
+      9.884302
+     ],
+     [
+      126.076649,
+      9.884329
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 35,
+   "properties": {
+    "id": "seg35",
+    "name": "East Cliff Path",
+    "from": "n6_1",
+    "to": "n6_2",
+    "lengthM": 1016.4,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.076649,
+      9.884329
+     ],
+     [
+      126.079435,
+      9.880666
+     ],
+     [
+      126.082886,
+      9.877622
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 36,
+   "properties": {
+    "id": "seg36",
+    "name": "East Cliff Path",
+    "from": "n6_2",
+    "to": "n6_3",
+    "lengthM": 613.6,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.082886,
+      9.877622
+     ],
+     [
+      126.085017,
+      9.875831
+     ],
+     [
+      126.087189,
+      9.87409
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 37,
+   "properties": {
+    "id": "seg37",
+    "name": "East Cliff Path",
+    "from": "n6_4",
+    "to": "n6_5",
+    "lengthM": 391.8,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.092174,
+      9.882866
+     ],
+     [
+      126.093956,
+      9.883009
+     ],
+     [
+      126.095699,
+      9.883405
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 38,
+   "properties": {
+    "id": "seg38",
+    "name": "East Cliff Path",
+    "from": "n6_5",
+    "to": "n6_6",
+    "lengthM": 546.4,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.095699,
+      9.883405
+     ],
+     [
+      126.098189,
+      9.883545
+     ],
+     [
+      126.100666,
+      9.883256
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 39,
+   "properties": {
+    "id": "seg39",
+    "name": "East Cliff Path",
+    "from": "n6_6",
+    "to": "n6_7",
+    "lengthM": 669.4,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.100666,
+      9.883256
+     ],
+     [
+      126.103719,
+      9.883139
+     ],
+     [
+      126.106768,
+      9.882948
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 40,
+   "properties": {
+    "id": "seg40",
+    "name": "Mangrove Rd",
+    "from": "n0_0",
+    "to": "n1_0",
+    "lengthM": 464.4,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.073161,
+      9.859116
+     ],
+     [
+      126.072818,
+      9.861178
+     ],
+     [
+      126.072125,
+      9.86315
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 41,
+   "properties": {
+    "id": "seg41",
+    "name": "Mangrove Rd",
+    "from": "n1_0",
+    "to": "n2_0",
+    "lengthM": 435.9,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.072125,
+      9.86315
+     ],
+     [
+      126.072049,
+      9.865109
+     ],
+     [
+      126.072248,
+      9.867059
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 42,
+   "properties": {
+    "id": "seg42",
+    "name": "Mangrove Rd",
+    "from": "n2_0",
+    "to": "n3_0",
+    "lengthM": 457.5,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.072248,
+      9.867059
+     ],
+     [
+      126.072441,
+      9.869108
+     ],
+     [
+      126.072619,
+      9.871157
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 43,
+   "properties": {
+    "id": "seg43",
+    "name": "Mangrove Rd",
+    "from": "n3_0",
+    "to": "n4_0",
+    "lengthM": 416.3,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.072619,
+      9.871157
+     ],
+     [
+      126.072627,
+      9.873029
+     ],
+     [
+      126.072677,
+      9.8749
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 44,
+   "properties": {
+    "id": "seg44",
+    "name": "Mangrove Rd",
+    "from": "n4_0",
+    "to": "n5_0",
+    "lengthM": 475.6,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.072677,
+      9.8749
+     ],
+     [
+      126.072191,
+      9.876984
+     ],
+     [
+      126.071673,
+      9.879061
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 45,
+   "properties": {
+    "id": "seg45",
+    "name": "Mangrove Rd",
+    "from": "n5_0",
+    "to": "n6_0",
+    "lengthM": 582.5,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.071673,
+      9.879061
+     ],
+     [
+      126.07183,
+      9.881676
+     ],
+     [
+      126.071965,
+      9.884292
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 46,
+   "properties": {
+    "id": "seg46",
+    "name": "Quarry Rd",
+    "from": "n1_1",
+    "to": "n2_1",
+    "lengthM": 561.1,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.077604,
+      9.862523
+     ],
+     [
+      126.077314,
+      9.86503
+     ],
+     [
+      126.077097,
+      9.867544
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 47,
+   "properties": {
+    "id": "seg47",
+    "name": "Quarry Rd",
+    "from": "n3_1",
+    "to": "n4_1",
+    "lengthM": 448.5,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.077212,
+      9.87062
+     ],
+     [
+      126.077595,
+      9.872601
+     ],
+     [
+      126.078002,
+      9.874578
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 48,
+   "properties": {
+    "id": "seg48",
+    "name": "Quarry Rd",
+    "from": "n4_1",
+    "to": "n5_1",
+    "lengthM": 616,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.078002,
+      9.874578
+     ],
+     [
+      126.077012,
+      9.877169
+     ],
+     [
+      126.076366,
+      9.879866
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 49,
+   "properties": {
+    "id": "seg49",
+    "name": "Quarry Rd",
+    "from": "n5_1",
+    "to": "n6_1",
+    "lengthM": 497.9,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.076366,
+      9.879866
+     ],
+     [
+      126.076623,
+      9.88209
+     ],
+     [
+      126.076649,
+      9.884329
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 50,
+   "properties": {
+    "id": "seg50",
+    "name": "Ridge Ave",
+    "from": "n0_2",
+    "to": "n1_2",
+    "lengthM": 491.5,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.082333,
+      9.858001
+     ],
+     [
+      126.082345,
+      9.860211
+     ],
+     [
+      126.082038,
+      9.8624
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 51,
+   "properties": {
+    "id": "seg51",
+    "name": "Ridge Ave",
+    "from": "n1_2",
+    "to": "n2_2",
+    "lengthM": 456.2,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.082038,
+      9.8624
+     ],
+     [
+      126.082396,
+      9.864421
+     ],
+     [
+      126.082818,
+      9.86643
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 52,
+   "properties": {
+    "id": "seg52",
+    "name": "Ridge Ave",
+    "from": "n2_2",
+    "to": "n3_2",
+    "lengthM": 621.9,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.082818,
+      9.86643
+     ],
+     [
+      126.082677,
+      9.869224
+     ],
+     [
+      126.082167,
+      9.871974
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 53,
+   "properties": {
+    "id": "seg53",
+    "name": "Ridge Ave",
+    "from": "n3_2",
+    "to": "n4_2",
+    "lengthM": 315.7,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.082167,
+      9.871974
+     ],
+     [
+      126.082196,
+      9.873394
+     ],
+     [
+      126.082023,
+      9.874803
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 54,
+   "properties": {
+    "id": "seg54",
+    "name": "Ridge Ave",
+    "from": "n4_2",
+    "to": "n5_2",
+    "lengthM": 447.1,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.082023,
+      9.874803
+     ],
+     [
+      126.081492,
+      9.876743
+     ],
+     [
+      126.081282,
+      9.878744
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 55,
+   "properties": {
+    "id": "seg55",
+    "name": "Ridge Ave",
+    "from": "n5_2",
+    "to": "n6_2",
+    "lengthM": 215.5,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.081282,
+      9.878744
+     ],
+     [
+      126.082084,
+      9.878183
+     ],
+     [
+      126.082886,
+      9.877622
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 56,
+   "properties": {
+    "id": "seg56",
+    "name": "Palm Row",
+    "from": "n0_3",
+    "to": "n1_3",
+    "lengthM": 413.2,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.087516,
+      9.859048
+     ],
+     [
+      126.087428,
+      9.860904
+     ],
+     [
+      126.087538,
+      9.862759
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 57,
+   "properties": {
+    "id": "seg57",
+    "name": "Palm Row",
+    "from": "n3_3",
+    "to": "n4_3",
+    "lengthM": 404.6,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.087695,
+      9.871484
+     ],
+     [
+      126.086733,
+      9.873036
+     ],
+     [
+      126.085902,
+      9.874662
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 58,
+   "properties": {
+    "id": "seg58",
+    "name": "Palm Row",
+    "from": "n4_3",
+    "to": "n5_3",
+    "lengthM": 95.2,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.085902,
+      9.874662
+     ],
+     [
+      126.08629,
+      9.874471
+     ],
+     [
+      126.08669,
+      9.874303
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 59,
+   "properties": {
+    "id": "seg59",
+    "name": "Palm Row",
+    "from": "n5_3",
+    "to": "n6_3",
+    "lengthM": 59.7,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.08669,
+      9.874303
+     ],
+     [
+      126.086933,
+      9.874182
+     ],
+     [
+      126.087189,
+      9.87409
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 60,
+   "properties": {
+    "id": "seg60",
+    "name": "Tide St",
+    "from": "n0_4",
+    "to": "n1_4",
+    "lengthM": 485.2,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.091479,
+      9.859188
+     ],
+     [
+      126.091584,
+      9.861368
+     ],
+     [
+      126.091895,
+      9.863527
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 61,
+   "properties": {
+    "id": "seg61",
+    "name": "Tide St",
+    "from": "n1_4",
+    "to": "n2_4",
+    "lengthM": 385.2,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.091895,
+      9.863527
+     ],
+     [
+      126.091526,
+      9.86522
+     ],
+     [
+      126.091334,
+      9.866942
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 62,
+   "properties": {
+    "id": "seg62",
+    "name": "Tide St",
+    "from": "n3_4",
+    "to": "n4_4",
+    "lengthM": 640.2,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.092235,
+      9.870462
+     ],
+     [
+      126.091239,
+      9.873166
+     ],
+     [
+      126.090708,
+      9.875999
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 63,
+   "properties": {
+    "id": "seg63",
+    "name": "Tide St",
+    "from": "n4_4",
+    "to": "n5_4",
+    "lengthM": 376.1,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.090708,
+      9.875999
+     ],
+     [
+      126.091467,
+      9.877518
+     ],
+     [
+      126.092471,
+      9.878887
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 64,
+   "properties": {
+    "id": "seg64",
+    "name": "Tide St",
+    "from": "n5_4",
+    "to": "n6_4",
+    "lengthM": 443.7,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.092471,
+      9.878887
+     ],
+     [
+      126.092286,
+      9.880874
+     ],
+     [
+      126.092174,
+      9.882866
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 65,
+   "properties": {
+    "id": "seg65",
+    "name": "Barangay Rd",
+    "from": "n0_5",
+    "to": "n1_5",
+    "lengthM": 471.6,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.096877,
+      9.858694
+     ],
+     [
+      126.096631,
+      9.860801
+     ],
+     [
+      126.096702,
+      9.86292
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 66,
+   "properties": {
+    "id": "seg66",
+    "name": "Barangay Rd",
+    "from": "n2_5",
+    "to": "n3_5",
+    "lengthM": 524.9,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.096836,
+      9.8667
+     ],
+     [
+      126.096795,
+      9.86906
+     ],
+     [
+      126.096677,
+      9.871417
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 67,
+   "properties": {
+    "id": "seg67",
+    "name": "Barangay Rd",
+    "from": "n3_5",
+    "to": "n4_5",
+    "lengthM": 522.7,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.096677,
+      9.871417
+     ],
+     [
+      126.096222,
+      9.873724
+     ],
+     [
+      126.09621,
+      9.876075
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 68,
+   "properties": {
+    "id": "seg68",
+    "name": "Barangay Rd",
+    "from": "n4_5",
+    "to": "n5_5",
+    "lengthM": 322.3,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.09621,
+      9.876075
+     ],
+     [
+      126.095957,
+      9.877503
+     ],
+     [
+      126.09571,
+      9.878931
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 69,
+   "properties": {
+    "id": "seg69",
+    "name": "Barangay Rd",
+    "from": "n5_5",
+    "to": "n6_5",
+    "lengthM": 498.1,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.09571,
+      9.878931
+     ],
+     [
+      126.095813,
+      9.881168
+     ],
+     [
+      126.095699,
+      9.883405
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 70,
+   "properties": {
+    "id": "seg70",
+    "name": "Old Ferry Rd",
+    "from": "n0_6",
+    "to": "n1_6",
+    "lengthM": 386.5,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.100758,
+      9.859431
+     ],
+     [
+      126.100766,
+      9.861169
+     ],
+     [
+      126.100543,
+      9.862893
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 71,
+   "properties": {
+    "id": "seg71",
+    "name": "Old Ferry Rd",
+    "from": "n1_6",
+    "to": "n2_6",
+    "lengthM": 385.5,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.100543,
+      9.862893
+     ],
+     [
+      126.100346,
+      9.864615
+     ],
+     [
+      126.10031,
+      9.866349
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 72,
+   "properties": {
+    "id": "seg72",
+    "name": "Old Ferry Rd",
+    "from": "n2_6",
+    "to": "n3_6",
+    "lengthM": 650.8,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.10031,
+      9.866349
+     ],
+     [
+      126.100971,
+      9.869203
+     ],
+     [
+      126.101865,
+      9.871993
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 73,
+   "properties": {
+    "id": "seg73",
+    "name": "Old Ferry Rd",
+    "from": "n3_6",
+    "to": "n4_6",
+    "lengthM": 436.7,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.101865,
+      9.871993
+     ],
+     [
+      126.101509,
+      9.873926
+     ],
+     [
+      126.100967,
+      9.875815
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 74,
+   "properties": {
+    "id": "seg74",
+    "name": "Old Ferry Rd",
+    "from": "n5_6",
+    "to": "n6_6",
+    "lengthM": 382.9,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.101878,
+      9.880037
+     ],
+     [
+      126.101148,
+      9.8816
+     ],
+     [
+      126.100666,
+      9.883256
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 75,
+   "properties": {
+    "id": "seg75",
+    "name": "Church Lane",
+    "from": "n0_7",
+    "to": "n1_7",
+    "lengthM": 393.5,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.106294,
+      9.859598
+     ],
+     [
+      126.106178,
+      9.861364
+     ],
+     [
+      126.106137,
+      9.863133
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 76,
+   "properties": {
+    "id": "seg76",
+    "name": "Church Lane",
+    "from": "n1_7",
+    "to": "n2_7",
+    "lengthM": 457.8,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.106137,
+      9.863133
+     ],
+     [
+      126.106049,
+      9.86519
+     ],
+     [
+      126.10636,
+      9.867225
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 77,
+   "properties": {
+    "id": "seg77",
+    "name": "Church Lane",
+    "from": "n2_7",
+    "to": "n3_7",
+    "lengthM": 486.9,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.10636,
+      9.867225
+     ],
+     [
+      126.106451,
+      9.869413
+     ],
+     [
+      126.106892,
+      9.871558
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 78,
+   "properties": {
+    "id": "seg78",
+    "name": "Church Lane",
+    "from": "n5_7",
+    "to": "n6_7",
+    "lengthM": 384.6,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.106381,
+      9.879523
+     ],
+     [
+      126.106427,
+      9.881252
+     ],
+     [
+      126.106768,
+      9.882948
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 79,
+   "properties": {
+    "id": "seg79",
+    "name": "Copra Cut",
+    "from": "n1_1",
+    "to": "n2_2",
+    "lengthM": 718.4,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.077604,
+      9.862523
+     ],
+     [
+      126.080298,
+      9.86436
+     ],
+     [
+      126.082818,
+      9.86643
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 80,
+   "properties": {
+    "id": "seg80",
+    "name": "Ridge Shortcut",
+    "from": "n4_5",
+    "to": "n5_6",
+    "lengthM": 762.9,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.09621,
+      9.876075
+     ],
+     [
+      126.09917,
+      9.877875
+     ],
+     [
+      126.101878,
+      9.880037
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 81,
+   "properties": {
+    "id": "seg81",
+    "name": "Mill Diagonal",
+    "from": "n3_2",
+    "to": "n4_3",
+    "lengthM": 506.8,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.082167,
+      9.871974
+     ],
+     [
+      126.084003,
+      9.873361
+     ],
+     [
+      126.085902,
+      9.874662
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 82,
+   "properties": {
+    "id": "seg82",
+    "name": "Upper Ford Bridge",
+    "from": "n0_5",
+    "to": "n0_6",
+    "lengthM": 433.2,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.096877,
+      9.858694
+     ],
+     [
+      126.098806,
+      9.859122
+     ],
+     [
+      126.100758,
+      9.859431
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 83,
+   "properties": {
+    "id": "seg83",
+    "name": "Salt Flat Causeway",
+    "from": "cw0",
+    "to": "cw1",
+    "lengthM": 314.5,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.085,
+      9.8746
+     ],
+     [
+      126.0863,
+      9.874
+     ],
+     [
+      126.0876,
+      9.8734
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 84,
+   "properties": {
+    "id": "seg84",
+    "name": "Salt Flat Causeway",
+    "from": "cw1",
+    "to": "cw2",
+    "lengthM": 354.7,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.0876,
+      9.8734
+     ],
+     [
+      126.0891,
+      9.8728
+     ],
+     [
+      126.0906,
+      9.8722
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 85,
+   "properties": {
+    "id": "seg85",
+    "name": "Salt Flat Causeway",
+    "from": "cw2",
+    "to": "cw3",
+    "lengthM": 384.8,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.0906,
+      9.8722
+     ],
+     [
+      126.0921,
+      9.8713
+     ],
+     [
+      126.0936,
+      9.8704
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 86,
+   "properties": {
+    "id": "seg86",
+    "name": "Salt Flat Causeway",
+    "from": "cw3",
+    "to": "cw4",
+    "lengthM": 396.7,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.0936,
+      9.8704
+     ],
+     [
+      126.09484,
+      9.8691
+     ],
+     [
+      126.09608,
+      9.8678
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 87,
+   "properties": {
+    "id": "seg87",
+    "name": "Salt Flat Causeway",
+    "from": "cw0",
+    "to": "n4_3",
+    "lengthM": 99.1,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.085,
+      9.8746
+     ],
+     [
+      126.085451,
+      9.874631
+     ],
+     [
+      126.085902,
+      9.874662
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 88,
+   "properties": {
+    "id": "seg88",
+    "name": "Salt Flat Causeway",
+    "from": "cw4",
+    "to": "n2_5",
+    "lengthM": 147.7,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.09608,
+      9.8678
+     ],
+     [
+      126.096458,
+      9.86725
+     ],
+     [
+      126.096836,
+      9.8667
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 89,
+   "properties": {
+    "id": "seg89",
+    "name": "Kalinaw District Hospital Access",
+    "from": "lm_hospital",
+    "to": "n1_6",
+    "lengthM": 258.6,
+    "speedKph": 25
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.0986,
+      9.8642
+     ],
+     [
+      126.099519,
+      9.863469
+     ],
+     [
+      126.100543,
+      9.862893
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 90,
+   "properties": {
+    "id": "seg90",
+    "name": "Bayanihan School & Shelter Access",
+    "from": "lm_shelter",
+    "to": "n2_1",
+    "lengthM": 33.9,
+    "speedKph": 25
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.0774,
+      9.8676
+     ],
+     [
+      126.077246,
+      9.867583
+     ],
+     [
+      126.077097,
+      9.867544
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 91,
+   "properties": {
+    "id": "seg91",
+    "name": "Town Center Plaza Access",
+    "from": "lm_town-center",
+    "to": "cw2",
+    "lengthM": 189.8,
+    "speedKph": 25
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.0892,
+      9.8732
+     ],
+     [
+      126.089871,
+      9.87266
+     ],
+     [
+      126.0906,
+      9.8722
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 92,
+   "properties": {
+    "id": "seg92",
+    "name": "Kalinaw Marina Access",
+    "from": "lm_marina",
+    "to": "n3_2",
+    "lengthM": 326.8,
+    "speedKph": 25
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.0806,
+      9.86948
+     ],
+     [
+      126.081304,
+      9.870777
+     ],
+     [
+      126.082167,
+      9.871974
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 93,
+   "properties": {
+    "id": "seg93",
+    "name": "Kalinaw Marina Ridge Access",
+    "from": "lm_marina",
+    "to": "n3_1",
+    "lengthM": 392.7,
+    "speedKph": 25
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.0806,
+      9.86948
+     ],
+     [
+      126.078879,
+      9.86997
+     ],
+     [
+      126.077212,
+      9.87062
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 94,
+   "properties": {
+    "id": "seg94",
+    "name": "Salt Flat Causeway",
+    "from": "lm_marina",
+    "to": "cw0",
+    "lengthM": 746,
+    "speedKph": 40
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.0806,
+      9.86948
+     ],
+     [
+      126.0828,
+      9.87204
+     ],
+     [
+      126.085,
+      9.8746
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 95,
+   "properties": {
+    "id": "seg95",
+    "name": "Ferry Dock Access",
+    "from": "lm_ferry",
+    "to": "n3_3",
+    "lengthM": 297,
+    "speedKph": 25
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.085,
+      9.87124
+     ],
+     [
+      126.086355,
+      9.871283
+     ],
+     [
+      126.087695,
+      9.871484
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 96,
+   "properties": {
+    "id": "seg96",
+    "name": "Ferry Dock Ridge Access",
+    "from": "lm_ferry",
+    "to": "n2_3",
+    "lengthM": 555.6,
+    "speedKph": 25
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.085,
+      9.87124
+     ],
+     [
+      126.085786,
+      9.868863
+     ],
+     [
+      126.086857,
+      9.8666
+     ]
+    ]
+   }
+  }
+ ]
+}

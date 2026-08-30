@@ -1,0 +1,90 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "hospital",
+    "name": "Kalinaw District Hospital",
+    "kind": "hospital",
+    "nodeId": "lm_hospital",
+    "elevation": 32.83
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     126.0986,
+     9.8642
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "shelter",
+    "name": "Bayanihan School & Shelter",
+    "kind": "shelter",
+    "nodeId": "lm_shelter",
+    "elevation": 11.17
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     126.0774,
+     9.8676
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "town-center",
+    "name": "Town Center Plaza",
+    "kind": "town-center",
+    "nodeId": "lm_town-center",
+    "elevation": 4.04
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     126.0892,
+     9.8732
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "marina",
+    "name": "Kalinaw Marina",
+    "kind": "marina",
+    "nodeId": "lm_marina",
+    "elevation": 4.58
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     126.0806,
+     9.86948
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "ferry",
+    "name": "Ferry Dock",
+    "kind": "ferry",
+    "nodeId": "lm_ferry",
+    "elevation": 2.45
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     126.085,
+     9.87124
+    ]
+   }
+  }
+ ]
+}
