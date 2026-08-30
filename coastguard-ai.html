@@ -92,6 +92,48 @@
     box-shadow:0 0 6px #22c55e; display:inline-block; margin-right:6px;
   }
 
+  /* Tactical Night Vision / Battery-Saver HUD toggle */
+  .hud-row{display:flex; justify-content:flex-end; margin-bottom:10px;}
+  .hud-toggle{
+    font-size:10px; font-weight:700; padding:5px 10px; border-radius:20px;
+    border:1px solid var(--sand-dim); background:var(--card); color:var(--ink-soft);
+    cursor:pointer; box-shadow:0 2px 6px rgba(20,40,40,0.06); font-family:'Inter';
+    display:flex; align-items:center; gap:5px;
+  }
+  .hud-toggle .hud-dot{width:7px; height:7px; border-radius:50%; background:var(--ink-soft); flex-shrink:0;}
+
+  /* Neon green NVG theme — all colors collapse to one hue for max legibility & OLED battery savings */
+  .phone.hud-green{
+    --navy:#39FF14; --navy-deep:#000000; --sand:#000000; --sand-dim:#0B1F0B;
+    --ink:#39FF14; --ink-soft:#22A82E; --card:#050805;
+    --coral:#39FF14; --coral-dark:#22A82E; --coral-tint:#0B1F0B;
+    --teal:#39FF14; --teal-dark:#22A82E; --teal-tint:#0B1F0B;
+    --amber:#39FF14; --amber-dark:#22A82E; --amber-tint:#0B1F0B;
+    --blue:#39FF14; --blue-dark:#22A82E; --blue-tint:#0B1F0B;
+    --purple:#39FF14; --purple-dark:#22A82E; --purple-tint:#0B1F0B;
+  }
+  .phone.hud-green .hud-toggle .hud-dot{background:#39FF14; box-shadow:0 0 6px #39FF14;}
+  .phone.hud-green .card, .phone.hud-green .jobcard, .phone.hud-green .rchip, .phone.hud-green .modal-content{
+    border:1px solid #123312;
+  }
+  .phone.hud-green .leaflet-container{filter:grayscale(1) brightness(0.65) sepia(1) hue-rotate(68deg) saturate(8);}
+
+  /* Red NVG theme — preserves the eye's dark-adaptation during night evacuations */
+  .phone.hud-red{
+    --navy:#FF3B30; --navy-deep:#000000; --sand:#000000; --sand-dim:#210A0A;
+    --ink:#FF3B30; --ink-soft:#B3241C; --card:#0A0303;
+    --coral:#FF3B30; --coral-dark:#B3241C; --coral-tint:#210A0A;
+    --teal:#FF3B30; --teal-dark:#B3241C; --teal-tint:#210A0A;
+    --amber:#FF3B30; --amber-dark:#B3241C; --amber-tint:#210A0A;
+    --blue:#FF3B30; --blue-dark:#B3241C; --blue-tint:#210A0A;
+    --purple:#FF3B30; --purple-dark:#B3241C; --purple-tint:#210A0A;
+  }
+  .phone.hud-red .hud-toggle .hud-dot{background:#FF3B30; box-shadow:0 0 6px #FF3B30;}
+  .phone.hud-red .card, .phone.hud-red .jobcard, .phone.hud-red .rchip, .phone.hud-red .modal-content{
+    border:1px solid #330F0F;
+  }
+  .phone.hud-red .leaflet-container{filter:grayscale(1) brightness(0.55) sepia(1) hue-rotate(-50deg) saturate(8);}
+
   /* Top bar */
   .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
   .topbar .place{font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-soft); font-weight:600;}
@@ -145,6 +187,23 @@
   .section-title{display:flex; align-items:center; justify-content:space-between; margin:18px 0 10px;}
   .section-title h3{font-size:15px; font-weight:600; color:var(--navy);}
   .section-title a{font-size:12px; color:var(--teal-dark); font-weight:600; text-decoration:none; cursor:pointer;}
+
+  /* Safest spot card */
+  .safespot-card{padding:0; overflow:hidden;}
+  .safespot-photo{width:100%; height:140px; object-fit:cover; display:block; background:var(--sand-dim);}
+  .safespot-body{padding:14px 16px 16px;}
+  .safespot-toprow{display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:6px;}
+  .safespot-toprow b{font-size:14.5px; color:var(--navy); line-height:1.3;}
+  .safespot-badge{flex-shrink:0; font-size:9.5px; font-weight:700; color:var(--teal-dark); background:var(--teal-tint); padding:3px 9px; border-radius:20px; white-space:nowrap;}
+  .safespot-meta{display:flex; flex-wrap:wrap; gap:8px 14px; margin-bottom:12px;}
+  .safespot-meta .m{font-size:11.5px; color:var(--ink-soft); font-weight:600; display:flex; align-items:center; gap:4px;}
+  .safespot-actions{display:flex; gap:8px;}
+
+  .safelist .row{display:flex; gap:10px; align-items:center; padding:10px 0; border-bottom:1px solid var(--sand-dim); cursor:pointer;}
+  .safelist .row:last-child{border-bottom:none;}
+  .safelist img{width:52px; height:52px; border-radius:12px; object-fit:cover; flex-shrink:0; background:var(--sand-dim);}
+  .safelist .info b{font-size:13px; color:var(--navy); display:block;}
+  .safelist .info span{font-size:11px; color:var(--ink-soft); display:block; margin-top:2px;}
 
   /* Incident row */
   .incident{display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--sand-dim);}
@@ -239,6 +298,35 @@
   .badge-severity.Moderate{background:#eab308; color:#000;}
   .badge-severity.Low{background:#22c55e; color:#fff;}
 
+  /* Visual water-level depth picker */
+  .depth-card{padding:14px;}
+  .depth-cardhead{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+  .depth-cardhead label{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-soft);}
+  .depth-type-toggle{display:flex; gap:4px;}
+  .depth-type-btn{font-size:10.5px; font-weight:700; padding:4px 9px; border-radius:10px; border:1px solid var(--sand-dim); background:var(--card); color:var(--ink-soft); cursor:pointer; font-family:'Inter';}
+  .depth-type-btn.active{background:var(--navy); color:#fff; border-color:var(--navy);}
+
+  .depthviz{display:flex; gap:16px; align-items:center; justify-content:center; padding:4px 0 12px;}
+  .depthviz-figure{position:relative; width:96px; height:170px; border-radius:14px; background:linear-gradient(180deg,#EAF3F1,#DCEAE7); overflow:hidden; border:1px solid var(--sand-dim); flex-shrink:0;}
+  .depthviz-figure svg{position:absolute; inset:6px; width:calc(100% - 12px); height:calc(100% - 12px); z-index:2;}
+  .depthviz-water{position:absolute; left:0; right:0; bottom:0; height:25%; background:linear-gradient(180deg, rgba(46,111,149,0.5), rgba(29,74,98,0.88)); z-index:3; transition:height .12s ease; border-top:2px solid rgba(255,255,255,0.6);}
+  .depthviz-gridline{position:absolute; left:0; right:0; height:1px; background:rgba(20,40,40,0.08); z-index:1;}
+
+  .depthviz-slider-wrap{height:170px; width:36px; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  input#depthSlider{
+    -webkit-appearance:none; appearance:none;
+    width:150px; height:6px; border-radius:4px; outline:none;
+    background:linear-gradient(90deg, var(--teal), var(--coral));
+    transform:rotate(-90deg);
+  }
+  input#depthSlider::-webkit-slider-thumb{-webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--blue); border:3px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,0.35); cursor:pointer;}
+  input#depthSlider::-moz-range-thumb{width:22px; height:22px; border-radius:50%; background:var(--blue); border:3px solid #fff; cursor:pointer;}
+
+  .depth-readout{display:flex; justify-content:space-between; align-items:baseline; padding-top:10px; border-top:1px dashed var(--sand-dim);}
+  .depth-readout b{font-size:14.5px; color:var(--navy);}
+  .depth-readout span{font-size:14px; font-weight:700; color:var(--blue-dark);}
+
+
   .btnrow{display:flex; gap:10px;}
   .btn{flex:1; padding:13px; border-radius:14px; border:none; font-family:'Inter'; font-weight:700; font-size:13px; cursor:pointer;}
   .btn.primary{background:var(--navy); color:#fff;}
@@ -307,6 +395,12 @@
       <span style="opacity:0.8; font-size:9px;">3 Peers Nearby</span>
     </div>
 
+    <div class="hud-row">
+      <button class="hud-toggle" id="hudToggleBtn" onclick="cycleHudMode()">
+        <span class="hud-dot"></span><span id="hudToggleLabel">Night Vision: Off</span>
+      </button>
+    </div>
+
     <div class="topbar">
       <div>
         <div class="place">Kalinaw Island</div>
@@ -363,6 +457,26 @@
       <div class="scoretext">
         <div class="tag">Community score ▲ 4 today</div>
         <p>Elevated harbor flood risk. 6 community reports, 2 barrier tags, &amp; marine logs active.</p>
+      </div>
+    </div>
+
+    <div class="section-title"><h3>Nearest safe spot</h3><a onclick="openModal('modal-safe-spots')">Other options</a></div>
+    <div class="card safespot-card" id="safespot-card">
+      <img class="safespot-photo" id="safespot-photo" src="" alt="Safest evacuation spot">
+      <div class="safespot-body">
+        <div class="safespot-toprow">
+          <b id="safespot-name">Loading…</b>
+          <span class="safespot-badge" id="safespot-badge">Safest nearby</span>
+        </div>
+        <div class="safespot-meta">
+          <div class="m" id="safespot-distance">📍 —</div>
+          <div class="m" id="safespot-elevation">⛰️ —</div>
+          <div class="m" id="safespot-capacity">👥 —</div>
+        </div>
+        <div class="safespot-actions">
+          <button class="btn primary" onclick="goToSafeSpotOnMap()">Get directions</button>
+          <button class="btn ghost" onclick="openModal('modal-safe-spots')">See other spots</button>
+        </div>
       </div>
     </div>
 
@@ -462,7 +576,7 @@
           <div class="value" id="aiSeverity">-</div>
         </div>
         <div class="aistat">
-          <div class="label">Est. Depth / Scale</div>
+          <div class="label">Depth Confirmed</div>
           <div class="value" id="aiDepth">-</div>
         </div>
         <div class="aistat full">
@@ -472,6 +586,26 @@
         <div class="aistat full">
           <div class="label">Action Plan</div>
           <div class="value" id="aiAction" style="font-size:12.5px; font-weight:500;">-</div>
+        </div>
+      </div>
+
+      <div class="card depth-card">
+        <div class="depth-cardhead">
+          <label>Confirm water depth</label>
+          <div class="depth-type-toggle">
+            <button type="button" class="depth-type-btn active" id="depthTypeHuman" onclick="setDepthSilhouette('human')">🧍 Person</button>
+            <button type="button" class="depth-type-btn" id="depthTypeCar" onclick="setDepthSilhouette('car')">🚗 Car</button>
+          </div>
+        </div>
+        <div class="depthviz">
+          <div class="depthviz-figure" id="depthFigureWrap"></div>
+          <div class="depthviz-slider-wrap">
+            <input type="range" id="depthSlider" min="0" max="200" value="50" oninput="updateDepthViz(this.value)">
+          </div>
+        </div>
+        <div class="depth-readout">
+          <b id="depthLabel">Knee-deep</b>
+          <span id="depthMeters">0.50m</span>
         </div>
       </div>
 
@@ -605,6 +739,16 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="modal-safe-spots">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Evacuation spots nearby</h2>
+        <button class="close-btn" onclick="closeModal('modal-safe-spots')">✕</button>
+      </div>
+      <div class="safelist" id="safe-spots-list"></div>
+    </div>
+  </div>
+
   <!-- ============ BOTTOM NAV ============ -->
   <div class="navbar">
     <button class="navitem active" data-tab="home" onclick="showScreen('home')"><span class="ic">🏠</span><span>Home</span></button>
@@ -658,11 +802,78 @@ let userIncidents = [
 let mapMarkersLayer = null;
 let currentMapFilter = 'all';
 
+// Evacuation / high-ground shelters, ranked by elevation + open capacity
+let sheltersData = [
+  { id: 1, name: "Kalinaw Elementary School Gym", type: "Primary Evacuation Center", distanceM: 350, elevationM: 14, capacity: "Open · 40 spots left", full: false, coords: [9.8791, 126.0875], photo: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=500&q=80" },
+  { id: 2, name: "Hilltop Barangay Hall", type: "Secondary Evacuation Center", distanceM: 680, elevationM: 22, capacity: "Open · 15 spots left", full: false, coords: [9.8815, 126.0845], photo: "https://images.unsplash.com/photo-1466442929976-97f336a657be?w=500&q=80" },
+  { id: 3, name: "St. Isidro Church Hall", type: "Overflow Shelter", distanceM: 1150, elevationM: 18, capacity: "Standby, on request", full: false, coords: [9.8730, 126.0955], photo: "https://images.unsplash.com/photo-1601979031925-424e53b6caaa?w=500&q=80" }
+];
+let selectedSafeSpotId = null;
+
 document.addEventListener("DOMContentLoaded", () => {
   renderHomeResources();
   renderResources();
   renderVolunteerJobs();
+  renderSafeSpot();
+  setDepthSilhouette('human');
+  updateDepthViz(50);
+  applyHudMode();
 });
+
+function formatDistance(m){ return m >= 1000 ? (m/1000).toFixed(1) + "km away" : m + "m away"; }
+
+// Picks the safest reachable spot: prefers higher elevation among open shelters, closest as tiebreak
+function pickSafestSpot() {
+  const open = sheltersData.filter(s => !s.full);
+  const pool = open.length ? open : sheltersData;
+  return pool.slice().sort((a, b) => (b.elevationM - a.elevationM) || (a.distanceM - b.distanceM))[0];
+}
+
+function renderSafeSpot() {
+  const spot = selectedSafeSpotId ? sheltersData.find(s => s.id === selectedSafeSpotId) : pickSafestSpot();
+  if (!spot) return;
+  document.getElementById('safespot-photo').src = spot.photo;
+  document.getElementById('safespot-photo').alt = spot.name;
+  document.getElementById('safespot-name').textContent = spot.name;
+  document.getElementById('safespot-badge').textContent = spot.id === pickSafestSpot().id ? "Safest nearby" : spot.type;
+  document.getElementById('safespot-distance').textContent = "📍 " + formatDistance(spot.distanceM);
+  document.getElementById('safespot-elevation').textContent = "⛰️ " + spot.elevationM + "m above sea level";
+  document.getElementById('safespot-capacity').textContent = "👥 " + spot.capacity;
+  renderSafeSpotsList();
+}
+
+function renderSafeSpotsList() {
+  const container = document.getElementById('safe-spots-list');
+  if (!container) return;
+  const safest = pickSafestSpot();
+  container.innerHTML = sheltersData.slice().sort((a,b) => (b.elevationM - a.elevationM) || (a.distanceM - b.distanceM)).map(s => `
+    <div class="row" onclick="chooseSafeSpot(${s.id})">
+      <img src="${s.photo}" alt="${s.name}">
+      <div class="info">
+        <b>${s.name} ${s.id === safest.id ? '✔' : ''}</b>
+        <span>${s.type} · ${formatDistance(s.distanceM)} · ${s.elevationM}m elevation</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function chooseSafeSpot(id) {
+  selectedSafeSpotId = id;
+  renderSafeSpot();
+  closeModal('modal-safe-spots');
+}
+
+function goToSafeSpotOnMap() {
+  const spot = selectedSafeSpotId ? sheltersData.find(s => s.id === selectedSafeSpotId) : pickSafestSpot();
+  showScreen('map');
+  setTimeout(() => {
+    if (!map) return;
+    setMapFilter('shelters', document.querySelector('#map-filters .chip:nth-child(6)') || document.querySelector('#map-filters .chip'));
+    map.setView(spot.coords, 16);
+    document.getElementById('pin-title').textContent = spot.name;
+    document.getElementById('pin-desc').textContent = `${spot.type} · ${formatDistance(spot.distanceM)} · ${spot.elevationM}m above sea level · ${spot.capacity}`;
+  }, 250);
+}
 
 function showScreen(name){
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -677,6 +888,20 @@ function showScreen(name){
 
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+let hudMode = 'off'; // 'off' | 'green' | 'red'
+function applyHudMode() {
+  const phone = document.querySelector('.phone');
+  phone.classList.remove('hud-green', 'hud-red');
+  if (hudMode === 'green') phone.classList.add('hud-green');
+  if (hudMode === 'red') phone.classList.add('hud-red');
+  const labels = { off: 'Night Vision: Off', green: 'NVG Mode: Green', red: 'NVG Mode: Red' };
+  document.getElementById('hudToggleLabel').textContent = labels[hudMode];
+}
+function cycleHudMode() {
+  hudMode = hudMode === 'off' ? 'green' : (hudMode === 'green' ? 'red' : 'off');
+  applyHudMode();
+}
 
 function togglePriorityAssistance(el) {
   const msg = document.getElementById('priorityMsg');
@@ -879,7 +1104,7 @@ function renderMapMarkers() {
         iconSize: [28, 28],
         iconAnchor: [14, 14]
       });
-      L.marker(inc.coords, { icon }).addTo(mapMarkersLayer).bindPopup(`<b>${inc.title}</b><br>Category: ${inc.category}<br>Severity: ${inc.severity}`);
+      L.marker(inc.coords, { icon }).addTo(mapMarkersLayer).bindPopup(`<b>${inc.title}</b><br>Category: ${inc.category}<br>Severity: ${inc.severity}${inc.depthMeters !== undefined ? `<br>Depth: ${inc.depthMeters}m` : ''}`);
     }
   });
 
@@ -898,15 +1123,18 @@ function renderMapMarkers() {
   }
 
   if (currentMapFilter === 'all' || currentMapFilter === 'shelters') {
-    volunteerJobs.forEach(job => {
-      if (job.coords) {
+    const safest = pickSafestSpot();
+    sheltersData.forEach(spot => {
+      if (spot.coords) {
         const icon = L.divIcon({
           className: '',
-          html: `<div class="mk mk-shelter">🤝</div>`,
+          html: `<div class="mk mk-shelter">${spot.id === safest.id ? '🛟' : '🏠'}</div>`,
           iconSize: [28, 28],
           iconAnchor: [14, 14]
         });
-        L.marker(job.coords, { icon }).addTo(mapMarkersLayer).bindPopup(`<b>Task: ${job.title}</b><br>Verified by: ${job.verifiedBy}`);
+        L.marker(spot.coords, { icon }).addTo(mapMarkersLayer).bindPopup(
+          `<img src="${spot.photo}" style="width:180px;height:90px;object-fit:cover;border-radius:8px;margin-bottom:6px;display:block;"><b>${spot.name}${spot.id === safest.id ? ' (Safest nearby)' : ''}</b><br>${spot.type}<br>${formatDistance(spot.distanceM)} · ${spot.elevationM}m elevation<br>${spot.capacity}`
+        );
       }
     });
   }
@@ -946,6 +1174,79 @@ function initReportPickerMap() {
 
 function triggerFileInput() { document.getElementById('imageInput').click(); }
 
+// --- Visual water-level depth picker -----------------------------------
+const HUMAN_SILHOUETTE_SVG = `<svg viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="50" cy="26" r="15" fill="var(--ink-soft)"/>
+  <rect x="37" y="44" width="26" height="66" rx="11" fill="var(--ink-soft)"/>
+  <rect x="27" y="48" width="11" height="52" rx="5.5" fill="var(--ink-soft)"/>
+  <rect x="62" y="48" width="11" height="52" rx="5.5" fill="var(--ink-soft)"/>
+  <rect x="38" y="108" width="11" height="62" rx="5.5" fill="var(--ink-soft)"/>
+  <rect x="51" y="108" width="11" height="62" rx="5.5" fill="var(--ink-soft)"/>
+</svg>`;
+const CAR_SILHOUETTE_SVG = `<svg viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
+  <rect x="8" y="128" width="84" height="38" rx="12" fill="var(--ink-soft)"/>
+  <path d="M24 128 L34 100 Q38 94 46 94 L64 94 Q72 94 76 100 L84 128 Z" fill="var(--ink-soft)"/>
+  <rect x="42" y="100" width="24" height="24" rx="3" fill="var(--card)" opacity="0.6"/>
+  <circle cx="28" cy="168" r="12" fill="var(--navy)"/>
+  <circle cx="72" cy="168" r="12" fill="var(--navy)"/>
+</svg>`;
+
+const DEPTH_LABELS = [
+  { max: 10, label: "Ankle-deep" },
+  { max: 40, label: "Knee-deep" },
+  { max: 80, label: "Waist-deep" },
+  { max: 120, label: "Chest-deep" },
+  { max: 160, label: "Overhead" },
+  { max: 200, label: "Fully submerged — extreme danger" }
+];
+function depthLabelFor(cm) {
+  return (DEPTH_LABELS.find(d => cm <= d.max) || DEPTH_LABELS[DEPTH_LABELS.length - 1]).label;
+}
+
+let depthSilhouetteType = 'human';
+let confirmedDepthMeters = 0.5;
+
+function setDepthSilhouette(type) {
+  depthSilhouetteType = type;
+  document.getElementById('depthTypeHuman').classList.toggle('active', type === 'human');
+  document.getElementById('depthTypeCar').classList.toggle('active', type === 'car');
+  document.getElementById('depthFigureWrap').innerHTML = (type === 'human' ? HUMAN_SILHOUETTE_SVG : CAR_SILHOUETTE_SVG)
+    + '<div class="depthviz-water" id="depthWaterOverlay"></div>';
+  // reapply current water height to the freshly-swapped figure
+  const slider = document.getElementById('depthSlider');
+  if (slider) updateDepthViz(slider.value);
+}
+
+function updateDepthViz(cmValue) {
+  const cm = Math.max(0, Math.min(200, parseInt(cmValue, 10) || 0));
+  const overlay = document.getElementById('depthWaterOverlay');
+  if (overlay) overlay.style.height = ((cm / 200) * 100) + '%';
+
+  const meters = (cm / 100).toFixed(2);
+  confirmedDepthMeters = parseFloat(meters);
+  const label = depthLabelFor(cm);
+
+  const depthLabelEl = document.getElementById('depthLabel');
+  const depthMetersEl = document.getElementById('depthMeters');
+  if (depthLabelEl) depthLabelEl.textContent = label;
+  if (depthMetersEl) depthMetersEl.textContent = meters + 'm';
+
+  const aiDepthEl = document.getElementById('aiDepth');
+  if (aiDepthEl) aiDepthEl.textContent = meters + 'm · ' + label;
+}
+
+// Seeds the slider/figure from the AI's text estimate (e.g. "0.5m"), which the
+// user can then drag to correct against what they're actually seeing.
+function setDepthFromAIEstimate(text) {
+  const match = String(text || '').match(/([\d.]+)/);
+  let cm = match ? Math.round(parseFloat(match[1]) * 100) : 50;
+  cm = Math.max(0, Math.min(200, cm));
+  const slider = document.getElementById('depthSlider');
+  if (slider) slider.value = cm;
+  updateDepthViz(cm);
+}
+// -------------------------------------------------------------------------
+
 function handleFileSelect(event) {
   const file = event.target.files[0];
   if (file) {
@@ -984,13 +1285,13 @@ async function analyzeFloodImage(base64Image) {
     const parsed = JSON.parse(data.choices[0].message.content);
 
     document.getElementById('aiSeverity').innerHTML = `<span class="badge-severity ${parsed.severity_level}">${parsed.severity_level}</span>`;
-    document.getElementById('aiDepth').textContent = parsed.estimated_water_depth || "N/A";
+    setDepthFromAIEstimate(parsed.estimated_water_depth);
     document.getElementById('aiHazards').textContent = Array.isArray(parsed.hazards) ? parsed.hazards.join(", ") : parsed.hazards;
     document.getElementById('aiAction').textContent = parsed.actionable_advice || "Monitor updates";
 
   } catch (err) {
     document.getElementById('aiSeverity').innerHTML = `<span class="badge-severity Moderate">Moderate</span>`;
-    document.getElementById('aiDepth').textContent = "0.4m (Offline Heuristics)";
+    setDepthFromAIEstimate("0.4m");
     document.getElementById('aiHazards').textContent = "Standing water, potential mobility barrier logged offline";
     document.getElementById('aiAction').textContent = "Report cached locally; will sync via Bluetooth Mesh peers";
   } finally {
@@ -1004,6 +1305,9 @@ function resetReport(){
   document.getElementById('report-upload').style.display='block';
   document.getElementById('report-analyzing').style.display='none';
   document.getElementById('report-result').style.display='none';
+  setDepthSilhouette('human');
+  document.getElementById('depthSlider').value = 50;
+  updateDepthViz(50);
 }
 
 function submitReport() {
@@ -1020,6 +1324,7 @@ function submitReport() {
     title: locName,
     category: cat,
     severity: severity,
+    depthMeters: confirmedDepthMeters,
     coords: selectedReportCoords,
     icon: icon
   });
