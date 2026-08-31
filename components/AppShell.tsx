@@ -32,14 +32,30 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const isLanding = pathname === "/";
 
   return (
-    <div className={`min-h-screen bg-sand lg:pb-0 ${isLanding ? "" : "pb-[66px]"}`}>
-      <header className="border-b border-sand-dim bg-sand/95 backdrop-blur">
+    <div
+      className={`min-h-screen lg:pb-0 ${isLanding ? "bg-navy-deep overflow-hidden" : "bg-sand pb-[66px]"}`}
+    >
+      <header
+        className={
+          isLanding
+            ? "absolute inset-x-0 top-0 z-50 border-b border-white/5 bg-navy-deep/40 backdrop-blur-md"
+            : "border-b border-sand-dim bg-sand/95 backdrop-blur"
+        }
+      >
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-x-4 gap-y-2 px-3 py-3 lg:px-5">
           <Link href="/" className="mr-auto block">
-            <span className="block text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink-soft">
+            <span
+              className={`block text-[10.5px] font-semibold uppercase tracking-[0.14em] ${
+                isLanding ? "text-white/50" : "text-ink-soft"
+              }`}
+            >
               Miami-Dade, Florida
             </span>
-            <span className="block font-serif text-[20px] font-semibold text-navy">
+            <span
+              className={`block font-serif text-[20px] font-semibold ${
+                isLanding ? "text-white" : "text-navy"
+              }`}
+            >
               CoastGuard AI
             </span>
           </Link>
@@ -77,7 +93,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Open the CoastGuard AI mobile field app in a new tab"
-            className="flex items-center gap-2 rounded-[14px] bg-navy px-3.5 py-2.5 text-[12.5px] font-bold text-white shadow-card transition-opacity hover:opacity-90"
+            className={`flex items-center gap-2 rounded-[14px] px-3.5 py-2.5 text-[12.5px] font-bold shadow-card transition-opacity hover:opacity-90 ${
+              isLanding
+                ? "bg-white/10 text-white ring-1 ring-white/20 backdrop-blur-sm"
+                : "bg-navy text-white"
+            }`}
           >
             <svg width="12" height="16" viewBox="0 0 13 17" fill="none" aria-hidden="true">
               <rect x="0.9" y="0.9" width="11.2" height="15.2" rx="2.4" stroke="currentColor" strokeWidth="1.8" />
@@ -101,7 +121,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </nav>
       </header>
 
-      <main className="mx-auto max-w-[1600px] px-3 py-4 lg:px-5">{children}</main>
+      <main
+        className={
+          isLanding
+            ? "relative"
+            : "mx-auto max-w-[1600px] px-3 py-4 lg:px-5"
+        }
+      >
+        {children}
+      </main>
 
       {/* Phone-width nav, mirroring the field app's bottom bar. */}
       <nav
