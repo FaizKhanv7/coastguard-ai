@@ -3,8 +3,20 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Interactive WebGL terrain + flood scene for the landing page.
- * Mouse/touch tilt the camera; the water level breathes on a slow loop.
+ * The landing page's hero visual: a WebGL terrain with a flood surface rising
+ * through it, an impassable coastal road and a safe inland route.
+ *
+ * It is an illustration, not the engine — but it illustrates the right thing.
+ * Land is coloured in the product's teals, water in its blues, the cut road in
+ * coral and the open route in teal, so the picture uses the same vocabulary
+ * the legend on `/map` does.
+ *
+ * The mesh is a real tessellated grid rather than a screen-filling quad: the
+ * height function is evaluated per vertex and the vertices are projected
+ * through a pitched camera, which is what gives it relief. Normals come from
+ * central differences of the same height function, so the lighting agrees with
+ * the shape. Mouse and touch pan the camera; the water level breathes on a
+ * slow loop, and holds still under `prefers-reduced-motion`.
  */
 export default function LandingScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -18,20 +30,31 @@ export default function LandingScene() {
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
+    // Transparent clear: everything above the horizon is left to the CSS sky
+    // gradient painted behind the canvas, which is cheaper than a sky quad and
+    // easier to keep in step with the frame's own colours.
     const gl = canvas.getContext("webgl", {
       antialias: true,
-      alpha: false,
+      alpha: true,
+      depth: true,
     });
     if (!gl) return;
 
+    /* ---------------------------------------------------------------- shaders */
+
     const vertSrc = `
-      attribute vec2 a_pos;
-      uniform vec2 u_res;
+      precision highp float;
+
+      attribute vec2 a_grid;      // [0,1] x [0,1] across the mesh
       uniform float u_time;
+      uniform float u_aspect;
       uniform vec2 u_mouse;
-      varying vec3 v_pos;
+      uniform float u_flood;
+
+      varying vec3 v_normal;
+      varying vec2 v_world;       // world (x, depth), for routes and detail
       varying float v_height;
-      varying float v_flood;
+      varying float v_depth;
 
       float hash(vec2 p) {
         return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -53,94 +76,158 @@ export default function LandingScene() {
         float a = 0.5;
         for (int i = 0; i < 5; i++) {
           v += a * noise(p);
-          p *= 2.02;
+          p = p * 2.03 + vec2(1.3, -0.7);
           a *= 0.5;
         }
         return v;
       }
 
+      /* Land height in world units: a coastal slope rising to the right,
+         with dunes and ridges laid over it. The shoreline therefore runs away
+         from the viewer, which is the shape of the real Biscayne Bay edge. */
+      float terrain(vec2 p) {
+        float slope = smoothstep(-2.5, 2.5, p.x);
+        float base = fbm(p * 0.40 + vec2(1.7, 0.4));
+        float ridge = fbm(p * 1.10 + vec2(4.0, 2.0));
+        float fine = fbm(p * 2.60 + vec2(9.0, 5.0));
+        float detail = base * 0.62 + ridge * 0.26 + fine * 0.12;
+        return slope * 0.55 + detail * 0.52 - 0.20;
+      }
+
       void main() {
-        vec2 uv = a_pos;
-        vec2 grid = uv * 28.0;
+        // Rows are spaced so the near ground gets most of the vertices, and
+        // each row is widened in proportion to its distance AND the viewport
+        // aspect, so the mesh always overfills the frame edge to edge.
+        float depth = 0.70 + pow(a_grid.y, 1.5) * 15.2;
+        float halfWidth = depth * max(u_aspect, 1.0);
+        float wx = (a_grid.x - 0.5) * 2.0 * halfWidth;
 
-        float land = fbm(grid * 0.55 + vec2(1.7, 0.4));
-        land = pow(land, 1.35);
-        float ridge = fbm(grid * 1.1 + vec2(4.0, 2.0));
-        float height = land * 0.55 + ridge * 0.18;
+        vec2 world = vec2(wx, depth);
+        float h = terrain(world);
 
-        float wave = sin(grid.x * 0.9 + u_time * 0.7) * 0.012
-                   + sin(grid.y * 1.1 - u_time * 0.5) * 0.01;
-        float floodBase = 0.28 + sin(u_time * 0.22) * 0.04;
-        float flood = floodBase + wave;
+        // Normals by central difference on the same height function.
+        float e = 0.05;
+        float hx = terrain(world + vec2(e, 0.0));
+        float hz = terrain(world + vec2(0.0, e));
+        v_normal = normalize(vec3(h - hx, e * 0.9, h - hz));
 
-        vec2 tilt = u_mouse * 0.35;
-        vec2 centered = (uv - 0.5) * vec2(u_res.x / u_res.y, 1.0);
-        centered += tilt;
+        vec3 p = vec3(wx, h, depth);
 
-        float perspective = 1.0 / (1.35 + centered.y * 0.85);
-        vec2 projected = centered * perspective;
-        projected.y += height * 0.42 * perspective;
+        // Camera: above the ground, pitched down so the horizon sits in the
+        // upper third of the frame. The mouse pans it gently.
+        float camY = 1.10 + u_mouse.y * 0.16;
+        float pitch = 0.28 - u_mouse.y * 0.045;
+        p.x -= u_mouse.x * 0.9;
 
-        vec2 clip = projected;
-        clip.x *= u_res.x / u_res.y;
-        gl_Position = vec4(clip, height * 0.15, 1.0);
+        vec3 rel = p - vec3(0.0, camY, 0.0);
+        float c = cos(pitch);
+        float s = sin(pitch);
+        // Pitching the camera down lifts the horizon, so rel.z carries a
+        // positive contribution into view.y.
+        vec3 view = vec3(rel.x, rel.y * c + rel.z * s, rel.z * c - rel.y * s);
 
-        v_pos = vec3(uv, height);
-        v_height = height;
-        v_flood = flood;
+        float f = 1.45;
+        float z = max(view.z, 0.06);
+        vec2 clip = vec2(view.x, view.y) * f / z;
+        clip.x /= max(u_aspect, 0.0001);
+
+        gl_Position = vec4(clip, clamp((z - 0.5) / 22.0, -1.0, 1.0), 1.0);
+
+        v_world = world;
+        v_height = h;
+        v_depth = depth;
       }
     `;
 
     const fragSrc = `
       precision mediump float;
+
       uniform float u_time;
-      uniform vec2 u_mouse;
-      varying vec3 v_pos;
+      uniform float u_flood;
+
+      varying vec3 v_normal;
+      varying vec2 v_world;
       varying float v_height;
-      varying float v_flood;
+      varying float v_depth;
+
+      /* Palette lifted from the app's tokens so the hero and the map read as
+         the same product. */
+      const vec3 WATER_DEEP  = vec3(0.031, 0.102, 0.125);  // navy-deep
+      const vec3 WATER_MID   = vec3(0.114, 0.290, 0.384);  // blue-dark
+      const vec3 WATER_SHOAL = vec3(0.211, 0.478, 0.616);  // blue, lifted
+      const vec3 LAND_LOW    = vec3(0.055, 0.180, 0.180);
+      const vec3 LAND_MID    = vec3(0.059, 0.353, 0.282);  // teal-dark
+      const vec3 LAND_HIGH   = vec3(0.180, 0.560, 0.455);  // teal
+      const vec3 RIDGE       = vec3(0.478, 0.690, 0.580);
+      const vec3 CORAL       = vec3(0.886, 0.341, 0.169);  // coral
+      const vec3 ROUTE       = vec3(0.180, 0.760, 0.600);
+      const vec3 FOG         = vec3(0.059, 0.216, 0.255);  // = the CSS sky at the horizon
 
       void main() {
-        float submerged = step(v_height, v_flood);
-        float shore = smoothstep(v_flood - 0.03, v_flood + 0.02, v_height);
+        float submerged = step(v_height, u_flood);
+        float aboveWater = v_height - u_flood;
 
-        vec3 deepWater = vec3(0.04, 0.16, 0.20);
-        vec3 midWater = vec3(0.12, 0.35, 0.44);
-        vec3 shallow = vec3(0.18, 0.54, 0.55);
-        vec3 landLow = vec3(0.09, 0.22, 0.26);
-        vec3 landHigh = vec3(0.16, 0.38, 0.34);
-        vec3 ridge = vec3(0.28, 0.52, 0.46);
+        // --- Land ---
+        float t = smoothstep(0.02, 0.42, v_height);
+        vec3 land = mix(LAND_LOW, LAND_MID, t);
+        land = mix(land, LAND_HIGH, smoothstep(0.34, 0.66, v_height));
+        land = mix(land, RIDGE, smoothstep(0.62, 0.90, v_height) * 0.6);
 
-        vec3 waterCol = mix(midWater, deepWater, shore);
-        waterCol = mix(shallow, waterCol, shore * 0.6);
+        // Directional light, so the relief is actually readable.
+        vec3 lightDir = normalize(vec3(-0.45, 0.82, -0.35));
+        float lambert = clamp(dot(normalize(v_normal), lightDir), 0.0, 1.0);
+        land *= 0.46 + lambert * 0.92;
 
-        float landT = smoothstep(0.18, 0.62, v_height);
-        vec3 landCol = mix(landLow, landHigh, landT);
-        landCol = mix(landCol, ridge, smoothstep(0.55, 0.85, v_height));
+        // --- Water ---
+        float belowBy = clamp(u_flood - v_height, 0.0, 0.5);
+        vec3 water = mix(WATER_SHOAL, WATER_MID, smoothstep(0.0, 0.14, belowBy));
+        water = mix(water, WATER_DEEP, smoothstep(0.12, 0.42, belowBy));
 
-        vec3 col = mix(landCol, waterCol, submerged);
+        // Surface ripples, brightest where the water is shallow.
+        float ripple = sin(v_world.x * 7.0 + u_time * 1.4)
+                     * sin(v_world.y * 5.2 - u_time * 0.9);
+        water += vec3(0.05, 0.10, 0.11) * ripple * (1.0 - smoothstep(0.0, 0.3, belowBy));
 
-        float route = smoothstep(0.015, 0.0, abs(v_pos.y - 0.52 - sin(v_pos.x * 14.0 + u_time * 0.4) * 0.015));
-        route *= step(v_height, v_flood + 0.08);
-        col = mix(col, vec3(0.89, 0.34, 0.17), route * 0.85);
+        // Sun path: a broad glare running out toward the horizon, which is
+        // what stops the open water reading as a flat dark slab.
+        float glare = smoothstep(1.8, 11.0, v_depth)
+                    * exp(-abs(v_world.x + 0.4) * 0.22);
+        water += vec3(0.34, 0.46, 0.47) * glare * (0.55 + 0.45 * ripple) * 0.6;
 
-        float safeRoute = smoothstep(0.012, 0.0, abs(v_pos.y - 0.38 - sin(v_pos.x * 10.0) * 0.02));
-        safeRoute *= step(v_flood + 0.05, v_height);
-        col = mix(col, vec3(0.12, 0.54, 0.44), safeRoute * 0.9);
+        vec3 col = mix(land, water, submerged);
 
-        float glow = exp(-length(u_mouse) * 0.8) * 0.08;
-        col += vec3(0.1, 0.25, 0.3) * glow;
+        // Foam at the waterline.
+        float shore = 1.0 - smoothstep(0.0, 0.035, abs(aboveWater));
+        col = mix(col, vec3(0.72, 0.86, 0.86), shore * 0.5);
 
-        float vignette = smoothstep(1.2, 0.25, length(v_pos.xy - 0.5));
-        col *= mix(0.55, 1.0, vignette);
+        // --- The coastal road, cut by the water ---
+        float roadBand = 1.0 - smoothstep(0.0, 0.055,
+          abs(v_world.x + 1.35 + sin(v_world.y * 0.5) * 0.55));
+        col = mix(col, CORAL, roadBand * (0.35 + submerged * 0.5));
+
+        // --- The inland route that is still open ---
+        float routeBand = 1.0 - smoothstep(0.0, 0.045,
+          abs(v_world.x - 1.15 + sin(v_world.y * 0.42 + 1.2) * 0.7));
+        col = mix(col, ROUTE, routeBand * (1.0 - submerged) * 0.8);
+
+        // Distance fog, so the far edge dissolves into the sky instead of
+        // ending in a hard line.
+        float fog = smoothstep(4.5, 15.0, v_depth);
+        col = mix(col, FOG, fog);
 
         gl_FragColor = vec4(col, 1.0);
       }
     `;
 
+    // A silent WebGL failure is a black rectangle where the hero should be,
+    // which is worth one console line to diagnose.
     function compile(type: number, src: string) {
       const shader = gl!.createShader(type)!;
       gl!.shaderSource(shader, src);
       gl!.compileShader(shader);
+      if (!gl!.getShaderParameter(shader, gl!.COMPILE_STATUS)) {
+        console.warn("LandingScene shader:", gl!.getShaderInfoLog(shader));
+      }
       return shader;
     }
 
@@ -148,34 +235,72 @@ export default function LandingScene() {
     gl.attachShader(program, compile(gl.VERTEX_SHADER, vertSrc));
     gl.attachShader(program, compile(gl.FRAGMENT_SHADER, fragSrc));
     gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.warn("LandingScene link:", gl.getProgramInfoLog(program));
+      return;
+    }
     gl.useProgram(program);
 
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    const verts = new Float32Array([
-      0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1,
-    ]);
+    /* --------------------------------------------------------------- geometry */
+
+    // 160 × 160 vertices keeps every index inside 16 bits, so no extension is
+    // needed for the element array.
+    const N = 160;
+    const verts = new Float32Array(N * N * 2);
+    for (let y = 0, k = 0; y < N; y++) {
+      for (let x = 0; x < N; x++) {
+        verts[k++] = x / (N - 1);
+        verts[k++] = y / (N - 1);
+      }
+    }
+
+    const indices = new Uint16Array((N - 1) * (N - 1) * 6);
+    for (let y = 0, k = 0; y < N - 1; y++) {
+      for (let x = 0; x < N - 1; x++) {
+        const i = y * N + x;
+        indices[k++] = i;
+        indices[k++] = i + 1;
+        indices[k++] = i + N;
+        indices[k++] = i + 1;
+        indices[k++] = i + N + 1;
+        indices[k++] = i + N;
+      }
+    }
+
+    const vbo = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
     gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
 
-    const aPos = gl.getAttribLocation(program, "a_pos");
-    gl.enableVertexAttribArray(aPos);
-    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+    const ibo = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
 
-    const uRes = gl.getUniformLocation(program, "u_res");
+    const aGrid = gl.getAttribLocation(program, "a_grid");
+    gl.enableVertexAttribArray(aGrid);
+    gl.vertexAttribPointer(aGrid, 2, gl.FLOAT, false, 0, 0);
+
     const uTime = gl.getUniformLocation(program, "u_time");
+    const uAspect = gl.getUniformLocation(program, "u_aspect");
     const uMouse = gl.getUniformLocation(program, "u_mouse");
+    const uFlood = gl.getUniformLocation(program, "u_flood");
+
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
+    gl.clearColor(0, 0, 0, 0);
+
+    /* ------------------------------------------------------------------- loop */
 
     let raf = 0;
-    let start = performance.now();
-    let w = 0;
-    let h = 0;
+    const start = performance.now();
+    let aspect = 1;
 
     function resize() {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = canvas!.clientWidth;
-      h = canvas!.clientHeight;
-      canvas!.width = w * dpr;
-      canvas!.height = h * dpr;
+      const w = Math.max(1, canvas!.clientWidth);
+      const h = Math.max(1, canvas!.clientHeight);
+      canvas!.width = Math.round(w * dpr);
+      canvas!.height = Math.round(h * dpr);
+      aspect = w / h;
       gl!.viewport(0, 0, canvas!.width, canvas!.height);
     }
 
@@ -198,14 +323,21 @@ export default function LandingScene() {
     canvas.addEventListener("pointerleave", onLeave);
 
     function frame(now: number) {
-      const t = (now - start) * 0.001;
-      pointer.current.x += (pointer.current.targetX - pointer.current.x) * 0.06;
-      pointer.current.y += (pointer.current.targetY - pointer.current.y) * 0.06;
+      const t = reducedMotion ? 6 : (now - start) * 0.001;
 
-      gl!.uniform2f(uRes, w, h);
-      gl!.uniform1f(uTime, reducedMotion ? 0 : t);
+      pointer.current.x += (pointer.current.targetX - pointer.current.x) * 0.05;
+      pointer.current.y += (pointer.current.targetY - pointer.current.y) * 0.05;
+
+      // The waterline breathing across the part of the slope where the
+      // shoreline reads most clearly.
+      const flood = 0.26 + Math.sin(t * 0.2) * 0.05;
+
+      gl!.clear(gl!.COLOR_BUFFER_BIT | gl!.DEPTH_BUFFER_BIT);
+      gl!.uniform1f(uTime, t);
+      gl!.uniform1f(uAspect, aspect);
       gl!.uniform2f(uMouse, pointer.current.x, pointer.current.y);
-      gl!.drawArrays(gl!.TRIANGLES, 0, 6);
+      gl!.uniform1f(uFlood, flood);
+      gl!.drawElements(gl!.TRIANGLES, indices.length, gl!.UNSIGNED_SHORT, 0);
 
       raf = requestAnimationFrame(frame);
     }
@@ -218,7 +350,8 @@ export default function LandingScene() {
       canvas.removeEventListener("pointermove", onMove);
       canvas.removeEventListener("pointerleave", onLeave);
       gl.deleteProgram(program);
-      gl.deleteBuffer(buf);
+      gl.deleteBuffer(vbo);
+      gl.deleteBuffer(ibo);
     };
   }, []);
 

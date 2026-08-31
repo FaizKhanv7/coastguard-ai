@@ -2,19 +2,20 @@
  * ============================================================================
  * Grounded assistant
  * ============================================================================
- * The field app's assistant calls a hosted LLM and falls back to canned advice
- * when there is no key — which, since the key must never be committed, is
- * always. That is fine for generic safety guidance but it cannot answer the
- * question people actually have, which is about *this town, at this hour*.
+ * The field app's assistant asks a hosted LLM for generic safety guidance and
+ * falls back to canned advice when it cannot reach one. That is fine as far as
+ * it goes, but it cannot answer the question people actually have, which is
+ * about *this town, at this hour*.
  *
  * So this one does not guess. It reads the question, works out what is being
  * asked, and answers from the flood model and the router. "Can I get to the
  * hospital?" runs A* and tells you the distance, or tells you the road is
  * severed and what to do instead.
  *
- * A pure function of (question, context) so it can be unit-tested with no
- * browser and no network. If a real LLM is ever wired in, it should go through
- * a server route with the key server-side, and these answers become its tools.
+ * A pure function of (question, context), so it can be unit-tested with no
+ * browser and no network. The LLM sits downstream of it, not upstream: the
+ * dashboard sends this answer through `lib/chat.ts` to be rephrased, so the
+ * numbers on screen are always the engine's even when the prose is not.
  * ============================================================================
  */
 

@@ -27,35 +27,24 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const { status, horizon, ready } = useCoastguard();
 
   // The landing page talks about the product rather than operating it, so it
-  // gets the wordmark and nothing else — a live water level above a hero
-  // headline just reads as clutter.
+  // brings its own marketing header and footer. Wrapping it in the operating
+  // chrome — section tabs, a live water level above the hero headline — would
+  // only read as clutter, so the shell steps out of the way entirely.
   const isLanding = pathname === "/";
 
+  if (isLanding) {
+    return <div className="min-h-screen bg-sand">{children}</div>;
+  }
+
   return (
-    <div
-      className={`min-h-screen lg:pb-0 ${isLanding ? "bg-navy-deep overflow-hidden" : "bg-sand pb-[66px]"}`}
-    >
-      <header
-        className={
-          isLanding
-            ? "absolute inset-x-0 top-0 z-50 border-b border-white/5 bg-navy-deep/40 backdrop-blur-md"
-            : "border-b border-sand-dim bg-sand/95 backdrop-blur"
-        }
-      >
+    <div className="min-h-screen bg-sand pb-[66px] lg:pb-0">
+      <header className="border-b border-sand-dim bg-sand/95 backdrop-blur">
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-x-4 gap-y-2 px-3 py-3 lg:px-5">
           <Link href="/" className="mr-auto block">
-            <span
-              className={`block text-[10.5px] font-semibold uppercase tracking-[0.14em] ${
-                isLanding ? "text-white/50" : "text-ink-soft"
-              }`}
-            >
+            <span className="block text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink-soft">
               Miami-Dade, Florida
             </span>
-            <span
-              className={`block font-serif text-[20px] font-semibold ${
-                isLanding ? "text-white" : "text-navy"
-              }`}
-            >
+            <span className="block font-serif text-[20px] font-semibold text-navy">
               CoastGuard AI
             </span>
           </Link>
@@ -63,7 +52,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           {/* Live strip. Present on every operating page, because "what is
               the water doing" is the question behind all of them. */}
           <div
-            className={`items-center gap-2 ${isLanding ? "hidden" : "flex"}`}
+            className="flex items-center gap-2"
             aria-live="polite"
             aria-atomic="true"
           >
@@ -93,11 +82,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Open the CoastGuard AI mobile field app in a new tab"
-            className={`flex items-center gap-2 rounded-[14px] px-3.5 py-2.5 text-[12.5px] font-bold shadow-card transition-opacity hover:opacity-90 ${
-              isLanding
-                ? "bg-white/10 text-white ring-1 ring-white/20 backdrop-blur-sm"
-                : "bg-navy text-white"
-            }`}
+            className="flex items-center gap-2 rounded-[14px] bg-navy px-3.5 py-2.5 text-[12.5px] font-bold text-white shadow-card transition-opacity hover:opacity-90"
           >
             <svg width="12" height="16" viewBox="0 0 13 17" fill="none" aria-hidden="true">
               <rect x="0.9" y="0.9" width="11.2" height="15.2" rx="2.4" stroke="currentColor" strokeWidth="1.8" />
@@ -111,9 +96,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         {/* Desktop nav */}
         <nav
           aria-label="Sections"
-          className={`mx-auto max-w-[1600px] gap-1 px-3 pb-2 lg:px-5 ${
-            isLanding ? "hidden" : "hidden lg:flex"
-          }`}
+          className="mx-auto hidden max-w-[1600px] gap-1 px-3 pb-2 lg:flex lg:px-5"
         >
           {NAV.map((item) => (
             <NavLink key={item.href} {...item} active={isActive(pathname, item.href)} />
@@ -121,22 +104,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </nav>
       </header>
 
-      <main
-        className={
-          isLanding
-            ? "relative"
-            : "mx-auto max-w-[1600px] px-3 py-4 lg:px-5"
-        }
-      >
-        {children}
-      </main>
+      <main className="mx-auto max-w-[1600px] px-3 py-4 lg:px-5">{children}</main>
 
       {/* Phone-width nav, mirroring the field app's bottom bar. */}
       <nav
         aria-label="Sections"
-        className={`fixed inset-x-0 bottom-0 z-40 border-t border-sand-dim bg-card px-1 py-1.5 lg:hidden ${
-          isLanding ? "hidden" : "flex"
-        }`}
+        className="fixed inset-x-0 bottom-0 z-40 flex border-t border-sand-dim bg-card px-1 py-1.5 lg:hidden"
       >
         {NAV.map((item) => {
           const active = isActive(pathname, item.href);

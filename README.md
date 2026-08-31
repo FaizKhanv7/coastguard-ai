@@ -75,9 +75,14 @@ on `/map` then walking to `/resources` shows you resources at the storm peak.
 
 `lib/assistant.ts` matches a question to something the engine can actually
 answer — a route, a water depth, a shelter recommendation — and generates the
-reply from the result. Every answer names its source. It needs no API key, so
-it works with the network down, which is when a flood response needs it, and
-it cannot invent a road that does not exist.
+reply from the result. Every answer names its source. The facts need no API
+key, so they survive the network going down — which is when a flood response
+needs them — and they cannot invent a road that does not exist.
+
+If a Groq key is configured (see below) the dashboard hands that grounded
+answer to the model to be said more naturally. The model rephrases; it is
+never asked to source. Pull the key and you read the engine's own wording,
+with the same numbers in it.
 
 `data/community.json` is the other half of the sync. Shelters, incidents,
 resources and volunteer jobs used to be hardcoded arrays inside the field app
@@ -102,13 +107,27 @@ field app — that is the file to edit. `npm run sync-mobile` mirrors it to
 `public/mobile.html`, which is what actually gets served, and it runs
 automatically on `npm run dev` and `npm run build` so the two cannot drift.
 
-> The field app's AI assistant calls the Groq API from the browser. The key in
-> the source is the placeholder `"nah"`, deliberately: this file is served to
-> the client, so a real credential here would be readable by anyone who views
-> source. With no key set the assistant short-circuits to its offline
-> responses instead of making a request that would fail. If you want the live
-> assistant for a demo, put a real key in a local copy only — never in a
-> deployed or committed one.
+### The chatbot key lives in exactly one place
+
+Copy `.env.example` to `.env.local` and put a [Groq key](https://console.groq.com/keys)
+on the `GROQ_API_KEY` line. Nothing else needs configuring: `app/api/chat/route.ts`
+reads it server-side and both surfaces post to that one route — the dashboard
+assistant directly, and the field app because it is served from the same origin
+as `/mobile.html`. The key is never bundled into the browser build.
+
+`.env*` is gitignored, so the key cannot be committed by accident.
+
+Both surfaces are built to work without it. With no key the route answers
+`503 no_key`, the dashboard falls back to the engine's own wording and the
+field app to its canned offline advice. A missing key degrades the assistant;
+it never breaks a page.
+
+> One escape hatch: `EMBED_GROQ_KEY_IN_MOBILE=true` makes `npm run sync-mobile`
+> bake the key into `public/mobile.html`, so the single file can reach Groq when
+> it is opened straight off disk with no server in front of it. **Anyone who
+> opens that file can then read the key.** It is off by default, it prints a
+> warning when it fires, and it never touches `coastguard-ai.html` itself.
+> Use it for an offline demo, then rotate the key.
 
 ---
 

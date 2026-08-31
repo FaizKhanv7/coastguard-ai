@@ -122,67 +122,145 @@ h3,
 }
 
 /* ============================================================
-   Landing page — full-viewport 3D hero
+   Landing page
+
+   The marketing surface is built from the same tokens as the
+   product — sand ground, white cards, navy ink, teal accent —
+   so crossing from "/" into "/overview" is not a change of
+   brand, just a change of job.
    ============================================================ */
+
+.landing-root {
+  background: var(--color-sand);
+  color: var(--color-ink);
+}
+
+/* Faint blueprint grid. Masked to a soft ellipse so it never
+   competes with the copy sitting on top of it. */
+.landing-grid {
+  background-image:
+    linear-gradient(to right, rgba(14, 42, 51, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(14, 42, 51, 0.055) 1px, transparent 1px);
+  background-size: 72px 72px;
+  -webkit-mask-image: radial-gradient(
+    ellipse 75% 65% at 50% 0%,
+    #000 15%,
+    transparent 80%
+  );
+  mask-image: radial-gradient(
+    ellipse 75% 65% at 50% 0%,
+    #000 15%,
+    transparent 80%
+  );
+}
+
+/* Three wide, low-opacity washes in the product's own accents. */
+.landing-aurora {
+  background:
+    radial-gradient(
+      ellipse 62% 46% at 50% -10%,
+      rgba(31, 138, 112, 0.2),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 46% 36% at 88% 6%,
+      rgba(46, 111, 149, 0.16),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 42% 32% at 5% 20%,
+      rgba(227, 160, 8, 0.12),
+      transparent 70%
+    );
+}
 
 .landing-canvas {
   touch-action: none;
 }
 
-.landing-title {
-  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.45);
+/* One entrance keyframe, staggered by a per-element delay, so the
+   first fold settles instead of popping. */
+.landing-rise {
+  animation: landing-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--rise-delay, 0s);
 }
 
-.landing-badge {
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+@keyframes landing-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
+
+.landing-title {
+  letter-spacing: -0.03em;
+}
+
+/* ---- Buttons ---- */
 
 .landing-btn-primary {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 14px 24px;
+  gap: 9px;
+  padding: 14px 22px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #ffffff 0%, #e8f4f0 100%);
-  color: var(--color-navy);
+  background: var(--color-navy);
+  color: #fff;
   font-size: 14px;
   font-weight: 700;
-  box-shadow:
-    0 4px 24px rgba(31, 138, 112, 0.35),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 24px -10px rgba(14, 42, 51, 0.65);
   transition:
     transform 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
 .landing-btn-primary:hover {
+  background: #123640;
   transform: translateY(-2px);
-  box-shadow:
-    0 8px 32px rgba(31, 138, 112, 0.45),
-    0 0 0 1px rgba(255, 255, 255, 0.15);
+  box-shadow: 0 16px 32px -12px rgba(14, 42, 51, 0.7);
 }
 
 .landing-btn-secondary {
   display: inline-flex;
   align-items: center;
-  padding: 14px 24px;
+  gap: 8px;
+  padding: 14px 22px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.06);
-  color: #fff;
+  background: var(--color-card);
+  color: var(--color-navy);
   font-size: 14px;
   font-weight: 700;
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--color-sand-dim);
+  box-shadow: var(--shadow-card);
   transition:
-    background 0.2s ease,
     border-color 0.2s ease,
     transform 0.2s ease;
 }
 
 .landing-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.22);
-  transform: translateY(-1px);
+  border-color: rgba(14, 42, 51, 0.28);
+  transform: translateY(-2px);
+}
+
+/* ---- The dark product frame that holds the WebGL scene ---- */
+
+.landing-frame {
+  box-shadow:
+    0 48px 90px -34px rgba(8, 26, 32, 0.55),
+    0 10px 28px -12px rgba(8, 26, 32, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.landing-glass {
+  background: rgba(8, 26, 32, 0.58);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .landing-particle {
@@ -193,13 +271,76 @@ h3,
   0%,
   100% {
     transform: translateY(0) scale(1);
-    opacity: 0.2;
+    opacity: 0.18;
   }
   50% {
     transform: translateY(-24px) scale(1.2);
-    opacity: 0.55;
+    opacity: 0.5;
   }
 }
+
+/* ---- Logo rail ---- */
+
+.landing-marquee {
+  animation: landing-slide 38s linear infinite;
+}
+
+@keyframes landing-slide {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.landing-marquee-mask {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
+
+/* ---- Feature cards ---- */
+
+.landing-card {
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.landing-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 36px -20px rgba(14, 42, 51, 0.4);
+}
+
+/* ---- FAQ ---- */
+
+.landing-faq summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.landing-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.landing-faq details[open] .landing-faq-sign {
+  transform: rotate(45deg);
+}
+
+.landing-faq-sign {
+  transition: transform 0.22s ease;
+}
+
+/* ---- Scroll hint ---- */
 
 .landing-scroll-hint {
   animation: landing-pulse 3s ease-in-out infinite;
@@ -208,10 +349,10 @@ h3,
 @keyframes landing-pulse {
   0%,
   100% {
-    opacity: 0.3;
+    opacity: 0.35;
   }
   50% {
-    opacity: 0.6;
+    opacity: 0.7;
   }
 }
 
@@ -220,6 +361,3 @@ h3,
     display: none;
   }
 }
-
-/* Fastshot-style single-viewport landing architecture */
-.fastshot-stage{position:fixed;inset:0;overflow:hidden;background:radial-gradient(circle at 50% 42%,#243241 0,#111820 38%,#0a0d12 72%);color:#fff;z-index:60;font-family:Inter,-apple-system,"Segoe UI",sans-serif}.fastshot-stage:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(64,132,155,.14),transparent 38%),repeating-linear-gradient(25deg,transparent 0 28px,rgba(255,255,255,.012) 29px 30px);pointer-events:none}.fastshot-frame{position:absolute;inset:0;display:flex;flex-direction:column;padding:clamp(20px,4vh,42px) clamp(24px,14.4vw,225px) clamp(24px,9vh,74px)}.fastshot-nav{height:43px;display:flex;align-items:center;justify-content:space-between;position:relative}.fastshot-brand{display:inline-flex;align-items:center;gap:12px;color:#fff;text-decoration:none;font-weight:500}.fastshot-mark{width:34px;height:34px;border-radius:50%;background:#75a9b8;display:grid;place-items:center;box-shadow:0 8px 24px #0006}.fastshot-mark:before{content:"";width:17px;height:17px;border-radius:50%;background:#fff;display:block}.fastshot-mark i{position:absolute;width:7px;height:7px;border-radius:50%;background:#151519}.fastshot-links{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:42px}.fastshot-links a,.fastshot-cta{color:#fff;text-decoration:none}.fastshot-links a{font-size:15px;opacity:.92}.fastshot-cta{padding:12px 18px;border-radius:12px;background:linear-gradient(#3d3d3f,#1d1d20);font-size:13px;font-weight:600}.fastshot-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}.fastshot-eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:10px;color:#9dafbb}.fastshot-hero h1{font-size:clamp(30px,3vw,48px);font-weight:420;letter-spacing:-.02em;text-align:center;text-shadow:0 3px 22px #0008}.fastshot-card{width:min(760px,70vw);min-height:152px;border-radius:26px;padding:24px;background:rgba(41,41,43,.955);backdrop-filter:blur(26px);box-shadow:inset 0 0 0 1px rgba(214,228,255,.14),0 22px 60px #0006;display:flex;flex-direction:column;justify-content:space-between;gap:24px}.fastshot-status{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.fastshot-status div{padding:10px 12px;border-radius:12px;background:#ffffff0a}.fastshot-status span{display:block;color:#91959b;font-size:9px;text-transform:uppercase;letter-spacing:.09em}.fastshot-status strong{display:block;margin-top:4px;font-size:17px;font-weight:520}.fastshot-tools{display:flex;align-items:center;gap:12px}.fastshot-zones{display:flex;gap:6px;flex-wrap:wrap}.fastshot-chip{height:30px;padding:0 10px;border-radius:9px;display:inline-flex;align-items:center;color:#a8aaad;text-decoration:none;font-size:9px;font-weight:500;background:linear-gradient(#ffffff16,#ffffff0a);border:1px solid #ffffff0d}.fastshot-right{margin-left:auto;display:flex;align-items:center;gap:14px;color:#98999c;font-size:10px;white-space:nowrap}.fastshot-send{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(163deg,#9ec6d1,#4f8797);color:#fff;text-decoration:none;font-size:16px;box-shadow:0 3px 12px rgba(66,132,150,.35)}.fastshot-proof{display:flex;flex-direction:column;align-items:center;gap:18px;font-size:11px}.fastshot-proof p{color:#d9dde0}.fastshot-proof div{display:flex;gap:52px;color:#fff;font-weight:600;letter-spacing:.02em}@media(max-width:1180px){.fastshot-frame{padding:28px clamp(28px,5vw,60px) 34px}.fastshot-card{width:min(760px,90vw)}.fastshot-links{gap:24px}}@media(max-width:599px),(max-height:599px) and (max-width:1180px){.fastshot-frame{padding:max(18px,env(safe-area-inset-top)) 18px max(20px,env(safe-area-inset-bottom))}.fastshot-links{display:none}.fastshot-cta{padding:10px 13px}.fastshot-hero{gap:14px}.fastshot-hero h1{max-width:12ch;line-height:1.08}.fastshot-card{width:100%;min-height:auto;padding:16px;border-radius:20px}.fastshot-status{grid-template-columns:repeat(3,1fr)}.fastshot-status strong{font-size:14px}.fastshot-tools{align-items:flex-end}.fastshot-zones{max-width:72%}.fastshot-right span{display:none}.fastshot-proof div{gap:20px;font-size:10px}}
